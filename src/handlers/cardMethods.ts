@@ -1,7 +1,7 @@
-import { toggleAllRels, toggleRels } from '../CalculateTree/CalculateTree.handlers.js'
+import { toggleAllRels, toggleRels } from '../CalculateTree/CalculateTree.handlers'
 // @ts-expect-error TS(6133) FIXME: 'AddRelativeTree' is declared but its value is nev... Remove this comment to see the full error message
-import AddRelativeTree from '../AddRelativeTree/AddRelativeTree.js'
-import { deletePerson, moveToAddToAdded } from './general.js'
+import AddRelativeTree from '../AddRelativeTree/AddRelativeTree'
+import { deletePerson, moveToAddToAdded } from './general'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'store' implicitly has an 'any' type.
 export function cardChangeMain(store, { card, d }) {

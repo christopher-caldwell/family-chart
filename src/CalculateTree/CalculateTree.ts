@@ -1,6 +1,6 @@
-import d3 from '../d3.js'
-import { sortChildrenWithSpouses } from './CalculateTree.handlers.js'
-import { createNewPerson } from '../handlers/newPerson.js'
+import d3 from '../d3'
+import { sortChildrenWithSpouses } from './CalculateTree.handlers'
+import { createNewPerson } from '../handlers/newPerson'
 
 export default function CalculateTree({
   // @ts-expect-error TS(7031) FIXME: Binding element 'data_stash' implicitly has an 'an... Remove this comment to see the full error message

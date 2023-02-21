@@ -1,4 +1,4 @@
-import d3 from '../d3.js'
+import d3 from '../d3'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'svg' implicitly has an 'any' type.
 export function setupSvg(svg, zoom_polite) {

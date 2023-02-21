@@ -1,6 +1,6 @@
-import d3 from '../d3.js'
-import CalculateTree from './AddRelativeTree.CalculateTree.js'
-import View from './AddRelativeTree.View.js'
+import d3 from '../d3'
+import CalculateTree from './AddRelativeTree.CalculateTree'
+import View from './AddRelativeTree.View'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'props' implicitly has an 'any' type.
 export default function AddRelativeTree(props) {

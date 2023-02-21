@@ -1,10 +1,10 @@
-import d3 from '../d3.js'
+import d3 from '../d3'
 
-import { mainToMiddle, setupSvg, treeFit } from './View.handlers.js'
-import { createPath } from './elements/Link.js'
-import { createLinks } from '../CalculateTree/createLinks.js'
-import { Card as CardDefault } from './elements/Card.js'
-import { calculateEnterAndExitPositions } from '../CalculateTree/CalculateTree.handlers.js'
+import { mainToMiddle, setupSvg, treeFit } from './View.handlers'
+import { createPath } from './elements/Link'
+import { createLinks } from '../CalculateTree/createLinks'
+import { Card as CardDefault } from './elements/Card'
+import { calculateEnterAndExitPositions } from '../CalculateTree/CalculateTree.handlers'
 
 // @ts-expect-error TS(7031) FIXME: Binding element 'store' implicitly has an 'any' ty... Remove this comment to see the full error message
 export default function d3AnimationView({ store, cont, Card }) {

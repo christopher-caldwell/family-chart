@@ -1,6 +1,6 @@
-import CalculateTree from './CalculateTree/CalculateTree.js'
+import CalculateTree from './CalculateTree/CalculateTree'
 // @ts-expect-error TS(6133) FIXME: 'createTreeDataWithMainNode' is declared but its v... Remove this comment to see the full error message
-import { createTreeDataWithMainNode } from './handlers/newPerson.js'
+import { createTreeDataWithMainNode } from './handlers/newPerson'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'initial_state' implicitly has an 'any' ... Remove this comment to see the full error message
 export default function createStore(initial_state) {

@@ -7,9 +7,9 @@ import {
   MiniTree,
   PencilIcon,
   PlusIcon,
-} from './Card.Elements.js'
-import { cardChangeMain, cardEdit, cardShowHideRels } from '../../handlers/cardMethods.js'
-import { isAllRelativeDisplayed } from '../../handlers/general.js'
+} from './Card.Elements'
+import { cardChangeMain, cardEdit, cardShowHideRels } from '../../handlers/cardMethods'
+import { isAllRelativeDisplayed } from '../../handlers/general'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'props' implicitly has an 'any' type.
 export function Card(props) {

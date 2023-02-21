@@ -1,5 +1,5 @@
-import { toggleAllRels } from '../CalculateTree/CalculateTree.handlers.js'
-import AddRelativeTree from './AddRelativeTree.js'
+import { toggleAllRels } from '../CalculateTree/CalculateTree.handlers'
+import AddRelativeTree from './AddRelativeTree'
 
 // @ts-expect-error TS(7031) FIXME: Binding element 'store' implicitly has an 'any' ty... Remove this comment to see the full error message
 export function AddRelative({ store, cont, card_dim, cardEditForm, labels }) {

@@ -1,4 +1,4 @@
-import d3 from '../../d3.js'
+import d3 from '../../d3'
 
 // @ts-expect-error TS(7031) FIXME: Binding element 'd' implicitly has an 'any' type.
 export default function Link({ d, entering, exiting }) {

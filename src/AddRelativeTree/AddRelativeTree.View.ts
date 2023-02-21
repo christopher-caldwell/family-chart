@@ -1,4 +1,4 @@
-import { addNewPerson, createNewPersonWithGenderFromRel, handleRelsOfNewDatum } from '../handlers/newPerson.js'
+import { addNewPerson, createNewPersonWithGenderFromRel, handleRelsOfNewDatum } from '../handlers/newPerson'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'tree' implicitly has an 'any' type.
 export default function View(tree, { store, data_stash, cont, datum, card_dim, cardEditForm, scale }) {

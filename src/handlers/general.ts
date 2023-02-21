@@ -1,6 +1,6 @@
-import d3 from '../d3.js'
-import { checkIfRelativesConnectedWithoutPerson } from './checkIfRelativesConnectedWithoutPerson.js'
-import { createTreeDataWithMainNode } from './newPerson.js'
+import d3 from '../d3'
+import { checkIfRelativesConnectedWithoutPerson } from './checkIfRelativesConnectedWithoutPerson'
+import { createTreeDataWithMainNode } from './newPerson'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'datum' implicitly has an 'any' type.
 export function moveToAddToAdded(datum, data_stash) {

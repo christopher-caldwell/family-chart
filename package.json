@@ -29,7 +29,7 @@
     "lint": "eslint ./ --ext .ts",
     "jest": "jest",
     "type-check": "tsc --noEmit",
-    "build": "microbundle --compress --target node --tsconfig tsconfig.build.json",
+    "build": "node build.js",
     "publish:version": "sh scripts/publish.sh",
     "test": "yarn run cypress open --project tests"
   },

@@ -1,4 +1,4 @@
-import { generateUUID, removeToAdd } from './general.js'
+import { generateUUID, removeToAdd } from './general'
 
 // @ts-expect-error TS(7031) FIXME: Binding element 'datum' implicitly has an 'any' ty... Remove this comment to see the full error message
 export function handleRelsOfNewDatum({ datum, data_stash, rel_type, rel_datum }) {
