@@ -24,6 +24,7 @@ export default function View(tree, { store, data_stash, cont, datum, card_dim, c
             // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
+            // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             ${tree.data.slice(1).map((d, i) => Card({ d }).template)}
           </g>
         </g>
@@ -78,6 +79,7 @@ export default function View(tree, { store, data_stash, cont, datum, card_dim, c
   function Link({ d, is_vertical }) {
     return {
       template: `
+      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
