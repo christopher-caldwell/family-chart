@@ -25,7 +25,12 @@
     "dist/**/*.js"
   ],
   "scripts": {
-    "build": "node build.js",
+    "format": "prettier --write .",
+    "lint": "eslint ./ --ext .ts",
+    "jest": "jest",
+    "type-check": "tsc --noEmit",
+    "build": "microbundle --compress --target node --tsconfig tsconfig.build.json",
+    "publish:version": "sh scripts/publish.sh",
     "test": "yarn run cypress open --project tests"
   },
   "sideEffects": false,
@@ -33,7 +38,11 @@
     "d3": "6"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
     "cypress": "^9.1.0",
+    "eslint": "^8.34.0",
+    "prettier": "^2.8.4",
     "rollup": "2",
     "rollup-plugin-terser": "7",
     "ts-migrate": "^0.1.35",

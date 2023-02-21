@@ -1,12 +1,11 @@
 <!-- PROJECT SHIELDS -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
 <br />
@@ -31,8 +30,6 @@
   </p>
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -50,37 +47,36 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://donatso.github.io/family-chart/examples/wiki-tree/?wiki_id=Q10633)
 
-family-chart is tool for creating and displaying family trees. 
-Although it has many default features, family trees created with this tool are very customizable. 
+family-chart is tool for creating and displaying family trees.
+Although it has many default features, family trees created with this tool are very customizable.
 This is an ongoing project and any suggestion or request will be appreciated :)
 
 ## Examples
+
 1. Interactive family tree of all people in wikidata database.
-[![Product Name Screen Shot][product-wiki-tree-screenshot]](https://donatso.github.io/family-chart/examples/wiki-tree/?wiki_id=Q1035)
+   [![Product Name Screen Shot][product-wiki-tree-screenshot]](https://donatso.github.io/family-chart/examples/wiki-tree/?wiki_id=Q1035)
 
 2. Basic tree
-[![Product Name Screen Shot][product-basic-tree-screenshot]](https://donatso.github.io/family-chart/examples/basic-tree-1)
-
+   [![Product Name Screen Shot][product-basic-tree-screenshot]](https://donatso.github.io/family-chart/examples/basic-tree-1)
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
-1. Visit [examples/create-tree](https://donatso.github.io/family-chart/examples/create-tree/) 
+1. Visit [examples/create-tree](https://donatso.github.io/family-chart/examples/create-tree/)
 2. Create your family tree
 3. Copy/paste generated code for Vanila, Vue or React.
 4. Copy/paste family-chart.css
 5. Give me some github stars (:
 
-
-
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 ### [Static](https://codesandbox.io/s/family-chart-static-zqzck?file=/FamilyChart.js)
@@ -89,9 +85,8 @@ This is an ongoing project and any suggestion or request will be appreciated :)
 
 ### [Vue](https://codesandbox.io/s/family-chart-vue-bsrv9?file=/src/components/FamilyChart.vue)
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -105,14 +100,14 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
-
 <!-- CONTACT -->
+
 ## Contact
 
 Donat Soric - [@linkedin](https://linkedin.com/in/donat-sorić-342a92161) - soricdonat@gmail.com
@@ -121,9 +116,8 @@ Project Link: [https://github.com/donatso/family-chart](https://github.com/donat
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/donatso/family-chart.svg?style=for-the-badge
 [contributors-url]: https://github.com/donatso/family-chart/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/donatso/family-chart.svg?style=for-the-badge
@@ -139,4 +133,3 @@ Project Link: [https://github.com/donatso/family-chart](https://github.com/donat
 [product-screenshot]: https://user-images.githubusercontent.com/26413530/143689335-7cbcd4e8-ff6c-4657-8d9d-ce6f9de3aa1e.png
 [product-basic-tree-screenshot]: https://user-images.githubusercontent.com/26413530/143689330-19d07f09-a127-45d9-b664-68207873caa4.png
 [product-wiki-tree-screenshot]: https://user-images.githubusercontent.com/26413530/143689337-e810d7ad-fefe-4edd-a7e1-0499bfc40abf.png
-

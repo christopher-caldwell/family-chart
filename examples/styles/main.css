@@ -17,15 +17,20 @@ svg.main_svg text {
   fill: currentColor;
 }
 
-rect.card-female, .card-female .card-body-rect, .card-female .text-overflow-mask {
+rect.card-female,
+.card-female .card-body-rect,
+.card-female .text-overflow-mask {
   fill: lightpink;
 }
 
-rect.card-male, .card-male .card-body-rect, .card-male .text-overflow-mask {
+rect.card-male,
+.card-male .card-body-rect,
+.card-male .text-overflow-mask {
   fill: lightblue;
 }
 
-.card-genderless .card-body-rect, .card-genderless .text-overflow-mask {
+.card-genderless .card-body-rect,
+.card-genderless .text-overflow-mask {
   fill: lightgray;
 }
 
@@ -44,10 +49,9 @@ g.card_add text {
   stroke: #000;
 }
 
-
 /* card_family_tree element */
 .card_family_tree rect {
-  transition: .3s;
+  transition: 0.3s;
 }
 .card_family_tree:hover rect {
   transform: scale(1.1);
@@ -57,10 +61,10 @@ g.card_add text {
 .card_add_relative {
   cursor: pointer;
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 .card_add_relative circle {
-  fill: rgba(0,0,0,0);
+  fill: rgba(0, 0, 0, 0);
 }
 .card_add_relative:hover {
   color: black;
@@ -69,14 +73,17 @@ g.card_add text {
 /* pencil_icon element */
 .card_edit.pencil_icon {
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 .card_edit.pencil_icon:hover {
   color: black;
 }
 
 /* link element */
-.card_break_link, .link_upper, .link_lower, .link_particles {
+.card_break_link,
+.link_upper,
+.link_lower,
+.link_particles {
   transform-origin: 50% 50%;
   transition: 1s;
 }
@@ -84,7 +91,7 @@ g.card_add text {
   color: #fff;
 }
 .card_break_link.closed .link_upper {
-  transform: translate(-140.5px,655.6px);
+  transform: translate(-140.5px, 655.6px);
 }
 .card_break_link.closed .link_upper g {
   transform: rotate(-58deg);
@@ -97,9 +104,9 @@ g.card_add text {
 
 /* create-tree styles */
 .input-field input {
-  height: 2.5rem!important;
+  height: 2.5rem !important;
 }
-.input-field>label:not(.label-icon).active {
+.input-field > label:not(.label-icon).active {
   -webkit-transform: translateY(-8px) scale(0.8);
   transform: translateY(-8px) scale(0.8);
 }

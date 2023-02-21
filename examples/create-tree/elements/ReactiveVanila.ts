@@ -1,10 +1,12 @@
-import Reactive from "./Reactive.js"
+import Reactive from './Reactive.js'
 
+// @ts-expect-error TS(7006) FIXME: Parameter 'selector' implicitly has an 'any' type.
 export default function ReactiveVanila(selector) {
   return Reactive(selector, getHtml)
 
+  // @ts-expect-error TS(7006) FIXME: Parameter 'create_tree_js' implicitly has an 'any'... Remove this comment to see the full error message
   function getHtml(create_tree_js) {
-    return (`
+    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +24,6 @@ export default function ReactiveVanila(selector) {
   </script>
 </body>
 </html>
-    `)
+    `
   }
 }

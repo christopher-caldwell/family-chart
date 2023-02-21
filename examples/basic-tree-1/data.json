@@ -11,13 +11,8 @@
     },
     "rels": {
       "father": "Q3050463",
-      "spouses": [
-        "Q462582",
-        "Q1987698"
-      ],
-      "children": [
-        "Q2217419"
-      ],
+      "spouses": ["Q462582", "Q1987698"],
+      "children": ["Q2217419"],
       "mother": "0.0930183100255757"
     },
     "main": true
@@ -34,9 +29,7 @@
     },
     "rels": {
       "father": "Q948620",
-      "spouses": [
-        "Q868"
-      ],
+      "spouses": ["Q868"],
       "children": [],
       "mother": "0.7784747470919489"
     },
@@ -71,13 +64,8 @@
       "gender": "M"
     },
     "rels": {
-      "spouses": [
-        "0.0930183100255757"
-      ],
-      "children": [
-        "Q868",
-        "Q4790690"
-      ]
+      "spouses": ["0.0930183100255757"],
+      "children": ["Q868", "Q4790690"]
     },
     "main": false
   },
@@ -92,12 +80,8 @@
       "gender": "F"
     },
     "rels": {
-      "spouses": [
-        "Q868"
-      ],
-      "children": [
-        "Q2217419"
-      ]
+      "spouses": ["Q868"],
+      "children": ["Q2217419"]
     },
     "main": false
   },
@@ -112,12 +96,8 @@
       "gender": "M"
     },
     "rels": {
-      "spouses": [
-        "0.7784747470919489"
-      ],
-      "children": [
-        "Q462582"
-      ]
+      "spouses": ["0.7784747470919489"],
+      "children": ["Q462582"]
     },
     "main": false
   },
@@ -142,13 +122,8 @@
   {
     "id": "0.0930183100255757",
     "rels": {
-      "spouses": [
-        "Q3050463"
-      ],
-      "children": [
-        "Q868",
-        "Q4790690"
-      ]
+      "spouses": ["Q3050463"],
+      "children": ["Q868", "Q4790690"]
     },
     "data": {
       "gender": "F"
@@ -159,12 +134,8 @@
   {
     "id": "0.7784747470919489",
     "rels": {
-      "spouses": [
-        "Q948620"
-      ],
-      "children": [
-        "Q462582"
-      ]
+      "spouses": ["Q948620"],
+      "children": ["Q462582"]
     },
     "data": {
       "gender": "F"

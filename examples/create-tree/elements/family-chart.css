@@ -19,13 +19,18 @@
 .f3 svg.main_svg text {
   fill: currentColor;
 }
-.f3 rect.card-female, .f3 .card-female .card-body-rect, .f3 .card-female .text-overflow-mask {
+.f3 rect.card-female,
+.f3 .card-female .card-body-rect,
+.f3 .card-female .text-overflow-mask {
   fill: lightpink;
 }
-.f3 rect.card-male, .f3 .card-male .card-body-rect, .f3 .card-male .text-overflow-mask {
+.f3 rect.card-male,
+.f3 .card-male .card-body-rect,
+.f3 .card-male .text-overflow-mask {
   fill: lightblue;
 }
-.f3 .card-genderless .card-body-rect, .f3 .card-genderless .text-overflow-mask {
+.f3 .card-genderless .card-body-rect,
+.f3 .card-genderless .text-overflow-mask {
   fill: lightgray;
 }
 .f3 .card_add .card-body-rect {
@@ -64,7 +69,10 @@
 .f3 .card_edit.pencil_icon:hover {
   color: black;
 }
-.f3 .card_break_link, .f3 .link_upper, .f3 .link_lower, .f3 .link_particles {
+.f3 .card_break_link,
+.f3 .link_upper,
+.f3 .link_lower,
+.f3 .link_particles {
   transform-origin: 50% 50%;
   transition: 1s;
 }
