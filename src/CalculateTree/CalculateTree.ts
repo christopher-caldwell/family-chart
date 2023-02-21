@@ -60,7 +60,7 @@ export default function CalculateTree({
     function sameBothParents(a, b) {
       return a.data.rels.father === b.data.rels.father && a.data.rels.mother === b.data.rels.mother
     }
-    // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
+    // @ts-expect-error TS(6133) FIXME: 'someChildren' is declared but its value is never ... Remove this comment to see the full error message
     function someChildren(a, b) {
       return hasCh(a) || hasCh(b)
     }

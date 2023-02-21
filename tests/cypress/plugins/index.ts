@@ -1,2 +1,2 @@
-// @ts-expect-error TS(2580) FIXME: Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
+// @ts-expect-error TS(7006) FIXME: Parameter 'on' implicitly has an 'any' type.
 module.exports = (on, config) => {}

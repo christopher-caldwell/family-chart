@@ -95,14 +95,12 @@ export function createNewPerson({ data, rels }) {
 // @ts-expect-error TS(7031) FIXME: Binding element 'data' implicitly has an 'any' typ... Remove this comment to see the full error message
 export function createNewPersonWithGenderFromRel({ data, rel_type, rel_datum }) {
   const gender = getGenderFromRelative(rel_datum, rel_type)
-  // @ts-expect-error TS(2550) FIXME: Property 'assign' does not exist on type 'ObjectCo... Remove this comment to see the full error message
   data = Object.assign(data || {}, { gender })
   // @ts-expect-error TS(2345) FIXME: Argument of type '{ data: any; }' is not assignabl... Remove this comment to see the full error message
   return createNewPerson({ data })
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'rel_datum' implicitly has an 'any' type... Remove this comment to see the full error message
   function getGenderFromRelative(rel_datum, rel_type) {
-    // @ts-expect-error TS(2550) FIXME: Property 'includes' does not exist on type 'string... Remove this comment to see the full error message
     return ['daughter', 'mother'].includes(rel_type) || (rel_type === 'spouse' && rel_datum.data.gender === 'M')
       ? 'F'
       : 'M'

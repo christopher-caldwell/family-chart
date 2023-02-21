@@ -135,6 +135,8 @@ export function Card(props) {
         <mask id="fade" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#fadeGrad)"/></mask>
         // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
+        // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
+        // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         <clipPath id="card_clip"><path d="${curvedRectPath({ w: card_dim.w, h: card_dim.h }, 5)}"></clipPath>
         <clipPath id="card_text_clip"><rect width="${card_dim.w - card_dim.text_x - 10}" height="${
         card_dim.h - 10

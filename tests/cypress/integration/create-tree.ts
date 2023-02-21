@@ -1,6 +1,6 @@
-// @ts-expect-error TS(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
+// @ts-expect-error TS(2593) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe('Create simple trees', () => {
-  // @ts-expect-error TS(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
+  // @ts-expect-error TS(2593) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it('Add f m', () => {
     // @ts-expect-error TS(2304) FIXME: Cannot find name 'cy'.
     cy.visit('http://localhost:8080/examples/create-tree')
@@ -12,7 +12,7 @@ describe('Create simple trees', () => {
     getCardByName('Zebra')
   })
 
-  // @ts-expect-error TS(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
+  // @ts-expect-error TS(2593) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it('Add s d', () => {
     // @ts-expect-error TS(2304) FIXME: Cannot find name 'cy'.
     cy.visit('http://localhost:8080/examples/create-tree')
@@ -26,7 +26,7 @@ describe('Create simple trees', () => {
     getCardByName('Becky')
   })
 
-  // @ts-expect-error TS(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
+  // @ts-expect-error TS(2593) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it('Add sp s d', () => {
     // @ts-expect-error TS(2304) FIXME: Cannot find name 'cy'.
     cy.visit('http://localhost:8080/examples/create-tree')
@@ -40,7 +40,7 @@ describe('Create simple trees', () => {
     getCardByName('Becky')
   })
 
-  // @ts-expect-error TS(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
+  // @ts-expect-error TS(2593) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it('Add sp s d_sp_new', () => {
     // @ts-expect-error TS(2304) FIXME: Cannot find name 'cy'.
     cy.visit('http://localhost:8080/examples/create-tree')
@@ -53,7 +53,7 @@ describe('Create simple trees', () => {
     getCardByName('Becky')
   })
 
-  // @ts-expect-error TS(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
+  // @ts-expect-error TS(2593) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
   it('Add s d ss sd', () => {
     // @ts-expect-error TS(2304) FIXME: Cannot find name 'cy'.
     cy.visit('http://localhost:8080/examples/create-tree')

@@ -38,7 +38,6 @@ export function checkIfRelativesConnectedWithoutPerson(datum, data_stash) {
       function runAllRels(f) {
         const r = d0.rels
         ;[r.father, r.mother, ...(r.spouses || []), ...(r.children || [])]
-          // @ts-expect-error TS(2550) FIXME: Property 'find' does not exist on type 'any[]'. Do... Remove this comment to see the full error message
           .filter(d_id => d_id && ![...without_persons, ...history].find(d => d.id === d_id))
           .forEach(d_id => f(d_id))
       }
