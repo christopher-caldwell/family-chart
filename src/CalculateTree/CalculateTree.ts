@@ -2,8 +2,8 @@ import d3 from '../d3.js'
 import { sortChildrenWithSpouses } from './CalculateTree.handlers.js'
 import { createNewPerson } from '../handlers/newPerson.js'
 
-// @ts-expect-error TS(7031) FIXME: Binding element 'data_stash' implicitly has an 'an... Remove this comment to see the full error message
 export default function CalculateTree({
+  // @ts-expect-error TS(7031) FIXME: Binding element 'data_stash' implicitly has an 'an... Remove this comment to see the full error message
   data_stash,
   main_id = null,
   is_vertical = true,
@@ -83,8 +83,8 @@ export default function CalculateTree({
     function hierarchyGetterParents(d) {
       return (
         [d.rels.father, d.rels.mother]
-          // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .filter(d => d)
+          // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .map(id => data_stash.find(d => d.id === id))
       )
     }

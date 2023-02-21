@@ -113,8 +113,8 @@ export function createLinks({ d, tree, is_vertical }) {
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function otherParent(d, p1, data) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'd0' implicitly has an 'any' type.
     return data.find(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'd0' implicitly has an 'any' type.
       d0 => d0.data.id !== p1.data.id && (d0.data.id === d.data.rels.mother || d0.data.id === d.data.rels.father)
     )
   }

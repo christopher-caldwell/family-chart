@@ -1,6 +1,6 @@
-// @ts-expect-error TS(2552) FIXME: Cannot find name 'require'. Did you mean 'required... Remove this comment to see the full error message
+// @ts-expect-error TS(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const fs = require('fs')
-// @ts-expect-error TS(2552) FIXME: Cannot find name 'require'. Did you mean 'required... Remove this comment to see the full error message
+// @ts-expect-error TS(2580) FIXME: Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
 const execSync = require('child_process').execSync
 
 const COMMENT = '//[remove_before_rollup]'

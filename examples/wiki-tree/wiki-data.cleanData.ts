@@ -50,9 +50,10 @@ function wdToFamilyTree(data_wd) {
         ? // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           datum.claims.filter(d => d.prop_id === prop).map(d => d.wiki_id)
         : type === 'labels'
-        ? // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
-          datum.claims
+        ? datum.claims
+            // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             .filter(d => d.prop_id === prop)
+            // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             .map(d => d.label)
             .join(' ')
         : null

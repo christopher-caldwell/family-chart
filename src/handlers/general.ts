@@ -24,21 +24,21 @@ export function deletePerson(datum, data_stash) {
   function executeDelete() {
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     data_stash.forEach(d => {
-      for (let k in d.rels) {
+      for (const k in d.rels) {
         if (!d.rels.hasOwnProperty(k)) continue
         if (d.rels[k] === datum.id) {
           delete d.rels[k]
         } else if (Array.isArray(d.rels[k]) && d.rels[k].includes(datum.id)) {
-          // @ts-expect-error TS(7006) FIXME: Parameter 'did' implicitly has an 'any' type.
           d.rels[k].splice(
+            // @ts-expect-error TS(7006) FIXME: Parameter 'did' implicitly has an 'any' type.
             d.rels[k].findIndex(did => did === datum.id),
             1
           )
         }
       }
     })
-    // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     data_stash.splice(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
       data_stash.findIndex(d => d.id === datum.id),
       1
     )
@@ -70,10 +70,10 @@ export function isAllRelativeDisplayed(d, data) {
 }
 
 export function generateUUID() {
-  var d = new Date().getTime()
-  var d2 = (performance && performance.now && performance.now() * 1000) || 0 //Time in microseconds since page-load or 0 if unsupported
+  let d = new Date().getTime()
+  let d2 = (performance && performance.now && performance.now() * 1000) || 0 //Time in microseconds since page-load or 0 if unsupported
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16
+    let r = Math.random() * 16
     if (d > 0) {
       //Use timestamp until depleted
       r = (d + r) % 16 | 0

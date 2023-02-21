@@ -1,12 +1,19 @@
-// @ts-expect-error TS(7031) FIXME: Binding element 'datum' implicitly has an 'any' ty... Remove this comment to see the full error message
 export function Form({
+  // @ts-expect-error TS(7031) FIXME: Binding element 'datum' implicitly has an 'any' ty... Remove this comment to see the full error message
   datum,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'rel_datum' implicitly has an 'any... Remove this comment to see the full error message
   rel_datum,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'store' implicitly has an 'any' ty... Remove this comment to see the full error message
   store,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'rel_type' implicitly has an 'any'... Remove this comment to see the full error message
   rel_type,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'card_edit' implicitly has an 'any... Remove this comment to see the full error message
   card_edit,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'postSubmit' implicitly has an 'an... Remove this comment to see the full error message
   postSubmit,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'card_display' implicitly has an '... Remove this comment to see the full error message
   card_display,
+  // @ts-expect-error TS(7031) FIXME: Binding element 'el' implicitly has an 'any' type.
   edit: { el, open, close },
 }) {
   setupFromHtml()
@@ -53,8 +60,8 @@ export function Form({
           ${
             !rel_datum.rels.spouses || rel_datum.rels.spouses.length === 0
               ? ''
-              : // @ts-expect-error TS(7006) FIXME: Parameter 'sp_id' implicitly has an 'any' type.
-                rel_datum.rels.spouses
+              : rel_datum.rels.spouses
+                  // @ts-expect-error TS(7006) FIXME: Parameter 'sp_id' implicitly has an 'any' type.
                   .map((sp_id, i) => {
                     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
                     const spouse = data_stash.find(d => d.id === sp_id)
@@ -85,17 +92,19 @@ export function Form({
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'card_edit' implicitly has an 'any' type... Remove this comment to see the full error message
   function getEditFields(card_edit) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
-    return card_edit
-      .map(d =>
-        d.type === 'text'
-          ? `<input type="text" name="${d.key}" placeholder="${d.placeholder}" value="${datum.data[d.key] || ''}">`
-          : d.type === 'textarea'
-          ? `<textarea class="materialize-textarea" name="${d.key}" placeholder="${d.placeholder}">${
-              datum.data[d.key] || ''
-            }</textarea>`
-          : ''
-      )
-      .join('\n')
+    return (
+      card_edit
+        // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
+        .map(d =>
+          d.type === 'text'
+            ? `<input type="text" name="${d.key}" placeholder="${d.placeholder}" value="${datum.data[d.key] || ''}">`
+            : d.type === 'textarea'
+            ? `<textarea class="materialize-textarea" name="${d.key}" placeholder="${d.placeholder}">${
+                datum.data[d.key] || ''
+              }</textarea>`
+            : ''
+        )
+        .join('\n')
+    )
   }
 }

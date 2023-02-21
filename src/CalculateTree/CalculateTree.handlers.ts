@@ -78,8 +78,8 @@ export function toggleRels(tree_datum, hide_rels) {
     const children = tree_datum.data[rels].children.slice(0),
       spouses = tree_datum.spouse ? [tree_datum.spouse] : tree_datum.spouses || []
 
-    // @ts-expect-error TS(7006) FIXME: Parameter 'ch_id' implicitly has an 'any' type.
     ;[tree_datum, ...spouses].forEach(sp =>
+      // @ts-expect-error TS(7006) FIXME: Parameter 'ch_id' implicitly has an 'any' type.
       children.forEach(ch_id => {
         if (sp.data[rels].children.includes(ch_id)) {
           if (!sp.data[rels_]) sp.data[rels_] = {}

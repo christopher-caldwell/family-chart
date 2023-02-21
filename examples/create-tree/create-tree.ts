@@ -8,6 +8,7 @@ import ReactiveReact from './elements/ReactiveReact.js'
 import Display from './elements/Display.js'
 import { Form } from '../../src/view/elements/Form.js'
 
+// @ts-expect-error TS(2705) FIXME: An async function or method in ES5/ES3 requires th... Remove this comment to see the full error message
 ;(async () => {
   const cont = document.querySelector('#FamilyChart'),
     card_dim = { w: 220, h: 70, text_x: 75, text_y: 15, img_w: 60, img_h: 60, img_x: 5, img_y: 5 },
@@ -36,10 +37,11 @@ import { Form } from '../../src/view/elements/Form.js'
     }),
     edit = Edit('#edit_cont', card_edit),
     display = Display('#display_cont', store, card_display),
-    // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     reactiveTextArea = ReactiveTextarea(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
       data => {
         store.update.data(data)
+        // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
         store.update.tree()
       },
       '#textarea',
@@ -58,9 +60,9 @@ import { Form } from '../../src/view/elements/Form.js'
     }
 
   view.setCard(Card)
-  // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
   fetch('./elements/family-chart.css')
     .then(r => r.text())
+    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     .then(text => (document.querySelector('#family-chart-css').innerText = text))
   store.setOnUpdate(onUpdate)
   store.update.tree({ initial: true })
@@ -73,7 +75,7 @@ import { Form } from '../../src/view/elements/Form.js'
       postSubmit(ps_props)
     }
     const el = document.querySelector('#form_modal'),
-      // @ts-expect-error TS(2339) FIXME: Property 'Modal' does not exist on type 'number'.
+      // @ts-expect-error TS(2304) FIXME: Cannot find name 'M'.
       modal = M.Modal.getInstance(el),
       edit = { el, open: () => modal.open(), close: () => modal.close() }
     Form({ ...props, card_edit, card_display, edit })

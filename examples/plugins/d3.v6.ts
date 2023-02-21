@@ -2,18 +2,20 @@
 ;(function (global, factory) {
   // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   typeof exports === 'object' && typeof module !== 'undefined'
-    ? factory(exports)
+    ? // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
+      factory(exports)
     : // @ts-expect-error TS(2304) FIXME: Cannot find name 'define'.
     typeof define === 'function' && define.amd
-    ? define(['exports'], factory)
-    : // @ts-expect-error TS(7017) FIXME: Element implicitly has an 'any' type because type ... Remove this comment to see the full error message
-      ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
+    ? // @ts-expect-error TS(2304) FIXME: Cannot find name 'define'.
+      define(['exports'], factory)
+    : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self),
+      // @ts-expect-error TS(7017) FIXME: Element implicitly has an 'any' type because type ... Remove this comment to see the full error message
       factory((global.d3 = global.d3 || {})))
   // @ts-expect-error TS(7006) FIXME: Parameter 'exports' implicitly has an 'any' type.
 })(this, function (exports) {
   'use strict'
 
-  var version = '6.2.0'
+  const version = '6.2.0'
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function ascending(a, b) {
@@ -132,6 +134,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function arrayify(values) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return typeof values !== 'object' || 'length' in values ? values : Array.from(values)
   }
 
@@ -147,12 +150,14 @@
     values = values.map(arrayify)
     const lengths = values.map(length)
     const j = values.length - 1
+    // @ts-expect-error TS(2550) FIXME: Property 'fill' does not exist on type 'any[]'. Do... Remove this comment to see the full error message
     const index = new Array(j + 1).fill(0)
     // @ts-expect-error TS(7034) FIXME: Variable 'product' implicitly has type 'any[]' in ... Remove this comment to see the full error message
     const product = []
     // @ts-expect-error TS(7005) FIXME: Variable 'product' implicitly has an 'any[]' type.
     if (j < 0 || lengths.some(empty)) return product
     while (true) {
+      // @ts-expect-error TS(7006) FIXME: Parameter 'j' implicitly has an 'any' type.
       product.push(index.map((j, i) => values[i][j]))
       let i = j
       while (++index[i] === lengths[i]) {
@@ -164,10 +169,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function cumsum(values, valueof) {
-    var sum = 0,
+    let sum = 0,
       index = 0
     return Float64Array.from(
       values,
+      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       valueof === undefined ? v => (sum += +v || 0) : v => (sum += +valueof(v, index++, values) || 0)
     )
   }
@@ -329,6 +335,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function groups(values, ...keys) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return nest(values, Array.from, identity, keys)
   }
 
@@ -339,6 +346,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function rollups(values, reduce, ...keys) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return nest(values, Array.from, reduce, keys)
   }
 
@@ -349,6 +357,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function indexes(values, ...keys) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return nest(values, Array.from, unique, keys)
   }
 
@@ -362,6 +371,7 @@
   function nest(values, map, reduce, keys) {
     return (function regroup(values, i) {
       if (i >= keys.length) return reduce(values)
+      // @ts-expect-error TS(2552) FIXME: Cannot find name 'Map'. Did you mean 'map'?
       const groups = new Map()
       const keyof = keys[i++]
       let index = -1
@@ -371,7 +381,6 @@
         if (group) group.push(value)
         else groups.set(key, [value])
       }
-      // @ts-expect-error TS(2802) FIXME: Type 'Map<any, any>' can only be iterated through ... Remove this comment to see the full error message
       for (const [key, values] of groups) {
         groups.set(key, regroup(values, i))
       }
@@ -379,9 +388,9 @@
     })(values, 0)
   }
 
-  var array = Array.prototype
+  const array = Array.prototype
 
-  var slice = array.slice
+  const slice = array.slice
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function constant(x) {
@@ -390,18 +399,17 @@
     }
   }
 
-  var e10 = Math.sqrt(50),
+  const e10 = Math.sqrt(50),
     e5 = Math.sqrt(10),
     e2 = Math.sqrt(2)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
   function ticks(start, stop, count) {
-    var reverse,
+    let reverse,
       i = -1,
       n,
       ticks,
       step
-
     ;(stop = +stop), (start = +start), (count = +count)
     if (start === stop && count > 0) return [start]
     if ((reverse = stop < start)) (n = start), (start = stop), (stop = n)
@@ -427,7 +435,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
   function tickIncrement(start, stop, count) {
-    var step = (stop - start) / Math.max(0, count),
+    const step = (stop - start) / Math.max(0, count),
       power = Math.floor(Math.log(step) / Math.LN10),
       error = step / Math.pow(10, power)
     return power >= 0
@@ -437,7 +445,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
   function tickStep(start, stop, count) {
-    var step0 = Math.abs(stop - start) / Math.max(0, count),
+    let step0 = Math.abs(stop - start) / Math.max(0, count),
       step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
       error = step0 / step1
     if (error >= e10) step1 *= 10
@@ -471,15 +479,16 @@
   }
 
   function bin() {
-    var value = identity,
+    let value = identity,
       domain = extent,
       threshold = thresholdSturges
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function histogram(data) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       if (!Array.isArray(data)) data = Array.from(data)
 
-      var i,
+      let i,
         n = data.length,
         x,
         values = new Array(n)
@@ -490,7 +499,7 @@
       }
 
       // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
-      var xz = domain(values),
+      let xz = domain(values),
         x0 = xz[0],
         x1 = xz[1],
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
@@ -509,13 +518,13 @@
 
       // Remove any thresholds outside the domain.
       // @ts-expect-error TS(2339) FIXME: Property 'length' does not exist on type 'number'.
-      var m = tz.length
+      let m = tz.length
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       while (tz[0] <= x0) tz.shift(), --m
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       while (tz[m - 1] > x1) tz.pop(), --m
 
-      var bins = new Array(m + 1),
+      let bins = new Array(m + 1),
         bin
 
       // Initialize bins.
@@ -652,13 +661,14 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function quantile(values, p, valueof) {
+    // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
     values = Float64Array.from(numbers(values, valueof))
     if (!(n = values.length)) return
     // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
     if ((p = +p) <= 0 || n < 2) return min(values)
     // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
     if (p >= 1) return max(values)
-    var n,
+    let n,
       i = (n - 1) * p,
       i0 = Math.floor(i),
       // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
@@ -675,7 +685,7 @@
     if ((p = +p) <= 0 || n < 2) return +valueof(values[0], 0, values)
     // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
     if (p >= 1) return +valueof(values[n - 1], n - 1, values)
-    var n,
+    let n,
       i = (n - 1) * p,
       i0 = Math.floor(i),
       // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
@@ -687,8 +697,8 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function freedmanDiaconis(values, min, max) {
-    // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
     return Math.ceil(
+      // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
       (max - min) / (2 * (quantile(values, 0.75) - quantile(values, 0.25)) * Math.pow(count(values), -1 / 3))
     )
   }
@@ -759,6 +769,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'arrays' implicitly has an 'any' type.
   function merge(arrays) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(flatten(arrays))
   }
 
@@ -807,7 +818,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'source' implicitly has an 'any' type.
   function permute(source, keys) {
-    // @ts-expect-error TS(2538) FIXME: Type 'unknown' cannot be used as an index type.
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(keys, key => source[key])
   }
 
@@ -918,7 +929,7 @@
     return index < 0 ? undefined : index
   }
 
-  var shuffle = shuffler(Math.random)
+  const shuffle = shuffler(Math.random)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'random' implicitly has an 'any' type.
   function shuffler(random) {
@@ -1014,14 +1025,17 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function map(values, mapper) {
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     if (typeof values[Symbol.iterator] !== 'function') throw new TypeError('values is not iterable')
     if (typeof mapper !== 'function') throw new TypeError('mapper is not a function')
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(values, (value, index) => mapper(value, index, values))
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function reduce(values, reducer, value) {
     if (typeof reducer !== 'function') throw new TypeError('reducer is not a function')
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     const iterator = values[Symbol.iterator]()
     let done,
       next,
@@ -1039,18 +1053,23 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function reverse(values) {
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     if (typeof values[Symbol.iterator] !== 'function') throw new TypeError('values is not iterable')
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(values).reverse()
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function sort(values, comparator = ascending) {
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     if (typeof values[Symbol.iterator] !== 'function') throw new TypeError('values is not iterable')
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(values).sort(comparator)
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function difference(values, ...others) {
+    // @ts-expect-error TS(2552) FIXME: Cannot find name 'Set'. Did you mean 'set'?
     values = new Set(values)
     for (const other of others) {
       for (const value of other) {
@@ -1062,13 +1081,16 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function disjoint(values, other) {
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     const iterator = other[Symbol.iterator](),
+      // @ts-expect-error TS(2552) FIXME: Cannot find name 'Set'. Did you mean 'set'?
       set = new Set()
     for (const v of values) {
       if (set.has(v)) return false
       let value, done
       while (({ value, done } = iterator.next())) {
         if (done) break
+        // @ts-expect-error TS(2550) FIXME: Property 'is' does not exist on type 'ObjectConstr... Remove this comment to see the full error message
         if (Object.is(v, value)) return false
         set.add(value)
       }
@@ -1078,11 +1100,13 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function set(values) {
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Set'. Do you need to change your... Remove this comment to see the full error message
     return values instanceof Set ? values : new Set(values)
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function intersection(values, ...others) {
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Set'. Do you need to change your... Remove this comment to see the full error message
     values = new Set(values)
     others = others.map(set)
     out: for (const value of values) {
@@ -1098,7 +1122,9 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function superset(values, other) {
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     const iterator = values[Symbol.iterator](),
+      // @ts-expect-error TS(2583) FIXME: Cannot find name 'Set'. Do you need to change your... Remove this comment to see the full error message
       set = new Set()
     for (const o of other) {
       if (set.has(o)) continue
@@ -1106,6 +1132,7 @@
       while (({ value, done } = iterator.next())) {
         if (done) return false
         set.add(value)
+        // @ts-expect-error TS(2550) FIXME: Property 'is' does not exist on type 'ObjectConstr... Remove this comment to see the full error message
         if (Object.is(o, value)) break
       }
     }
@@ -1119,6 +1146,7 @@
 
   // @ts-expect-error TS(7019) FIXME: Rest parameter 'others' implicitly has an 'any[]' ... Remove this comment to see the full error message
   function union(...others) {
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Set'. Do you need to change your... Remove this comment to see the full error message
     const set = new Set()
     for (const other of others) {
       for (const o of other) {
@@ -1128,14 +1156,14 @@
     return set
   }
 
-  var slice$1 = Array.prototype.slice
+  const slice$1 = Array.prototype.slice
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function identity$1(x) {
     return x
   }
 
-  var top = 1,
+  const top = 1,
     right = 2,
     bottom = 3,
     left = 4,
@@ -1159,7 +1187,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'scale' implicitly has an 'any' type.
   function center(scale) {
-    var offset = Math.max(0, scale.bandwidth() - 1) / 2 // Adjust for 0.5px offset.
+    let offset = Math.max(0, scale.bandwidth() - 1) / 2 // Adjust for 0.5px offset.
     if (scale.round()) offset = Math.round(offset)
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     return function (d) {
@@ -1175,7 +1203,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'orient' implicitly has an 'any' type.
   function axis(orient, scale) {
     // @ts-expect-error TS(7034) FIXME: Variable 'tickArguments' implicitly has type 'any[... Remove this comment to see the full error message
-    var tickArguments = [],
+    let tickArguments = [],
       // @ts-expect-error TS(7034) FIXME: Variable 'tickValues' implicitly has type 'any' in... Remove this comment to see the full error message
       tickValues = null,
       // @ts-expect-error TS(7034) FIXME: Variable 'tickFormat' implicitly has type 'any' in... Remove this comment to see the full error message
@@ -1189,16 +1217,18 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function axis(context) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'tickValues' implicitly has an 'any' type... Remove this comment to see the full error message
-      var values =
+      let values =
+          // @ts-expect-error TS(7005) FIXME: Variable 'tickValues' implicitly has an 'any' type... Remove this comment to see the full error message
           tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues,
-        // @ts-expect-error TS(7005) FIXME: Variable 'tickFormat' implicitly has an 'any' type... Remove this comment to see the full error message
         format =
+          // @ts-expect-error TS(7005) FIXME: Variable 'tickFormat' implicitly has an 'any' type... Remove this comment to see the full error message
           tickFormat == null
             ? scale.tickFormat
-              ? scale.tickFormat.apply(scale, tickArguments)
+              ? // @ts-expect-error TS(7005) FIXME: Variable 'tickArguments' implicitly has an 'any[]'... Remove this comment to see the full error message
+                scale.tickFormat.apply(scale, tickArguments)
               : identity$1
-            : tickFormat,
+            : // @ts-expect-error TS(7005) FIXME: Variable 'tickFormat' implicitly has an 'any' type... Remove this comment to see the full error message
+              tickFormat,
         spacing = Math.max(tickSizeInner, 0) + tickPadding,
         range = scale.range(),
         range0 = +range[0] + 0.5,
@@ -1242,6 +1272,7 @@
           .attr('opacity', epsilon)
           // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .attr('transform', function (d) {
+            // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             return isFinite((d = position(d))) ? transform(d) : this.getAttribute('transform')
           })
 
@@ -1249,7 +1280,8 @@
           .attr('opacity', epsilon)
           // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .attr('transform', function (d) {
-            var p = this.parentNode.__axis
+            // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+            let p = this.parentNode.__axis
             return transform(p && isFinite((p = p(d))) ? p : position(d))
           })
       }
@@ -1285,11 +1317,10 @@
         .attr('font-family', 'sans-serif')
         .attr('text-anchor', orient === right ? 'start' : orient === left ? 'end' : 'middle')
 
-      selection
+      selection.each(function () {
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-        .each(function () {
-          this.__axis = position
-        })
+        this.__axis = position
+      })
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -1309,10 +1340,10 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     axis.tickValues = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'tickValues' implicitly has an 'any' type... Remove this comment to see the full error message
       return arguments.length
         ? ((tickValues = _ == null ? null : slice$1.call(_)), axis)
-        : tickValues && tickValues.slice()
+        : // @ts-expect-error TS(7005) FIXME: Variable 'tickValues' implicitly has an 'any' type... Remove this comment to see the full error message
+          tickValues && tickValues.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -1364,7 +1395,7 @@
     return axis(left, scale)
   }
 
-  var noop = { value: () => {} }
+  const noop = { value: () => {} }
 
   function dispatch() {
     for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
@@ -1384,24 +1415,26 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'typenames' implicitly has an 'any' type... Remove this comment to see the full error message
   function parseTypenames(typenames, types) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
-    return typenames
-      .trim()
-      .split(/^|\s+/)
-      .map(function (t) {
-        var name = '',
-          i = t.indexOf('.')
-        if (i >= 0) (name = t.slice(i + 1)), (t = t.slice(0, i))
-        if (t && !types.hasOwnProperty(t)) throw new Error('unknown type: ' + t)
-        return { type: t, name: name }
-      })
+    return (
+      typenames
+        .trim()
+        .split(/^|\s+/)
+        // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
+        .map(function (t) {
+          let name = '',
+            i = t.indexOf('.')
+          if (i >= 0) (name = t.slice(i + 1)), (t = t.slice(0, i))
+          if (t && !types.hasOwnProperty(t)) throw new Error('unknown type: ' + t)
+          return { type: t, name: name }
+        })
+    )
   }
 
   Dispatch.prototype = dispatch.prototype = {
     constructor: Dispatch,
     // @ts-expect-error TS(7006) FIXME: Parameter 'typename' implicitly has an 'any' type.
     on: function (typename, callback) {
-      var _ = this._,
+      let _ = this._,
         T = parseTypenames(typename + '', _),
         t,
         i = -1,
@@ -1424,10 +1457,10 @@
       return this
     },
     copy: function () {
-      var copy = {},
+      const copy = {},
         _ = this._
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      for (var t in _) copy[t] = _[t].slice()
+      for (const t in _) copy[t] = _[t].slice()
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return new Dispatch(copy)
     },
@@ -1442,7 +1475,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
     apply: function (type, that, args) {
       if (!this._.hasOwnProperty(type)) throw new Error('unknown type: ' + type)
-      for (var t = this._[type], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args)
+      for (let t = this._[type], i = 0, n = t.length; i < n; ++i) t[i].value.apply(that, args)
     },
   }
 
@@ -1457,7 +1490,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
   function set$1(type, name, callback) {
-    for (var i = 0, n = type.length; i < n; ++i) {
+    for (let i = 0, n = type.length; i < n; ++i) {
       if (type[i].name === name) {
         ;(type[i] = noop), (type = type.slice(0, i).concat(type.slice(i + 1)))
         break
@@ -1467,9 +1500,9 @@
     return type
   }
 
-  var xhtml = 'http://www.w3.org/1999/xhtml'
+  const xhtml = 'http://www.w3.org/1999/xhtml'
 
-  var namespaces = {
+  const namespaces = {
     svg: 'http://www.w3.org/2000/svg',
     xhtml: xhtml,
     xlink: 'http://www.w3.org/1999/xlink',
@@ -1479,7 +1512,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function namespace(name) {
-    var prefix = (name += ''),
+    let prefix = (name += ''),
       i = prefix.indexOf(':')
     if (i >= 0 && (prefix = name.slice(0, i)) !== 'xmlns') name = name.slice(i + 1)
     // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
@@ -1490,7 +1523,7 @@
   function creatorInherit(name) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var document = this.ownerDocument,
+      const document = this.ownerDocument,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         uri = this.namespaceURI
       return uri === xhtml && document.documentElement.namespaceURI === xhtml
@@ -1509,7 +1542,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function creator(name) {
-    var fullname = namespace(name)
+    const fullname = namespace(name)
     return (fullname.local ? creatorFixed : creatorInherit)(fullname)
   }
 
@@ -1551,7 +1584,8 @@
   function array$1(x) {
     return typeof x === 'object' && 'length' in x
       ? x // Array, TypedArray, NodeList, array-like
-      : Array.from(x) // Map, Set, iterable, string, or anything else
+      : // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+        Array.from(x) // Map, Set, iterable, string, or anything else
   }
 
   function empty$1() {
@@ -1572,7 +1606,7 @@
   function arrayAll(select) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var group = select.apply(this, arguments)
+      const group = select.apply(this, arguments)
       return group == null ? [] : array$1(group)
     }
   }
@@ -1612,7 +1646,8 @@
     }
   }
 
-  var find = Array.prototype.find
+  // @ts-expect-error TS(2550) FIXME: Property 'find' does not exist on type 'any[]'. Do... Remove this comment to see the full error message
+  const find = Array.prototype.find
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'match' implicitly has an 'any' type.
   function childFind(match) {
@@ -1635,7 +1670,7 @@
     )
   }
 
-  var filter$1 = Array.prototype.filter
+  const filter$1 = Array.prototype.filter
 
   function children() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -1729,7 +1764,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function bindIndex(parent, group, enter, update, exit, data) {
-    var i = 0,
+    let i = 0,
       node,
       groupLength = group.length,
       dataLength = data.length
@@ -1757,8 +1792,9 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function bindKey(parent, group, enter, update, exit, data, key) {
-    var i,
+    let i,
       node,
+      // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
       nodeByKeyValue = new Map(),
       groupLength = group.length,
       dataLength = data.length,
@@ -1808,10 +1844,10 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function selection_data(value, key) {
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     if (!arguments.length) return Array.from(this, datum)
 
-    var bind = key ? bindKey : bindIndex,
+    const bind = key ? bindKey : bindIndex,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       parents = this._parents,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -1820,7 +1856,7 @@
     if (typeof value !== 'function') value = constant$1(value)
 
     for (var m = groups.length, update = new Array(m), enter = new Array(m), exit = new Array(m), j = 0; j < m; ++j) {
-      var parent = parents[j],
+      const parent = parents[j],
         group = groups[j],
         groupLength = group.length,
         data = array$1(value.call(parent, parent && parent.__data__, j, parents)),
@@ -1860,8 +1896,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'onenter' implicitly has an 'any' type.
   function selection_join(onenter, onupdate, onexit) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var enter = this.enter(),
+    let enter = this.enter(),
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       update = this,
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       exit = this.exit()
     enter = typeof onenter === 'function' ? onenter(enter) : enter.append(onenter + '')
     if (onupdate != null) update = onupdate(update)
@@ -1874,9 +1912,10 @@
   function selection_merge(selection) {
     if (!(selection instanceof Selection)) throw new Error('invalid merge')
 
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     for (
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       var groups0 = this._groups,
+        // @ts-expect-error TS(2339) FIXME: Property '_groups' does not exist on type '{}'.
         groups1 = selection._groups,
         m0 = groups0.length,
         m1 = groups1.length,
@@ -1912,7 +1951,7 @@
 
   function selection_order() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    for (var groups = this._groups, j = -1, m = groups.length; ++j < m; ) {
+    for (let groups = this._groups, j = -1, m = groups.length; ++j < m; ) {
       for (var group = groups[j], i = group.length - 1, next = group[i], node; --i >= 0; ) {
         if ((node = group[i])) {
           if (next && node.compareDocumentPosition(next) ^ 4) next.parentNode.insertBefore(node, next)
@@ -1959,7 +1998,7 @@
   }
 
   function selection_call() {
-    var callback = arguments[0]
+    const callback = arguments[0]
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     arguments[0] = this
     callback.apply(null, arguments)
@@ -1968,15 +2007,15 @@
   }
 
   function selection_nodes() {
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(this)
   }
 
   function selection_node() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
-      for (var group = groups[j], i = 0, n = group.length; i < n; ++i) {
-        var node = group[i]
+    for (let groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
+      for (let group = groups[j], i = 0, n = group.length; i < n; ++i) {
+        const node = group[i]
         if (node) return node
       }
     }
@@ -1999,7 +2038,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function selection_each(callback) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
+    for (let groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
       for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) {
         if ((node = group[i])) callback.call(node, node.__data__, i, group)
       }
@@ -2045,7 +2084,7 @@
   function attrFunction(name, value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (v == null) this.removeAttribute(name)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -2057,7 +2096,7 @@
   function attrFunctionNS(fullname, value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (v == null) this.removeAttributeNS(fullname.space, fullname.local)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -2067,11 +2106,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function selection_attr(name, value) {
-    var fullname = namespace(name)
+    const fullname = namespace(name)
 
     if (arguments.length < 2) {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var node = this.node()
+      const node = this.node()
       return fullname.local ? node.getAttributeNS(fullname.space, fullname.local) : node.getAttribute(fullname)
     }
 
@@ -2120,7 +2159,7 @@
   function styleFunction(name, value, priority) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (v == null) this.style.removeProperty(name)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -2168,7 +2207,7 @@
   function propertyFunction(name, value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (v == null) delete this[name]
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -2212,7 +2251,7 @@
   ClassList.prototype = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
     add: function (name) {
-      var i = this._names.indexOf(name)
+      const i = this._names.indexOf(name)
       if (i < 0) {
         this._names.push(name)
         this._node.setAttribute('class', this._names.join(' '))
@@ -2220,7 +2259,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
     remove: function (name) {
-      var i = this._names.indexOf(name)
+      const i = this._names.indexOf(name)
       if (i >= 0) {
         this._names.splice(i, 1)
         this._node.setAttribute('class', this._names.join(' '))
@@ -2234,7 +2273,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function classedAdd(node, names) {
-    var list = classList(node),
+    let list = classList(node),
       i = -1,
       n = names.length
     while (++i < n) list.add(names[i])
@@ -2242,7 +2281,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function classedRemove(node, names) {
-    var list = classList(node),
+    let list = classList(node),
       i = -1,
       n = names.length
     while (++i < n) list.remove(names[i])
@@ -2274,11 +2313,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function selection_classed(name, value) {
-    var names = classArray(name + '')
+    const names = classArray(name + '')
 
     if (arguments.length < 2) {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var list = classList(this.node()),
+      let list = classList(this.node()),
         i = -1,
         n = names.length
       while (++i < n) if (!list.contains(names[i])) return false
@@ -2306,7 +2345,7 @@
   function textFunction(value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.textContent = v == null ? '' : v
     }
@@ -2338,7 +2377,7 @@
   function htmlFunction(value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.innerHTML = v == null ? '' : v
     }
@@ -2375,7 +2414,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function selection_append(name) {
-    var create = typeof name === 'function' ? name : creator(name)
+    const create = typeof name === 'function' ? name : creator(name)
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this.select(function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -2389,7 +2428,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function selection_insert(name, before) {
-    var create = typeof name === 'function' ? name : creator(name),
+    const create = typeof name === 'function' ? name : creator(name),
       select = before == null ? constantNull : typeof before === 'function' ? before : selector(before)
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this.select(function () {
@@ -2400,7 +2439,7 @@
 
   function remove() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var parent = this.parentNode
+    const parent = this.parentNode
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (parent) parent.removeChild(this)
   }
@@ -2412,7 +2451,8 @@
 
   function selection_cloneShallow() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var clone = this.cloneNode(false),
+    const clone = this.cloneNode(false),
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       parent = this.parentNode
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return parent ? parent.insertBefore(clone, this.nextSibling) : clone
@@ -2420,7 +2460,8 @@
 
   function selection_cloneDeep() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var clone = this.cloneNode(true),
+    const clone = this.cloneNode(true),
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       parent = this.parentNode
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return parent ? parent.insertBefore(clone, this.nextSibling) : clone
@@ -2452,23 +2493,25 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'typenames' implicitly has an 'any' type... Remove this comment to see the full error message
   function parseTypenames$1(typenames) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
-    return typenames
-      .trim()
-      .split(/^|\s+/)
-      .map(function (t) {
-        var name = '',
-          i = t.indexOf('.')
-        if (i >= 0) (name = t.slice(i + 1)), (t = t.slice(0, i))
-        return { type: t, name: name }
-      })
+    return (
+      typenames
+        .trim()
+        .split(/^|\s+/)
+        // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
+        .map(function (t) {
+          let name = '',
+            i = t.indexOf('.')
+          if (i >= 0) (name = t.slice(i + 1)), (t = t.slice(0, i))
+          return { type: t, name: name }
+        })
+    )
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'typename' implicitly has an 'any' type.
   function onRemove(typename) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var on = this.__on
+      const on = this.__on
       if (!on) return
       for (var j = 0, i = -1, m = on.length, o; j < m; ++j) {
         if (((o = on[j]), (!typename.type || o.type === typename.type) && o.name === typename.name)) {
@@ -2488,11 +2531,11 @@
   function onAdd(typename, value, options) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var on = this.__on,
+      let on = this.__on,
         o,
         listener = contextListener(value)
       if (on)
-        for (var j = 0, m = on.length; j < m; ++j) {
+        for (let j = 0, m = on.length; j < m; ++j) {
           if ((o = on[j]).type === typename.type && o.name === typename.name) {
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             this.removeEventListener(o.type, o.listener, o.options)
@@ -2513,7 +2556,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'typename' implicitly has an 'any' type.
   function selection_on(typename, value, options) {
-    var typenames = parseTypenames$1(typename + ''),
+    let typenames = parseTypenames$1(typename + ''),
       i,
       n = typenames.length,
       t
@@ -2541,7 +2584,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function dispatchEvent(node, type, params) {
-    var window = defaultView(node),
+    let window = defaultView(node),
       event = window.CustomEvent
 
     if (typeof event === 'function') {
@@ -2579,14 +2622,14 @@
 
   function* selection_iterator() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
+    for (let groups = this._groups, j = 0, m = groups.length; j < m; ++j) {
       for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) {
         if ((node = group[i])) yield node
       }
     }
   }
 
-  var root = [null]
+  const root = [null]
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'groups' implicitly has an 'any' type.
   function Selection(groups, parents) {
@@ -2642,6 +2685,7 @@
     datum: selection_datum,
     on: selection_on,
     dispatch: selection_dispatch,
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     [Symbol.iterator]: selection_iterator,
   }
 
@@ -2659,7 +2703,7 @@
     return select(creator(name).call(document.documentElement))
   }
 
-  var nextId = 0
+  let nextId = 0
 
   function local() {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -2675,7 +2719,7 @@
     constructor: Local,
     // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
     get: function (node) {
-      var id = this._
+      const id = this._
       while (!(id in node)) if (!(node = node.parentNode)) return
       return node[id]
     },
@@ -2704,15 +2748,15 @@
     event = sourceEvent(event)
     if (node === undefined) node = event.currentTarget
     if (node) {
-      var svg = node.ownerSVGElement || node
+      const svg = node.ownerSVGElement || node
       if (svg.createSVGPoint) {
-        var point = svg.createSVGPoint()
+        let point = svg.createSVGPoint()
         ;(point.x = event.clientX), (point.y = event.clientY)
         point = point.matrixTransform(node.getScreenCTM().inverse())
         return [point.x, point.y]
       }
       if (node.getBoundingClientRect) {
-        var rect = node.getBoundingClientRect()
+        const rect = node.getBoundingClientRect()
         return [event.clientX - rect.left - node.clientLeft, event.clientY - rect.top - node.clientTop]
       }
     }
@@ -2727,6 +2771,7 @@
       if (node === undefined) node = events.currentTarget
       events = events.touches || [events]
     }
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(events, event => pointer(event, node))
   }
 
@@ -2752,7 +2797,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'view' implicitly has an 'any' type.
   function dragDisable(view) {
-    var root = view.document.documentElement,
+    const root = view.document.documentElement,
       selection = select(view).on('dragstart.drag', noevent, true)
     if ('onselectstart' in root) {
       selection.on('selectstart.drag', noevent, true)
@@ -2764,7 +2809,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'view' implicitly has an 'any' type.
   function yesdrag(view, noclick) {
-    var root = view.document.documentElement,
+    const root = view.document.documentElement,
       selection = select(view).on('dragstart.drag', null)
     if (noclick) {
       selection.on('click.drag', noevent, true)
@@ -2781,10 +2826,10 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var constant$2 = x => () => x
+  const constant$2 = x => () => x
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
   function DragEvent(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
     type,
     {
       // @ts-expect-error TS(7031) FIXME: Binding element 'sourceEvent' implicitly has an 'a... Remove this comment to see the full error message
@@ -2799,8 +2844,11 @@
       active,
       // @ts-expect-error TS(7031) FIXME: Binding element 'x' implicitly has an 'any' type.
       x,
+      // @ts-expect-error TS(7031) FIXME: Binding element 'y' implicitly has an 'any' type.
       y,
+      // @ts-expect-error TS(7031) FIXME: Binding element 'dx' implicitly has an 'any' type.
       dx,
+      // @ts-expect-error TS(7031) FIXME: Binding element 'dy' implicitly has an 'any' type.
       dy,
       // @ts-expect-error TS(7031) FIXME: Binding element 'dispatch' implicitly has an 'any'... Remove this comment to see the full error message
       dispatch,
@@ -2823,7 +2871,7 @@
   }
 
   DragEvent.prototype.on = function () {
-    var value = this._.on.apply(this._, arguments)
+    const value = this._.on.apply(this._, arguments)
     return value === this._ ? this : value
   }
 
@@ -2849,7 +2897,7 @@
   }
 
   function drag() {
-    var filter = defaultFilter,
+    let filter = defaultFilter,
       container = defaultContainer,
       subject = defaultSubject,
       touchable = defaultTouchable,
@@ -2884,7 +2932,7 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'touchending' implicitly has an 'any' typ... Remove this comment to see the full error message
       if (touchending || !filter.call(this, event, d)) return
       // @ts-expect-error TS(2554) FIXME: Expected 6 arguments, but got 5.
-      var gesture = beforestart(this, container.call(this, event, d), event, d, 'mouse')
+      const gesture = beforestart(this, container.call(this, event, d), event, d, 'mouse')
       if (!gesture) return
       select(event.view).on('mousemove.drag', mousemoved, true).on('mouseup.drag', mouseupped, true)
       dragDisable(event.view)
@@ -2902,7 +2950,8 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'mousemoving' implicitly has an 'any' typ... Remove this comment to see the full error message
       if (!mousemoving) {
         // @ts-expect-error TS(7005) FIXME: Variable 'mousedownx' implicitly has an 'any' type... Remove this comment to see the full error message
-        var dx = event.clientX - mousedownx,
+        const dx = event.clientX - mousedownx,
+          // @ts-expect-error TS(7005) FIXME: Variable 'mousedowny' implicitly has an 'any' type... Remove this comment to see the full error message
           dy = event.clientY - mousedowny
         mousemoving = dx * dx + dy * dy > clickDistance2
       }
@@ -2924,7 +2973,7 @@
     function touchstarted(event, d) {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!filter.call(this, event, d)) return
-      var touches = event.changedTouches,
+      let touches = event.changedTouches,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         c = container.call(this, event, d),
         n = touches.length,
@@ -2942,7 +2991,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
     function touchmoved(event) {
-      var touches = event.changedTouches,
+      let touches = event.changedTouches,
         n = touches.length,
         i,
         gesture
@@ -2958,7 +3007,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
     function touchended(event) {
-      var touches = event.changedTouches,
+      let touches = event.changedTouches,
         n = touches.length,
         i,
         gesture
@@ -2979,18 +3028,19 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
     function beforestart(that, container, event, d, identifier, touch) {
-      var dispatch = listeners.copy(),
-        // @ts-expect-error TS(7034) FIXME: Variable 'dx' implicitly has type 'any' in some lo... Remove this comment to see the full error message
+      let dispatch = listeners.copy(),
         p = pointer(touch || event, container),
+        // @ts-expect-error TS(7034) FIXME: Variable 'dx' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         dx,
+        // @ts-expect-error TS(7034) FIXME: Variable 'dy' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         dy,
         // @ts-expect-error TS(7034) FIXME: Variable 's' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         s
 
-      // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       if (
         (s = subject.call(
           that,
+          // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           new DragEvent('beforestart', {
             sourceEvent: event,
             target: drag,
@@ -3012,15 +3062,15 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
       return function gesture(type, event, touch) {
-        var p0 = p,
+        let p0 = p,
           n
         switch (type) {
-          // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           case 'start':
+            // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             ;(gestures[identifier] = gesture), (n = active++)
             break
-          // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           case 'end':
+            // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
             delete gestures[identifier], --active // nobreak
           case 'drag':
             ;(p = pointer(touch || event, container)), (n = active)
@@ -3071,7 +3121,7 @@
     }
 
     drag.on = function () {
-      var value = listeners.on.apply(listeners, arguments)
+      const value = listeners.on.apply(listeners, arguments)
       return value === listeners ? drag : value
     }
 
@@ -3091,17 +3141,17 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function extend(parent, definition) {
-    var prototype = Object.create(parent.prototype)
-    for (var key in definition) prototype[key] = definition[key]
+    const prototype = Object.create(parent.prototype)
+    for (const key in definition) prototype[key] = definition[key]
     return prototype
   }
 
   function Color() {}
 
-  var darker = 0.7
-  var brighter = 1 / darker
+  const darker = 0.7
+  const brighter = 1 / darker
 
-  var reI = '\\s*([+-]?\\d+)\\s*',
+  const reI = '\\s*([+-]?\\d+)\\s*',
     reN = '\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)\\s*',
     reP = '\\s*([+-]?\\d*\\.?\\d+(?:[eE][+-]?\\d+)?)%\\s*',
     reHex = /^#([0-9a-f]{3,8})$/,
@@ -3112,7 +3162,7 @@
     reHslPercent = new RegExp('^hsl\\(' + [reN, reP, reP] + '\\)$'),
     reHslaPercent = new RegExp('^hsla\\(' + [reN, reP, reP, reN] + '\\)$')
 
-  var named = {
+  const named = {
     aliceblue: 0xf0f8ff,
     antiquewhite: 0xfaebd7,
     aqua: 0x00ffff,
@@ -3266,6 +3316,7 @@
   define(Color, color, {
     // @ts-expect-error TS(7006) FIXME: Parameter 'channels' implicitly has an 'any' type.
     copy: function (channels) {
+      // @ts-expect-error TS(2550) FIXME: Property 'assign' does not exist on type 'ObjectCo... Remove this comment to see the full error message
       return Object.assign(new this.constructor(), this, channels)
     },
     displayable: function () {
@@ -3295,16 +3346,16 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'format' implicitly has an 'any' type.
   function color(format) {
-    var m, l
+    let m, l
     format = (format + '').trim().toLowerCase()
     return (m = reHex.exec(format))
       ? ((l = m[1].length),
         (m = parseInt(m[1], 16)),
         l === 6
           ? rgbn(m) // #ff0000
-          : // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-          l === 3
-          ? new Rgb(
+          : l === 3
+          ? // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+            new Rgb(
               ((m >> 8) & 0xf) | ((m >> 4) & 0xf0),
               ((m >> 4) & 0xf) | (m & 0xf0),
               ((m & 0xf) << 4) | (m & 0xf),
@@ -3320,29 +3371,29 @@
               (((m & 0xf) << 4) | (m & 0xf)) / 0xff
             ) // #f000
           : null) // invalid hex
-      : // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-      (m = reRgbInteger.exec(format))
-      ? new Rgb(m[1], m[2], m[3], 1) // rgb(255, 0, 0)
-      : // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-      (m = reRgbPercent.exec(format))
-      ? new Rgb((m[1] * 255) / 100, (m[2] * 255) / 100, (m[3] * 255) / 100, 1) // rgb(100%, 0%, 0%)
+      : (m = reRgbInteger.exec(format))
+      ? // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+        new Rgb(m[1], m[2], m[3], 1) // rgb(255, 0, 0)
+      : (m = reRgbPercent.exec(format))
+      ? // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+        new Rgb((m[1] * 255) / 100, (m[2] * 255) / 100, (m[3] * 255) / 100, 1) // rgb(100%, 0%, 0%)
       : (m = reRgbaInteger.exec(format))
       ? rgba(m[1], m[2], m[3], m[4]) // rgba(255, 0, 0, 1)
-      : // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-      (m = reRgbaPercent.exec(format))
-      ? rgba((m[1] * 255) / 100, (m[2] * 255) / 100, (m[3] * 255) / 100, m[4]) // rgb(100%, 0%, 0%, 1)
-      : // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-      (m = reHslPercent.exec(format))
-      ? hsla(m[1], m[2] / 100, m[3] / 100, 1) // hsl(120, 50%, 50%)
-      : // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-      (m = reHslaPercent.exec(format))
-      ? hsla(m[1], m[2] / 100, m[3] / 100, m[4]) // hsla(120, 50%, 50%, 1)
-      : // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      named.hasOwnProperty(format)
-      ? rgbn(named[format]) // eslint-disable-line no-prototype-builtins
-      : // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-      format === 'transparent'
-      ? new Rgb(NaN, NaN, NaN, 0)
+      : (m = reRgbaPercent.exec(format))
+      ? // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+        rgba((m[1] * 255) / 100, (m[2] * 255) / 100, (m[3] * 255) / 100, m[4]) // rgb(100%, 0%, 0%, 1)
+      : (m = reHslPercent.exec(format))
+      ? // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+        hsla(m[1], m[2] / 100, m[3] / 100, 1) // hsl(120, 50%, 50%)
+      : (m = reHslaPercent.exec(format))
+      ? // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+        hsla(m[1], m[2] / 100, m[3] / 100, m[4]) // hsla(120, 50%, 50%, 1)
+      : named.hasOwnProperty(format)
+      ? // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        rgbn(named[format]) // eslint-disable-line no-prototype-builtins
+      : format === 'transparent'
+      ? // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+        new Rgb(NaN, NaN, NaN, 0)
       : null
   }
 
@@ -3432,7 +3483,7 @@
 
   function rgb_formatRgb() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var a = this.opacity
+    let a = this.opacity
     a = isNaN(a) ? 1 : Math.max(0, Math.min(1, a))
     return (
       (a === 1 ? 'rgb(' : 'rgba(') +
@@ -3472,7 +3523,7 @@
     if (!o) return new Hsl()
     if (o instanceof Hsl) return o
     o = o.rgb()
-    var r = o.r / 255,
+    let r = o.r / 255,
       g = o.g / 255,
       b = o.b / 255,
       min = Math.min(r, g, b),
@@ -3530,7 +3581,7 @@
       },
       rgb: function () {
         // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-        var h = (this.h % 360) + (this.h < 0) * 360,
+        const h = (this.h % 360) + (this.h < 0) * 360,
           s = isNaN(h) || isNaN(this.s) ? 0 : this.s,
           l = this.l,
           m2 = l + (l < 0.5 ? l : 1 - l) * s,
@@ -3553,7 +3604,7 @@
         )
       },
       formatHsl: function () {
-        var a = this.opacity
+        let a = this.opacity
         a = isNaN(a) ? 1 : Math.max(0, Math.min(1, a))
         return (
           (a === 1 ? 'hsl(' : 'hsla(') +
@@ -3594,7 +3645,7 @@
     if (o instanceof Lab) return new Lab(o.l, o.a, o.b, o.opacity)
     if (o instanceof Hcl) return hcl2lab(o)
     if (!(o instanceof Rgb)) o = rgbConvert(o)
-    var r = rgb2lrgb(o.r),
+    let r = rgb2lrgb(o.r),
       g = rgb2lrgb(o.g),
       b = rgb2lrgb(o.b),
       y = xyz2lab((0.2225045 * r + 0.7168786 * g + 0.0606169 * b) / Yn),
@@ -3648,7 +3699,7 @@
         return new Lab(this.l - K * (k == null ? 1 : k), this.a, this.b, this.opacity)
       },
       rgb: function () {
-        var y = (this.l + 16) / 116,
+        let y = (this.l + 16) / 116,
           x = isNaN(this.a) ? y : y + this.a / 500,
           z = isNaN(this.b) ? y : y - this.b / 200
         x = Xn * lab2xyz(x)
@@ -3692,7 +3743,7 @@
     if (!(o instanceof Lab)) o = labConvert(o)
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     if (o.a === 0 && o.b === 0) return new Hcl(NaN, 0 < o.l && o.l < 100 ? 0 : NaN, o.l, o.opacity)
-    var h = Math.atan2(o.b, o.a) * degrees
+    const h = Math.atan2(o.b, o.a) * degrees
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     return new Hcl(h < 0 ? h + 360 : h, Math.sqrt(o.a * o.a + o.b * o.b), o.l, o.opacity)
   }
@@ -3725,7 +3776,7 @@
   function hcl2lab(o) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     if (isNaN(o.h)) return new Lab(o.l, 0, 0, o.opacity)
-    var h = o.h * radians
+    const h = o.h * radians
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     return new Lab(o.l, Math.cos(h) * o.c, Math.sin(h) * o.c, o.opacity)
   }
@@ -3750,7 +3801,7 @@
     })
   )
 
-  var A = -0.14861,
+  const A = -0.14861,
     B = +1.78277,
     C = -0.29227,
     D = -0.90649,
@@ -3764,7 +3815,7 @@
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     if (o instanceof Cubehelix) return new Cubehelix(o.h, o.s, o.l, o.opacity)
     if (!(o instanceof Rgb)) o = rgbConvert(o)
-    var r = o.r / 255,
+    const r = o.r / 255,
       g = o.g / 255,
       b = o.b / 255,
       l = (BC_DA * b + ED * r - EB * g) / (BC_DA + ED - EB),
@@ -3811,7 +3862,7 @@
         return new Cubehelix(this.h, this.s, this.l * k, this.opacity)
       },
       rgb: function () {
-        var h = isNaN(this.h) ? 0 : (this.h + 120) * radians,
+        const h = isNaN(this.h) ? 0 : (this.h + 120) * radians,
           l = +this.l,
           a = isNaN(this.s) ? 0 : this.s * l * (1 - l),
           cosh = Math.cos(h),
@@ -3829,7 +3880,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 't1' implicitly has an 'any' type.
   function basis(t1, v0, v1, v2, v3) {
-    var t2 = t1 * t1,
+    const t2 = t1 * t1,
       t3 = t2 * t1
     return (
       ((1 - 3 * t1 + 3 * t2 - t3) * v0 + (4 - 6 * t2 + 3 * t3) * v1 + (1 + 3 * t1 + 3 * t2 - 3 * t3) * v2 + t3 * v3) / 6
@@ -3838,10 +3889,10 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function basis$1(values) {
-    var n = values.length - 1
+    const n = values.length - 1
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
-      var i = t <= 0 ? (t = 0) : t >= 1 ? ((t = 1), n - 1) : Math.floor(t * n),
+      const i = t <= 0 ? (t = 0) : t >= 1 ? ((t = 1), n - 1) : Math.floor(t * n),
         v1 = values[i],
         v2 = values[i + 1],
         v0 = i > 0 ? values[i - 1] : 2 * v1 - v2,
@@ -3852,10 +3903,10 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
   function basisClosed(values) {
-    var n = values.length
+    const n = values.length
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
-      var i = Math.floor(((t %= 1) < 0 ? ++t : t) * n),
+      const i = Math.floor(((t %= 1) < 0 ? ++t : t) * n),
         v0 = values[(i + n - 1) % n],
         v1 = values[i % n],
         v2 = values[(i + 1) % n],
@@ -3865,7 +3916,7 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var constant$3 = x => () => x
+  const constant$3 = x => () => x
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function linear(a, d) {
@@ -3877,11 +3928,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function exponential(a, b, y) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return (
       (a = Math.pow(a, y)),
       (b = Math.pow(b, y) - a),
       (y = 1 / y),
+      // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
       function (t) {
         return Math.pow(a + t * b, y)
       }
@@ -3890,33 +3941,33 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function hue(a, b) {
-    var d = b - a
+    const d = b - a
     return d ? linear(a, d > 180 || d < -180 ? d - 360 * Math.round(d / 360) : d) : constant$3(isNaN(a) ? b : a)
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
   function gamma(y) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     return (y = +y) === 1
       ? nogamma
-      : function (a, b) {
+      : // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
+        function (a, b) {
           return b - a ? exponential(a, b, y) : constant$3(isNaN(a) ? b : a)
         }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function nogamma(a, b) {
-    var d = b - a
+    const d = b - a
     return d ? linear(a, d) : constant$3(isNaN(a) ? b : a)
   }
 
-  var interpolateRgb = (function rgbGamma(y) {
-    var color = gamma(y)
+  const interpolateRgb = (function rgbGamma(y) {
+    const color = gamma(y)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function rgb$1(start, end) {
       // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
-      var r = color((start = rgb(start)).r, (end = rgb(end)).r),
+      const r = color((start = rgb(start)).r, (end = rgb(end)).r),
         g = color(start.g, end.g),
         b = color(start.b, end.b),
         opacity = nogamma(start.opacity, end.opacity)
@@ -3939,12 +3990,12 @@
   function rgbSpline(spline) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'colors' implicitly has an 'any' type.
     return function (colors) {
-      var n = colors.length,
+      let n = colors.length,
         r = new Array(n),
         g = new Array(n),
         b = new Array(n),
-        // @ts-expect-error TS(7034) FIXME: Variable 'color' implicitly has type 'any' in some... Remove this comment to see the full error message
         i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'color' implicitly has type 'any' in some... Remove this comment to see the full error message
         color
       for (i = 0; i < n; ++i) {
         // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
@@ -3971,13 +4022,13 @@
     }
   }
 
-  var rgbBasis = rgbSpline(basis$1)
-  var rgbBasisClosed = rgbSpline(basisClosed)
+  const rgbBasis = rgbSpline(basis$1)
+  const rgbBasisClosed = rgbSpline(basisClosed)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function numberArray(a, b) {
     if (!b) b = []
-    var n = a ? Math.min(b.length, a.length) : 0,
+    let n = a ? Math.min(b.length, a.length) : 0,
       c = b.slice(),
       i
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -3999,7 +4050,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function genericArray(a, b) {
-    var nb = b ? b.length : 0,
+    let nb = b ? b.length : 0,
       na = a ? Math.min(nb, a.length) : 0,
       x = new Array(na),
       c = new Array(nb),
@@ -4017,11 +4068,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function date(a, b) {
-    var d = new Date()
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
+    const d = new Date()
     return (
       (a = +a),
       (b = +b),
+      // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
       function (t) {
         return d.setTime(a * (1 - t) + b * t), d
       }
@@ -4030,10 +4081,10 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolateNumber(a, b) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return (
       (a = +a),
       (b = +b),
+      // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
       function (t) {
         return a * (1 - t) + b * t
       }
@@ -4042,7 +4093,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function object(a, b) {
-    var i = {},
+    let i = {},
       c = {},
       k
 
@@ -4067,7 +4118,7 @@
     }
   }
 
-  var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
+  const reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
     reB = new RegExp(reA.source, 'g')
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
@@ -4087,7 +4138,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolateString(a, b) {
-    var bi = (reA.lastIndex = reB.lastIndex = 0), // scan index for next number in b
+    let bi = (reA.lastIndex = reB.lastIndex = 0), // scan index for next number in b
       am, // current match in a
       bm, // current match in b
       bs, // string preceding current number in b, if any
@@ -4133,8 +4184,8 @@
       ? q[0]
         ? one(q[0].x)
         : zero(b)
-      : // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
-        ((b = q.length),
+      : ((b = q.length),
+        // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
         function (t) {
           // @ts-expect-error TS(7005) FIXME: Variable 'q' implicitly has an 'any[]' type.
           for (var i = 0, o; i < b; ++i) s[(o = q[i]).i] = o.x(t)
@@ -4145,7 +4196,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolate(a, b) {
-    var t = typeof b,
+    let t = typeof b,
       c
     return b == null || t === 'boolean'
       ? constant$3(b)
@@ -4170,7 +4221,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'range' implicitly has an 'any' type.
   function discrete(range) {
-    var n = range.length
+    const n = range.length
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
       return range[Math.max(0, Math.min(n - 1, Math.floor(t * n)))]
@@ -4179,29 +4230,29 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function hue$1(a, b) {
-    var i = hue(+a, +b)
+    const i = hue(+a, +b)
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
-      var x = i(t)
+      const x = i(t)
       return x - 360 * Math.floor(x / 360)
     }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolateRound(a, b) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return (
       (a = +a),
       (b = +b),
+      // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
       function (t) {
         return Math.round(a * (1 - t) + b * t)
       }
     )
   }
 
-  var degrees$1 = 180 / Math.PI
+  const degrees$1 = 180 / Math.PI
 
-  var identity$2 = {
+  const identity$2 = {
     translateX: 0,
     translateY: 0,
     rotate: 0,
@@ -4212,7 +4263,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function decompose(a, b, c, d, e, f) {
-    var scaleX, scaleY, skewX
+    let scaleX, scaleY, skewX
     if ((scaleX = Math.sqrt(a * a + b * b))) (a /= scaleX), (b /= scaleX)
     if ((skewX = a * c + b * d)) (c -= a * skewX), (d -= b * skewX)
     if ((scaleY = Math.sqrt(c * c + d * d))) (c /= scaleY), (d /= scaleY), (skewX /= scaleY)
@@ -4228,7 +4279,7 @@
   }
 
   // @ts-expect-error TS(7034) FIXME: Variable 'svgNode' implicitly has type 'any' in so... Remove this comment to see the full error message
-  var svgNode
+  let svgNode
 
   /* eslint-disable no-undef */
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
@@ -4260,7 +4311,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'xa' implicitly has an 'any' type.
     function translate(xa, ya, xb, yb, s, q) {
       if (xa !== xb || ya !== yb) {
-        var i = s.push('translate(', null, pxComma, null, pxParen)
+        const i = s.push('translate(', null, pxComma, null, pxParen)
         q.push({ i: i - 4, x: interpolateNumber(xa, xb) }, { i: i - 2, x: interpolateNumber(ya, yb) })
       } else if (xb || yb) {
         s.push('translate(' + xb + pxComma + yb + pxParen)
@@ -4290,7 +4341,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'xa' implicitly has an 'any' type.
     function scale(xa, ya, xb, yb, s, q) {
       if (xa !== xb || ya !== yb) {
-        var i = s.push(pop(s) + 'scale(', null, ',', null, ')')
+        const i = s.push(pop(s) + 'scale(', null, ',', null, ')')
         q.push({ i: i - 4, x: interpolateNumber(xa, xb) }, { i: i - 2, x: interpolateNumber(ya, yb) })
       } else if (xb !== 1 || yb !== 1) {
         s.push(pop(s) + 'scale(' + xb + ',' + yb + ')')
@@ -4300,7 +4351,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     return function (a, b) {
       // @ts-expect-error TS(7034) FIXME: Variable 's' implicitly has type 'any[]' in some l... Remove this comment to see the full error message
-      var s = [], // string constants and placeholders
+      const s = [], // string constants and placeholders
         // @ts-expect-error TS(7034) FIXME: Variable 'q' implicitly has type 'any[]' in some l... Remove this comment to see the full error message
         q = [] // number interpolators
       ;(a = parse(a)), (b = parse(b))
@@ -4315,7 +4366,7 @@
       a = b = null // gc
       // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
       return function (t) {
-        var i = -1,
+        let i = -1,
           n = q.length,
           o
         // @ts-expect-error TS(7005) FIXME: Variable 'q' implicitly has an 'any[]' type.
@@ -4326,10 +4377,10 @@
     }
   }
 
-  var interpolateTransformCss = interpolateTransform(parseCss, 'px, ', 'px)', 'deg)')
-  var interpolateTransformSvg = interpolateTransform(parseSvg, ', ', ')', ')')
+  const interpolateTransformCss = interpolateTransform(parseCss, 'px, ', 'px)', 'deg)')
+  const interpolateTransformSvg = interpolateTransform(parseSvg, ', ', ')', ')')
 
-  var epsilon2 = 1e-12
+  const epsilon2 = 1e-12
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function cosh(x) {
@@ -4346,12 +4397,12 @@
     return ((x = Math.exp(2 * x)) - 1) / (x + 1)
   }
 
-  var interpolateZoom = (function zoomRho(rho, rho2, rho4) {
+  const interpolateZoom = (function zoomRho(rho, rho2, rho4) {
     // p0 = [ux0, uy0, w0]
     // p1 = [ux1, uy1, w1]
     // @ts-expect-error TS(7006) FIXME: Parameter 'p0' implicitly has an 'any' type.
     function zoom(p0, p1) {
-      var ux0 = p0[0],
+      let ux0 = p0[0],
         uy0 = p0[1],
         w0 = p0[2],
         ux1 = p1[0],
@@ -4380,7 +4431,7 @@
 
       // General case.
       else {
-        var d1 = Math.sqrt(d2),
+        const d1 = Math.sqrt(d2),
           b0 = (w1 * w1 - w0 * w0 + rho4 * d2) / (2 * w0 * rho2 * d1),
           b1 = (w1 * w1 - w0 * w0 - rho4 * d2) / (2 * w1 * rho2 * d1),
           r0 = Math.log(Math.sqrt(b0 * b0 + 1) - b0),
@@ -4389,7 +4440,7 @@
         // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
         i = function (t) {
           // @ts-expect-error TS(7005) FIXME: Variable 'S' implicitly has an 'any' type.
-          var s = t * S,
+          const s = t * S,
             coshr0 = cosh(r0),
             u = (w0 / (rho2 * d1)) * (coshr0 * tanh(rho * s + r0) - sinh(r0))
           return [ux0 + u * dx, uy0 + u * dy, (w0 * coshr0) / cosh(rho * s + r0)]
@@ -4404,7 +4455,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     zoom.rho = function (_) {
-      var _1 = Math.max(1e-3, +_),
+      const _1 = Math.max(1e-3, +_),
         _2 = _1 * _1,
         _4 = _2 * _2
       return zoomRho(_1, _2, _4)
@@ -4418,7 +4469,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     return function (start, end) {
       // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
-      var h = hue((start = hsl(start)).h, (end = hsl(end)).h),
+      const h = hue((start = hsl(start)).h, (end = hsl(end)).h),
         s = nogamma(start.s, end.s),
         l = nogamma(start.l, end.l),
         opacity = nogamma(start.opacity, end.opacity)
@@ -4433,13 +4484,13 @@
     }
   }
 
-  var hsl$2 = hsl$1(hue)
-  var hslLong = hsl$1(nogamma)
+  const hsl$2 = hsl$1(hue)
+  const hslLong = hsl$1(nogamma)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
   function lab$1(start, end) {
     // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
-    var l = nogamma((start = lab(start)).l, (end = lab(end)).l),
+    const l = nogamma((start = lab(start)).l, (end = lab(end)).l),
       a = nogamma(start.a, end.a),
       b = nogamma(start.b, end.b),
       opacity = nogamma(start.opacity, end.opacity)
@@ -4458,7 +4509,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     return function (start, end) {
       // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
-      var h = hue((start = hcl(start)).h, (end = hcl(end)).h),
+      const h = hue((start = hcl(start)).h, (end = hcl(end)).h),
         c = nogamma(start.c, end.c),
         l = nogamma(start.l, end.l),
         opacity = nogamma(start.opacity, end.opacity)
@@ -4473,8 +4524,8 @@
     }
   }
 
-  var hcl$2 = hcl$1(hue)
-  var hclLong = hcl$1(nogamma)
+  const hcl$2 = hcl$1(hue)
+  const hclLong = hcl$1(nogamma)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'hue' implicitly has an 'any' type.
   function cubehelix$1(hue) {
@@ -4484,7 +4535,7 @@
       // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       function cubehelix$1(start, end) {
         // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 1.
-        var h = hue((start = cubehelix(start)).h, (end = cubehelix(end)).h),
+        const h = hue((start = cubehelix(start)).h, (end = cubehelix(end)).h),
           s = nogamma(start.s, end.s),
           l = nogamma(start.l, end.l),
           opacity = nogamma(start.opacity, end.opacity)
@@ -4504,32 +4555,32 @@
     })(1)
   }
 
-  var cubehelix$2 = cubehelix$1(hue)
-  var cubehelixLong = cubehelix$1(nogamma)
+  const cubehelix$2 = cubehelix$1(hue)
+  const cubehelixLong = cubehelix$1(nogamma)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'interpolate$1' implicitly has an 'any' ... Remove this comment to see the full error message
   function piecewise(interpolate$1, values) {
     if (values === undefined) (values = interpolate$1), (interpolate$1 = interpolate)
-    var i = 0,
+    let i = 0,
       n = values.length - 1,
       v = values[0],
       I = new Array(n < 0 ? 0 : n)
     while (i < n) I[i] = interpolate$1(v, (v = values[++i]))
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
-      var i = Math.max(0, Math.min(n - 1, Math.floor((t *= n))))
+      const i = Math.max(0, Math.min(n - 1, Math.floor((t *= n))))
       return I[i](t - i)
     }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'interpolator' implicitly has an 'any' t... Remove this comment to see the full error message
   function quantize(interpolator, n) {
-    var samples = new Array(n)
-    for (var i = 0; i < n; ++i) samples[i] = interpolator(i / (n - 1))
+    const samples = new Array(n)
+    for (let i = 0; i < n; ++i) samples[i] = interpolator(i / (n - 1))
     return samples
   }
 
-  var frame = 0, // is an animation frame pending?
+  let frame = 0, // is an animation frame pending?
     timeout = 0, // is a timeout pending?
     interval = 0, // are any timers active?
     pokeDelay = 1000, // how frequently we check for clock skew
@@ -4542,11 +4593,11 @@
     clockSkew = 0,
     // @ts-expect-error TS(2774) FIXME: This condition will always return true since this ... Remove this comment to see the full error message
     clock = typeof performance === 'object' && performance.now ? performance : Date,
-    // @ts-expect-error TS(7006) FIXME: Parameter 'f' implicitly has an 'any' type.
     setFrame =
       typeof window === 'object' && window.requestAnimationFrame
         ? window.requestAnimationFrame.bind(window)
-        : function (f) {
+        : // @ts-expect-error TS(7006) FIXME: Parameter 'f' implicitly has an 'any' type.
+          function (f) {
             setTimeout(f, 17)
           }
 
@@ -4599,7 +4650,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function timer(callback, delay, time) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var t = new Timer()
+    const t = new Timer()
     t.restart(callback, delay, time)
     return t
   }
@@ -4608,7 +4659,7 @@
     now() // Get the current time, if not already set.
     ++frame // Pretend we’ve set an alarm, if we haven’t already.
     // @ts-expect-error TS(7005) FIXME: Variable 'taskHead' implicitly has an 'any' type.
-    var t = taskHead,
+    let t = taskHead,
       e
     while (t) {
       if ((e = clockNow - t._time) >= 0) t._call.call(null, e)
@@ -4630,14 +4681,14 @@
   }
 
   function poke() {
-    var now = clock.now(),
+    const now = clock.now(),
       delay = now - clockLast
     if (delay > pokeDelay) (clockSkew -= delay), (clockLast = now)
   }
 
   function nap() {
-    // @ts-expect-error TS(7005) FIXME: Variable 'taskHead' implicitly has an 'any' type.
-    var t0,
+    let t0,
+      // @ts-expect-error TS(7005) FIXME: Variable 'taskHead' implicitly has an 'any' type.
       t1 = taskHead,
       t2,
       time = Infinity
@@ -4659,7 +4710,7 @@
     if (frame) return // Soonest alarm already set, or will be.
     // @ts-expect-error TS(2322) FIXME: Type 'void' is not assignable to type 'number'.
     if (timeout) timeout = clearTimeout(timeout)
-    var delay = time - clockNow // Strictly less than if we recomputed clockNow.
+    const delay = time - clockNow // Strictly less than if we recomputed clockNow.
     if (delay > 24) {
       if (time < Infinity) timeout = setTimeout(wake, time - clock.now() - clockSkew)
       // @ts-expect-error TS(2322) FIXME: Type 'void' is not assignable to type 'number'.
@@ -4673,10 +4724,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function timeout$1(callback, delay, time) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var t = new Timer()
+    const t = new Timer()
     delay = delay == null ? 0 : +delay
-    // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
     t.restart(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
       elapsed => {
         t.stop()
         callback(elapsed + delay)
@@ -4690,15 +4741,15 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function interval$1(callback, delay, time) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var t = new Timer(),
+    let t = new Timer(),
       total = delay
     if (delay == null) return t.restart(callback, delay, time), t
     t._restart = t.restart
     // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
     t.restart = function (callback, delay, time) {
       ;(delay = +delay), (time = time == null ? now() : +time)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
       t._restart(
+        // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
         function tick(elapsed) {
           elapsed += total
           t._restart(tick, (total += delay), time)
@@ -4713,21 +4764,21 @@
   }
 
   // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 4.
-  var emptyOn = dispatch('start', 'end', 'cancel', 'interrupt')
+  const emptyOn = dispatch('start', 'end', 'cancel', 'interrupt')
   // @ts-expect-error TS(7034) FIXME: Variable 'emptyTween' implicitly has type 'any[]' ... Remove this comment to see the full error message
-  var emptyTween = []
+  const emptyTween = []
 
-  var CREATED = 0
-  var SCHEDULED = 1
-  var STARTING = 2
-  var STARTED = 3
-  var RUNNING = 4
-  var ENDING = 5
-  var ENDED = 6
+  const CREATED = 0
+  const SCHEDULED = 1
+  const STARTING = 2
+  const STARTED = 3
+  const RUNNING = 4
+  const ENDING = 5
+  const ENDED = 6
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function schedule(node, name, id, index, group, timing) {
-    var schedules = node.__transition
+    const schedules = node.__transition
     if (!schedules) node.__transition = {}
     else if (id in schedules) return
     create$1(node, id, {
@@ -4748,28 +4799,28 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function init(node, id) {
-    var schedule = get$1(node, id)
+    const schedule = get$1(node, id)
     if (schedule.state > CREATED) throw new Error('too late; already scheduled')
     return schedule
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function set$2(node, id) {
-    var schedule = get$1(node, id)
+    const schedule = get$1(node, id)
     if (schedule.state > STARTED) throw new Error('too late; already running')
     return schedule
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function get$1(node, id) {
-    var schedule = node.__transition
+    let schedule = node.__transition
     if (!schedule || !(schedule = schedule[id])) throw new Error('transition not found')
     return schedule
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function create$1(node, id, self) {
-    var schedules = node.__transition,
+    let schedules = node.__transition,
       // @ts-expect-error TS(7034) FIXME: Variable 'tween' implicitly has type 'any' in some... Remove this comment to see the full error message
       tween
 
@@ -4789,7 +4840,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
     function start(elapsed) {
-      var i, j, n, o
+      let i, j, n, o
 
       // If the state is not SCHEDULED, then we previously errored on start.
       if (self.state !== SCHEDULED) return stop()
@@ -4853,7 +4904,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'elapsed' implicitly has an 'any' type.
     function tick(elapsed) {
-      var t =
+      let t =
           elapsed < self.duration
             ? self.ease.call(null, elapsed / self.duration)
             : (self.timer.restart(stop), (self.state = ENDING), 1),
@@ -4878,14 +4929,14 @@
       self.state = ENDED
       self.timer.stop()
       delete schedules[id]
-      for (var i in schedules) return // eslint-disable-line no-unused-vars
+      for (const i in schedules) return // eslint-disable-line no-unused-vars
       delete node.__transition
     }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function interrupt(node, name) {
-    var schedules = node.__transition,
+    let schedules = node.__transition,
       schedule,
       active,
       empty = true,
@@ -4922,10 +4973,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'id' implicitly has an 'any' type.
   function tweenRemove(id, name) {
     // @ts-expect-error TS(7034) FIXME: Variable 'tween0' implicitly has type 'any' in som... Remove this comment to see the full error message
-    var tween0, tween1
+    let tween0, tween1
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var schedule = set$2(this, id),
+      const schedule = set$2(this, id),
         tween = schedule.tween
 
       // If this node shared tween with the previous node,
@@ -4934,7 +4985,7 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'tween0' implicitly has an 'any' type.
       if (tween !== tween0) {
         tween1 = tween0 = tween
-        for (var i = 0, n = tween1.length; i < n; ++i) {
+        for (let i = 0, n = tween1.length; i < n; ++i) {
           if (tween1[i].name === name) {
             tween1 = tween1.slice()
             tween1.splice(i, 1)
@@ -4951,11 +5002,11 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'id' implicitly has an 'any' type.
   function tweenFunction(id, name, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 'tween0' implicitly has type 'any' in som... Remove this comment to see the full error message
-    var tween0, tween1
+    let tween0, tween1
     if (typeof value !== 'function') throw new Error()
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var schedule = set$2(this, id),
+      const schedule = set$2(this, id),
         tween = schedule.tween
 
       // If this node shared tween with the previous node,
@@ -4981,13 +5032,13 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_tween(name, value) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var id = this._id
+    const id = this._id
 
     name += ''
 
     if (arguments.length < 2) {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var tween = get$1(this.node(), id).tween
+      const tween = get$1(this.node(), id).tween
       for (var i = 0, n = tween.length, t; i < n; ++i) {
         if ((t = tween[i]).name === name) {
           return t.value
@@ -5002,11 +5053,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'transition' implicitly has an 'any' typ... Remove this comment to see the full error message
   function tweenValue(transition, name, value) {
-    var id = transition._id
+    const id = transition._id
 
     transition.each(function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var schedule = set$2(this, id)
+      const schedule = set$2(this, id)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       ;(schedule.value || (schedule.value = {}))[name] = value.apply(this, arguments)
     })
@@ -5019,7 +5070,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolate$1(a, b) {
-    var c
+    let c
     return (
       typeof b === 'number'
         ? interpolateNumber
@@ -5050,18 +5101,19 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function attrConstant$1(name, interpolate, value1) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       string1 = value1 + '',
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0 = this.getAttribute(name)
+      const string0 = this.getAttribute(name)
       return string0 === string1
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : (interpolate0 = interpolate((string00 = string0), value1))
     }
   }
@@ -5069,18 +5121,19 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'fullname' implicitly has an 'any' type.
   function attrConstantNS$1(fullname, interpolate, value1) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       string1 = value1 + '',
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0 = this.getAttributeNS(fullname.space, fullname.local)
+      const string0 = this.getAttributeNS(fullname.space, fullname.local)
       return string0 === string1
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : (interpolate0 = interpolate((string00 = string0), value1))
     }
   }
@@ -5088,14 +5141,14 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function attrFunction$1(name, interpolate, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       // @ts-expect-error TS(7034) FIXME: Variable 'string10' implicitly has type 'any' in s... Remove this comment to see the full error message
       string10,
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0,
+      let string0,
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         value1 = value(this),
         string1
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5107,7 +5160,8 @@
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00 && string1 === string10
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : ((string10 = string1), (interpolate0 = interpolate((string00 = string0), value1)))
     }
   }
@@ -5115,14 +5169,14 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'fullname' implicitly has an 'any' type.
   function attrFunctionNS$1(fullname, interpolate, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       // @ts-expect-error TS(7034) FIXME: Variable 'string10' implicitly has type 'any' in s... Remove this comment to see the full error message
       string10,
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0,
+      let string0,
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         value1 = value(this),
         string1
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5134,14 +5188,15 @@
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00 && string1 === string10
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : ((string10 = string1), (interpolate0 = interpolate((string00 = string0), value1)))
     }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_attr(name, value) {
-    var fullname = namespace(name),
+    const fullname = namespace(name),
       i = fullname === 'transform' ? interpolateTransformSvg : interpolate$1
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this.attrTween(
@@ -5176,10 +5231,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'fullname' implicitly has an 'any' type.
   function attrTweenNS(fullname, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 't0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-    var t0, i0
+    let t0, i0
     function tween() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var i = value.apply(this, arguments)
+      const i = value.apply(this, arguments)
       // @ts-expect-error TS(7005) FIXME: Variable 'i0' implicitly has an 'any' type.
       if (i !== i0) t0 = (i0 = i) && attrInterpolateNS(fullname, i)
       // @ts-expect-error TS(7005) FIXME: Variable 't0' implicitly has an 'any' type.
@@ -5192,10 +5247,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function attrTween(name, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 't0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-    var t0, i0
+    let t0, i0
     function tween() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var i = value.apply(this, arguments)
+      const i = value.apply(this, arguments)
       // @ts-expect-error TS(7005) FIXME: Variable 'i0' implicitly has an 'any' type.
       if (i !== i0) t0 = (i0 = i) && attrInterpolate(name, i)
       // @ts-expect-error TS(7005) FIXME: Variable 't0' implicitly has an 'any' type.
@@ -5207,13 +5262,13 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_attrTween(name, value) {
-    var key = 'attr.' + name
+    let key = 'attr.' + name
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (arguments.length < 2) return (key = this.tween(key)) && key._value
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (value == null) return this.tween(key, null)
     if (typeof value !== 'function') throw new Error()
-    var fullname = namespace(name)
+    const fullname = namespace(name)
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this.tween(key, (fullname.local ? attrTweenNS : attrTween)(fullname, value))
   }
@@ -5240,7 +5295,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function transition_delay(value) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var id = this._id
+    const id = this._id
 
     return arguments.length
       ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5271,7 +5326,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function transition_duration(value) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var id = this._id
+    const id = this._id
 
     return arguments.length
       ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5292,7 +5347,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function transition_ease(value) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var id = this._id
+    const id = this._id
 
     return arguments.length
       ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5305,7 +5360,7 @@
   function easeVarying(id, value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var v = value.apply(this, arguments)
+      const v = value.apply(this, arguments)
       if (typeof v !== 'function') throw new Error()
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       set$2(this, id).ease = v
@@ -5342,8 +5397,8 @@
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (transition._id !== this._id) throw new Error()
 
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     for (
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       var groups0 = this._groups,
         groups1 = transition._groups,
         m0 = groups0.length,
@@ -5384,7 +5439,7 @@
       .trim()
       .split(/^|\s+/)
       .every(function (t) {
-        var i = t.indexOf('.')
+        const i = t.indexOf('.')
         if (i >= 0) t = t.slice(0, i)
         return !t || t === 'start'
       })
@@ -5393,12 +5448,13 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'id' implicitly has an 'any' type.
   function onFunction(id, name, listener) {
     // @ts-expect-error TS(7034) FIXME: Variable 'on0' implicitly has type 'any' in some l... Remove this comment to see the full error message
-    var on0,
+    let on0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'on1' implicitly has type 'any' in some l... Remove this comment to see the full error message
       on1,
       sit = start(name) ? init : set$2
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var schedule = sit(this, id),
+      const schedule = sit(this, id),
         on = schedule.on
 
       // If this node shared a dispatch with the previous node,
@@ -5415,7 +5471,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_on(name, listener) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var id = this._id
+    const id = this._id
 
     return arguments.length < 2
       ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5428,9 +5484,9 @@
   function removeFunction(id) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var parent = this.parentNode
+      const parent = this.parentNode
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      for (var i in this.__transition) if (+i !== id) return
+      for (const i in this.__transition) if (+i !== id) return
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (parent) parent.removeChild(this)
     }
@@ -5444,7 +5500,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'select' implicitly has an 'any' type.
   function transition_select(select) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var name = this._name,
+    const name = this._name,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       id = this._id
 
@@ -5472,7 +5528,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'select' implicitly has an 'any' type.
   function transition_selectAll(select) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var name = this._name,
+    const name = this._name,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       id = this._id
 
@@ -5505,7 +5561,7 @@
     return new Transition(subgroups, parents, name, id)
   }
 
-  var Selection$1 = selection.prototype.constructor
+  const Selection$1 = selection.prototype.constructor
 
   function transition_selection() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5515,21 +5571,22 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function styleNull(name, interpolate) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       // @ts-expect-error TS(7034) FIXME: Variable 'string10' implicitly has type 'any' in s... Remove this comment to see the full error message
       string10,
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0 = styleValue(this, name),
+      const string0 = styleValue(this, name),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         string1 = (this.style.removeProperty(name), styleValue(this, name))
       return string0 === string1
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00 && string1 === string10
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : (interpolate0 = interpolate((string00 = string0), (string10 = string1)))
     }
   }
@@ -5545,18 +5602,19 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function styleConstant$1(name, interpolate, value1) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       string1 = value1 + '',
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0 = styleValue(this, name)
+      const string0 = styleValue(this, name)
       return string0 === string1
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : (interpolate0 = interpolate((string00 = string0), value1))
     }
   }
@@ -5564,14 +5622,14 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function styleFunction$1(name, interpolate, value) {
     // @ts-expect-error TS(7034) FIXME: Variable 'string00' implicitly has type 'any' in s... Remove this comment to see the full error message
-    var string00,
+    let string00,
       // @ts-expect-error TS(7034) FIXME: Variable 'string10' implicitly has type 'any' in s... Remove this comment to see the full error message
       string10,
       // @ts-expect-error TS(7034) FIXME: Variable 'interpolate0' implicitly has type 'any' ... Remove this comment to see the full error message
       interpolate0
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var string0 = styleValue(this, name),
+      let string0 = styleValue(this, name),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         value1 = value(this),
         string1 = value1 + ''
@@ -5581,7 +5639,8 @@
         ? null
         : // @ts-expect-error TS(7005) FIXME: Variable 'string00' implicitly has an 'any' type.
         string0 === string00 && string1 === string10
-        ? interpolate0
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'interpolate0' implicitly has an 'any' ty... Remove this comment to see the full error message
+          interpolate0
         : ((string10 = string1), (interpolate0 = interpolate((string00 = string0), value1)))
     }
   }
@@ -5589,15 +5648,18 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'id' implicitly has an 'any' type.
   function styleMaybeRemove(id, name) {
     // @ts-expect-error TS(7034) FIXME: Variable 'on0' implicitly has type 'any' in some l... Remove this comment to see the full error message
-    var on0,
+    let on0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'on1' implicitly has type 'any' in some l... Remove this comment to see the full error message
       on1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'listener0' implicitly has type 'any' in ... Remove this comment to see the full error message
       listener0,
       key = 'style.' + name,
       event = 'end.' + key,
+      // @ts-expect-error TS(7034) FIXME: Variable 'remove' implicitly has type 'any' in som... Remove this comment to see the full error message
       remove
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var schedule = set$2(this, id),
+      const schedule = set$2(this, id),
         on = schedule.on,
         // @ts-expect-error TS(7005) FIXME: Variable 'remove' implicitly has an 'any' type.
         listener = schedule.value[key] == null ? remove || (remove = styleRemove$1(name)) : undefined
@@ -5615,13 +5677,13 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_style(name, value, priority) {
-    var i = (name += '') === 'transform' ? interpolateTransformCss : interpolate$1
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+    const i = (name += '') === 'transform' ? interpolateTransformCss : interpolate$1
     return value == null
-      ? this.styleTween(name, styleNull(name, i)).on('end.style.' + name, styleRemove$1(name))
-      : // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      typeof value === 'function'
-      ? this
+      ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+        this.styleTween(name, styleNull(name, i)).on('end.style.' + name, styleRemove$1(name))
+      : typeof value === 'function'
+      ? // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+        this
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .styleTween(name, styleFunction$1(name, i, tweenValue(this, 'style.' + name, value)))
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5642,10 +5704,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function styleTween(name, value, priority) {
     // @ts-expect-error TS(7034) FIXME: Variable 't' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-    var t, i0
+    let t, i0
     function tween() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var i = value.apply(this, arguments)
+      const i = value.apply(this, arguments)
       // @ts-expect-error TS(7005) FIXME: Variable 'i0' implicitly has an 'any' type.
       if (i !== i0) t = (i0 = i) && styleInterpolate(name, i, priority)
       // @ts-expect-error TS(7005) FIXME: Variable 't' implicitly has an 'any' type.
@@ -5657,7 +5719,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function transition_styleTween(name, value, priority) {
-    var key = 'style.' + (name += '')
+    let key = 'style.' + (name += '')
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (arguments.length < 2) return (key = this.tween(key)) && key._value
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5679,7 +5741,7 @@
   function textFunction$1(value) {
     return function () {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var value1 = value(this)
+      const value1 = value(this)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this.textContent = value1 == null ? '' : value1
     }
@@ -5709,10 +5771,10 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function textTween(value) {
     // @ts-expect-error TS(7034) FIXME: Variable 't0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-    var t0, i0
+    let t0, i0
     function tween() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var i = value.apply(this, arguments)
+      const i = value.apply(this, arguments)
       // @ts-expect-error TS(7005) FIXME: Variable 'i0' implicitly has an 'any' type.
       if (i !== i0) t0 = (i0 = i) && textInterpolate(i)
       // @ts-expect-error TS(7005) FIXME: Variable 't0' implicitly has an 'any' type.
@@ -5724,7 +5786,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function transition_textTween(value) {
-    var key = 'text'
+    let key = 'text'
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (arguments.length < 1) return (key = this.tween(key)) && key._value
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -5736,7 +5798,7 @@
 
   function transition_transition() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var name = this._name,
+    const name = this._name,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       id0 = this._id,
       id1 = newId()
@@ -5745,7 +5807,7 @@
     for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) {
       for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) {
         if ((node = group[i])) {
-          var inherit = get$1(node, id0)
+          const inherit = get$1(node, id0)
           schedule(node, name, id1, i, group, {
             time: inherit.time + inherit.delay + inherit.duration,
             delay: 0,
@@ -5762,14 +5824,16 @@
 
   function transition_end() {
     // @ts-expect-error TS(7034) FIXME: Variable 'on0' implicitly has type 'any' in some l... Remove this comment to see the full error message
-    var on0,
+    let on0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'on1' implicitly has type 'any' in some l... Remove this comment to see the full error message
       on1,
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       that = this,
       id = that._id,
       size = that.size()
+    // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
     return new Promise(function (resolve, reject) {
-      var cancel = { value: reject },
-        // @ts-expect-error TS(2794) FIXME: Expected 1 arguments, but got 0. Did you forget to... Remove this comment to see the full error message
+      const cancel = { value: reject },
         end = {
           value: function () {
             if (--size === 0) resolve()
@@ -5778,7 +5842,7 @@
 
       that.each(function () {
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-        var schedule = set$2(this, id),
+        const schedule = set$2(this, id),
           on = schedule.on
 
         // If this node shared a dispatch with the previous node,
@@ -5797,12 +5861,11 @@
       })
 
       // The selection was empty, resolve end immediately
-      // @ts-expect-error TS(2794) FIXME: Expected 1 arguments, but got 0. Did you forget to... Remove this comment to see the full error message
       if (size === 0) resolve()
     })
   }
 
-  var id = 0
+  let id = 0
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'groups' implicitly has an 'any' type.
   function Transition(groups, parents, name, id) {
@@ -5825,7 +5888,7 @@
     return ++id
   }
 
-  var selection_prototype = selection.prototype
+  const selection_prototype = selection.prototype
 
   Transition.prototype = transition.prototype = {
     constructor: Transition,
@@ -5855,6 +5918,7 @@
     ease: transition_ease,
     easeVarying: transition_easeVarying,
     end: transition_end,
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     [Symbol.iterator]: selection_prototype[Symbol.iterator],
   }
 
@@ -5891,9 +5955,9 @@
     return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2
   }
 
-  var exponent = 3
+  const exponent = 3
 
-  var polyIn = (function custom(e) {
+  const polyIn = (function custom(e) {
     e = +e
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -5906,7 +5970,7 @@
     return polyIn
   })(exponent)
 
-  var polyOut = (function custom(e) {
+  const polyOut = (function custom(e) {
     e = +e
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -5919,7 +5983,7 @@
     return polyOut
   })(exponent)
 
-  var polyInOut = (function custom(e) {
+  const polyInOut = (function custom(e) {
     e = +e
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -5932,7 +5996,7 @@
     return polyInOut
   })(exponent)
 
-  var pi = Math.PI,
+  const pi = Math.PI,
     halfPi = pi / 2
 
   // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -5986,7 +6050,7 @@
     return ((t *= 2) <= 1 ? 1 - Math.sqrt(1 - t * t) : Math.sqrt(1 - (t -= 2) * t) + 1) / 2
   }
 
-  var b1 = 4 / 11,
+  const b1 = 4 / 11,
     b2 = 6 / 11,
     b3 = 8 / 11,
     b4 = 3 / 4,
@@ -6018,9 +6082,9 @@
     return ((t *= 2) <= 1 ? 1 - bounceOut(1 - t) : bounceOut(t - 1) + 1) / 2
   }
 
-  var overshoot = 1.70158
+  const overshoot = 1.70158
 
-  var backIn = (function custom(s) {
+  const backIn = (function custom(s) {
     s = +s
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -6033,7 +6097,7 @@
     return backIn
   })(overshoot)
 
-  var backOut = (function custom(s) {
+  const backOut = (function custom(s) {
     s = +s
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -6046,7 +6110,7 @@
     return backOut
   })(overshoot)
 
-  var backInOut = (function custom(s) {
+  const backInOut = (function custom(s) {
     s = +s
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
@@ -6059,12 +6123,12 @@
     return backInOut
   })(overshoot)
 
-  var tau = 2 * Math.PI,
+  const tau = 2 * Math.PI,
     amplitude = 1,
     period = 0.3
 
-  var elasticIn = (function custom(a, p) {
-    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
+  const elasticIn = (function custom(a, p) {
+    const s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     function elasticIn(t) {
@@ -6083,8 +6147,8 @@
     return elasticIn
   })(amplitude, period)
 
-  var elasticOut = (function custom(a, p) {
-    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
+  const elasticOut = (function custom(a, p) {
+    const s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     function elasticOut(t) {
@@ -6103,8 +6167,8 @@
     return elasticOut
   })(amplitude, period)
 
-  var elasticInOut = (function custom(a, p) {
-    var s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
+  const elasticInOut = (function custom(a, p) {
+    const s = Math.asin(1 / (a = Math.max(1, a))) * (p /= tau)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     function elasticInOut(t) {
@@ -6123,7 +6187,7 @@
     return elasticInOut
   })(amplitude, period)
 
-  var defaultTiming = {
+  const defaultTiming = {
     time: null, // Set on use.
     delay: 0,
     duration: 250,
@@ -6132,7 +6196,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function inherit(node, id) {
-    var timing
+    let timing
     while (!(timing = node.__transition) || !(timing = timing[id])) {
       if (!(node = node.parentNode)) {
         throw new Error(`transition ${id} not found`)
@@ -6143,7 +6207,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
   function selection_transition(name) {
-    var id, timing
+    let id, timing
 
     if (name instanceof Transition) {
       // @ts-expect-error TS(2339) FIXME: Property '_id' does not exist on type '{}'.
@@ -6169,11 +6233,11 @@
   selection.prototype.interrupt = selection_interrupt
   selection.prototype.transition = selection_transition
 
-  var root$1 = [null]
+  const root$1 = [null]
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function active(node, name) {
-    var schedules = node.__transition,
+    let schedules = node.__transition,
       schedule,
       i
 
@@ -6191,10 +6255,10 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var constant$4 = x => () => x
+  const constant$4 = x => () => x
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
   function BrushEvent(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
     type,
     {
       // @ts-expect-error TS(7031) FIXME: Binding element 'sourceEvent' implicitly has an 'a... Remove this comment to see the full error message
@@ -6231,7 +6295,7 @@
     event.stopImmediatePropagation()
   }
 
-  var MODE_DRAG = { name: 'drag' },
+  const MODE_DRAG = { name: 'drag' },
     MODE_SPACE = { name: 'space' },
     MODE_HANDLE = { name: 'handle' },
     MODE_CENTER = { name: 'center' }
@@ -6248,7 +6312,7 @@
     return [number1(e[0]), number1(e[1])]
   }
 
-  var X = {
+  const X = {
     name: 'x',
     handles: ['w', 'e'].map(type),
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
@@ -6266,7 +6330,7 @@
     },
   }
 
-  var Y = {
+  const Y = {
     name: 'y',
     handles: ['n', 's'].map(type),
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
@@ -6284,7 +6348,7 @@
     },
   }
 
-  var XY = {
+  const XY = {
     name: 'xy',
     handles: ['n', 'w', 'e', 's', 'nw', 'ne', 'sw', 'se'].map(type),
     // @ts-expect-error TS(7006) FIXME: Parameter 'xy' implicitly has an 'any' type.
@@ -6297,7 +6361,7 @@
     },
   }
 
-  var cursors = {
+  const cursors = {
     overlay: 'crosshair',
     selection: 'move',
     n: 'ns-resize',
@@ -6310,7 +6374,7 @@
     sw: 'nesw-resize',
   }
 
-  var flipX = {
+  const flipX = {
     e: 'w',
     w: 'e',
     nw: 'ne',
@@ -6319,7 +6383,7 @@
     sw: 'se',
   }
 
-  var flipY = {
+  const flipY = {
     n: 's',
     s: 'n',
     nw: 'sw',
@@ -6328,7 +6392,7 @@
     sw: 'nw',
   }
 
-  var signsX = {
+  const signsX = {
     overlay: +1,
     selection: +1,
     n: null,
@@ -6341,7 +6405,7 @@
     sw: -1,
   }
 
-  var signsY = {
+  const signsY = {
     overlay: +1,
     selection: +1,
     n: -1,
@@ -6367,7 +6431,7 @@
 
   function defaultExtent() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var svg = this.ownerSVGElement || this
+    let svg = this.ownerSVGElement || this
     if (svg.hasAttribute('viewBox')) {
       svg = svg.viewBox.baseVal
       return [
@@ -6400,7 +6464,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function brushSelection(node) {
-    var state = node.__brush
+    const state = node.__brush
     return state ? state.dim.output(state.selection) : null
   }
 
@@ -6418,7 +6482,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'dim' implicitly has an 'any' type.
   function brush$1(dim) {
-    var extent = defaultExtent,
+    let extent = defaultExtent,
       filter = defaultFilter$1,
       touchable = defaultTouchable$1,
       keys = true,
@@ -6430,7 +6494,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'group' implicitly has an 'any' type.
     function brush(group) {
-      var overlay = group
+      const overlay = group
         .property('__brush', initialize)
         .selectAll('.overlay')
         .data([type('overlay')])
@@ -6444,7 +6508,7 @@
         .merge(overlay)
         .each(function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var extent = local$1(this).extent
+          const extent = local$1(this).extent
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           select(this)
             .attr('x', extent[0][0])
@@ -6465,7 +6529,7 @@
         .attr('stroke', '#fff')
         .attr('shape-rendering', 'crispEdges')
 
-      var handle = group
+      const handle = group
         .selectAll('.handle')
         // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
         .data(dim.handles, function (d) {
@@ -6483,6 +6547,7 @@
         })
         // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
         .attr('cursor', function (d) {
+          // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           return cursors[d.type]
         })
 
@@ -6505,21 +6570,23 @@
         group
           // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
           .on('start.brush', function (event) {
+            // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
             emitter(this, arguments).beforestart().start(event)
           })
           // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
           .on('interrupt.brush end.brush', function (event) {
+            // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
             emitter(this, arguments).end(event)
           })
           .tween('brush', function () {
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-            var that = this,
+            const that = this,
               state = that.__brush,
               // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
               emit = emitter(that, arguments),
               selection0 = state.selection,
-              // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
               selection1 = dim.input(
+                // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
                 typeof selection === 'function' ? selection.apply(this, arguments) : selection,
                 state.extent
               ),
@@ -6537,7 +6604,7 @@
       } else {
         group.each(function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var that = this,
+          const that = this,
             args = arguments,
             state = that.__brush,
             selection1 = dim.input(
@@ -6563,7 +6630,7 @@
 
     function redraw() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var group = select(this),
+      const group = select(this),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         selection = local$1(this).selection
 
@@ -6610,7 +6677,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
     function emitter(that, args, clean) {
-      var emit = that.__brush.emitter
+      const emit = that.__brush.emitter
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return emit && (!clean || !emit.clean) ? emit : new Emitter(that, args, clean)
     }
@@ -6652,7 +6719,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
       emit: function (type, event, mode) {
-        var d = select(this.that).datum()
+        const d = select(this.that).datum()
         listeners.call(
           type,
           this.that,
@@ -6677,7 +6744,7 @@
       if (!filter.apply(this, arguments)) return
 
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var that = this,
+      let that = this,
         type = event.target.__data__.type,
         mode =
           (keys && event.metaKey ? (type = 'overlay') : type) === 'selection'
@@ -6692,21 +6759,25 @@
         state = local$1(that),
         extent = state.extent,
         selection = state.selection,
-        // @ts-expect-error TS(7034) FIXME: Variable 'w0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         W = extent[0][0],
+        // @ts-expect-error TS(7034) FIXME: Variable 'w0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         w0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'w1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         w1,
-        // @ts-expect-error TS(7034) FIXME: Variable 'n0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         N = extent[0][1],
+        // @ts-expect-error TS(7034) FIXME: Variable 'n0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         n0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         n1,
-        // @ts-expect-error TS(7034) FIXME: Variable 'e0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         E = extent[1][0],
+        // @ts-expect-error TS(7034) FIXME: Variable 'e0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         e0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'e1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         e1,
-        // @ts-expect-error TS(7034) FIXME: Variable 's0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         S = extent[1][1],
+        // @ts-expect-error TS(7034) FIXME: Variable 's0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         s0,
+        // @ts-expect-error TS(7034) FIXME: Variable 's1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         s1,
         dx = 0,
         dy = 0,
@@ -6717,13 +6788,11 @@
         lockX,
         // @ts-expect-error TS(7034) FIXME: Variable 'lockY' implicitly has type 'any' in some... Remove this comment to see the full error message
         lockY,
+        // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
         points = Array.from(event.touches || [event], t => {
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           const i = t.identifier
           t = pointer(t, that)
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           t.point0 = t.slice()
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           t.identifier = i
           return t
         })
@@ -6732,18 +6801,8 @@
         if (selection) moving = true
         const pts = [points[0], points[1] || points[0]]
         state.selection = selection = [
-          [
-            // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
-            (w0 = dim === Y ? W : min$1(pts[0][0], pts[1][0])),
-            // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
-            (n0 = dim === X ? N : min$1(pts[0][1], pts[1][1])),
-          ],
-          [
-            // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
-            (e0 = dim === Y ? E : max$1(pts[0][0], pts[1][0])),
-            // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
-            (s0 = dim === X ? S : max$1(pts[0][1], pts[1][1])),
-          ],
+          [(w0 = dim === Y ? W : min$1(pts[0][0], pts[1][0])), (n0 = dim === X ? N : min$1(pts[0][1], pts[1][1]))],
+          [(e0 = dim === Y ? E : max$1(pts[0][0], pts[1][0])), (s0 = dim === X ? S : max$1(pts[0][1], pts[1][1]))],
         ]
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
         if (points.length > 1) move()
@@ -6759,16 +6818,16 @@
       e1 = e0
       s1 = s0
 
-      var group = select(that).attr('pointer-events', 'none')
+      const group = select(that).attr('pointer-events', 'none')
 
-      var overlay = group
+      const overlay = group
         .selectAll('.overlay')
         // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         .attr('cursor', cursors[type])
 
       // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
       interrupt(that)
-      var emit = emitter(that, arguments, true).beforestart()
+      const emit = emitter(that, arguments, true).beforestart()
 
       if (event.touches) {
         emit.moved = moved
@@ -6786,17 +6845,14 @@
       // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
       function moved(event) {
         for (const p of event.changedTouches || [event]) {
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           for (const d of points) if (d.identifier === p.identifier) d.cur = pointer(p, that)
         }
         // @ts-expect-error TS(7005) FIXME: Variable 'lockX' implicitly has an 'any' type.
         if (shifting && !lockX && !lockY && points.length === 1) {
           const point = points[0]
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           if (abs(point.cur[0] - point[0]) > abs(point.cur[1] - point[1])) lockY = true
           else lockX = true
         }
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         for (const point of points) if (point.cur) (point[0] = point.cur[0]), (point[1] = point.cur[1])
         moving = true
         noevent$1(event)
@@ -6805,14 +6861,11 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
       function move(event) {
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         const point = points[0],
           point0 = point.point0
-        var t
+        let t
 
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         dx = point[0] - point0[0]
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         dy = point[1] - point0[1]
 
         switch (mode) {
@@ -6826,9 +6879,7 @@
           }
           case MODE_HANDLE: {
             if (points[1]) {
-              // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
               if (signX) (w1 = max$1(W, min$1(E, points[0][0]))), (e1 = max$1(W, min$1(E, points[1][0]))), (signX = 1)
-              // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
               if (signY) (n1 = max$1(N, min$1(S, points[0][1]))), (s1 = max$1(N, min$1(S, points[1][1]))), (signY = 1)
             } else {
               // @ts-expect-error TS(7005) FIXME: Variable 'w0' implicitly has an 'any' type.
@@ -6879,8 +6930,8 @@
         // @ts-expect-error TS(7005) FIXME: Variable 'lockY' implicitly has an 'any' type.
         if (lockY) (n1 = selection[0][1]), (s1 = selection[1][1])
 
-        // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
         if (
+          // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
           selection[0][0] !== w1 ||
           // @ts-expect-error TS(7005) FIXME: Variable 'n1' implicitly has an 'any' type.
           selection[0][1] !== n1 ||
@@ -6889,9 +6940,10 @@
           // @ts-expect-error TS(7005) FIXME: Variable 's1' implicitly has an 'any' type.
           selection[1][1] !== s1
         ) {
-          // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
           state.selection = [
+            // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
             [w1, n1],
+            // @ts-expect-error TS(7005) FIXME: Variable 'e1' implicitly has an 'any' type.
             [e1, s1],
           ]
           redraw.call(that)
@@ -6947,9 +6999,11 @@
             if (mode === MODE_HANDLE || mode === MODE_CENTER) {
               // @ts-expect-error TS(7005) FIXME: Variable 'e1' implicitly has an 'any' type.
               if (signX < 0) e0 = e1 - dx
+              // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
               else if (signX > 0) w0 = w1 - dx
               // @ts-expect-error TS(7005) FIXME: Variable 's1' implicitly has an 'any' type.
               if (signY < 0) s0 = s1 - dy
+              // @ts-expect-error TS(7005) FIXME: Variable 'n1' implicitly has an 'any' type.
               else if (signY > 0) n0 = n1 - dy
               mode = MODE_SPACE
               overlay.attr('cursor', cursors.selection)
@@ -6981,9 +7035,11 @@
             if (mode === MODE_CENTER) {
               // @ts-expect-error TS(7005) FIXME: Variable 'e1' implicitly has an 'any' type.
               if (signX < 0) e0 = e1
+              // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
               else if (signX > 0) w0 = w1
               // @ts-expect-error TS(7005) FIXME: Variable 's1' implicitly has an 'any' type.
               if (signY < 0) s0 = s1
+              // @ts-expect-error TS(7005) FIXME: Variable 'n1' implicitly has an 'any' type.
               else if (signY > 0) n0 = n1
               mode = MODE_HANDLE
               // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
@@ -7003,9 +7059,11 @@
               } else {
                 // @ts-expect-error TS(7005) FIXME: Variable 'e1' implicitly has an 'any' type.
                 if (signX < 0) e0 = e1
+                // @ts-expect-error TS(7005) FIXME: Variable 'w1' implicitly has an 'any' type.
                 else if (signX > 0) w0 = w1
                 // @ts-expect-error TS(7005) FIXME: Variable 's1' implicitly has an 'any' type.
                 if (signY < 0) s0 = s1
+                // @ts-expect-error TS(7005) FIXME: Variable 'n1' implicitly has an 'any' type.
                 else if (signY > 0) n0 = n1
                 mode = MODE_HANDLE
               }
@@ -7037,7 +7095,7 @@
 
     function initialize() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var state = this.__brush || { selection: null }
+      const state = this.__brush || { selection: null }
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       state.extent = number2(extent.apply(this, arguments))
       state.dim = dim
@@ -7070,24 +7128,25 @@
     }
 
     brush.on = function () {
-      var value = listeners.on.apply(listeners, arguments)
+      const value = listeners.on.apply(listeners, arguments)
       return value === listeners ? brush : value
     }
 
     return brush
   }
 
-  var abs$1 = Math.abs
-  var cos = Math.cos
-  var sin = Math.sin
-  var pi$1 = Math.PI
-  var halfPi$1 = pi$1 / 2
-  var tau$1 = pi$1 * 2
-  var max$2 = Math.max
-  var epsilon$1 = 1e-12
+  const abs$1 = Math.abs
+  const cos = Math.cos
+  const sin = Math.sin
+  const pi$1 = Math.PI
+  const halfPi$1 = pi$1 / 2
+  const tau$1 = pi$1 * 2
+  const max$2 = Math.max
+  const epsilon$1 = 1e-12
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
   function range(i, j) {
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from({ length: j - i }, (_, k) => i + k)
   }
 
@@ -7113,7 +7172,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'directed' implicitly has an 'any' type.
   function chord$1(directed, transpose) {
-    var padAngle = 0,
+    let padAngle = 0,
       // @ts-expect-error TS(7034) FIXME: Variable 'sortGroups' implicitly has type 'any' in... Remove this comment to see the full error message
       sortGroups = null,
       // @ts-expect-error TS(7034) FIXME: Variable 'sortSubgroups' implicitly has type 'any'... Remove this comment to see the full error message
@@ -7123,7 +7182,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'matrix' implicitly has an 'any' type.
     function chord(matrix) {
-      var n = matrix.length,
+      let n = matrix.length,
         groupSums = new Array(n),
         groupIndex = range(0, n),
         chords = new Array(n * n),
@@ -7153,10 +7212,13 @@
         for (const i of groupIndex) {
           const x0 = x
           if (directed) {
+            // @ts-expect-error TS(7006) FIXME: Parameter 'j' implicitly has an 'any' type.
             const subgroupIndex = range(~n + 1, n).filter(j => (j < 0 ? matrix[~j * n + i] : matrix[i * n + j]))
             // @ts-expect-error TS(7005) FIXME: Variable 'sortSubgroups' implicitly has an 'any' t... Remove this comment to see the full error message
             if (sortSubgroups)
+              // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
               subgroupIndex.sort((a, b) =>
+                // @ts-expect-error TS(7005) FIXME: Variable 'sortSubgroups' implicitly has an 'any' t... Remove this comment to see the full error message
                 sortSubgroups(
                   a < 0 ? -matrix[~a * n + i] : matrix[i * n + a],
                   b < 0 ? -matrix[~b * n + i] : matrix[i * n + b]
@@ -7183,6 +7245,7 @@
             }
             groups[i] = { index: i, startAngle: x0, endAngle: x, value: groupSums[i] }
           } else {
+            // @ts-expect-error TS(7006) FIXME: Parameter 'j' implicitly has an 'any' type.
             const subgroupIndex = range(0, n).filter(j => matrix[i * n + j] || matrix[j * n + i])
             // @ts-expect-error TS(7005) FIXME: Variable 'sortSubgroups' implicitly has an 'any' t... Remove this comment to see the full error message
             if (sortSubgroups) subgroupIndex.sort((a, b) => sortSubgroups(matrix[i * n + a], matrix[i * n + b]))
@@ -7246,10 +7309,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     chord.sortChords = function (_) {
-      // @ts-expect-error TS(2339) FIXME: Property '_' does not exist on type '(a: any, b: a... Remove this comment to see the full error message
       return arguments.length
-        ? (_ == null ? (sortChords = null) : ((sortChords = compareValue(_))._ = _), chord)
-        : sortChords && sortChords._
+        ? // @ts-expect-error TS(2339) FIXME: Property '_' does not exist on type '(a: any, b: a... Remove this comment to see the full error message
+          (_ == null ? (sortChords = null) : ((sortChords = compareValue(_))._ = _), chord)
+        : // @ts-expect-error TS(7005) FIXME: Variable 'sortChords' implicitly has an 'any' type... Remove this comment to see the full error message
+          sortChords && sortChords._
     }
 
     return chord
@@ -7263,9 +7327,11 @@
   function Path() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     this._x0 =
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this._y0 = // start of current subpath
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this._x1 =
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       this._y1 =
         null // end of current subpath
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -7304,7 +7370,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'x1' implicitly has an 'any' type.
     arcTo: function (x1, y1, x2, y2, r) {
       ;(x1 = +x1), (y1 = +y1), (x2 = +x2), (y2 = +y2), (r = +r)
-      var x0 = this._x1,
+      const x0 = this._x1,
         y0 = this._y1,
         x21 = x2 - x1,
         y21 = y2 - y1,
@@ -7332,7 +7398,7 @@
 
       // Otherwise, draw an arc!
       else {
-        var x20 = x2 - x0,
+        const x20 = x2 - x0,
           y20 = y2 - y0,
           l21_2 = x21 * x21 + y21 * y21,
           l20_2 = x20 * x20 + y20 * y20,
@@ -7363,7 +7429,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     arc: function (x, y, r, a0, a1, ccw) {
       ;(x = +x), (y = +y), (r = +r), (ccw = !!ccw)
-      var dx = r * Math.cos(a0),
+      let dx = r * Math.cos(a0),
         dy = r * Math.sin(a0),
         x0 = x + dx,
         y0 = y + dy,
@@ -7441,7 +7507,7 @@
     },
   }
 
-  var slice$2 = Array.prototype.slice
+  const slice$2 = Array.prototype.slice
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function constant$5(x) {
@@ -7485,7 +7551,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'headRadius' implicitly has an 'any' typ... Remove this comment to see the full error message
   function ribbon(headRadius) {
-    var source = defaultSource,
+    let source = defaultSource,
       target = defaultTarget,
       sourceRadius = defaultRadius,
       targetRadius = defaultRadius,
@@ -7496,7 +7562,7 @@
       context = null
 
     function ribbon() {
-      var buffer,
+      let buffer,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         s = source.apply(this, arguments),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -7534,7 +7600,7 @@
       if (sa0 !== ta0 || sa1 !== ta1) {
         if (headRadius) {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var hr = +headRadius.apply(this, arguments),
+          const hr = +headRadius.apply(this, arguments),
             tr2 = tr - hr,
             ta2 = (ta0 + ta1) / 2
           // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
@@ -7558,8 +7624,8 @@
       if (buffer) return (context = null), buffer + '' || null
     }
 
-    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     if (headRadius)
+      // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
       ribbon.headRadius = function (_) {
         return arguments.length ? ((headRadius = typeof _ === 'function' ? _ : constant$5(+_)), ribbon) : headRadius
       }
@@ -7624,9 +7690,9 @@
     return ribbon(defaultArrowheadRadius)
   }
 
-  var array$3 = Array.prototype
+  const array$3 = Array.prototype
 
-  var slice$3 = array$3.slice
+  const slice$3 = array$3.slice
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function ascending$2(a, b) {
@@ -7635,7 +7701,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'ring' implicitly has an 'any' type.
   function area(ring) {
-    var i = 0,
+    let i = 0,
       n = ring.length,
       area = ring[n - 1][1] * ring[0][0] - ring[n - 1][0] * ring[0][1]
     while (++i < n) area += ring[i - 1][1] * ring[i][0] - ring[i - 1][0] * ring[i][1]
@@ -7643,11 +7709,11 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var constant$6 = x => () => x
+  const constant$6 = x => () => x
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'ring' implicitly has an 'any' type.
   function contains(ring, hole) {
-    var i = -1,
+    let i = -1,
       n = hole.length,
       c
     while (++i < n) if ((c = ringContains(ring, hole[i]))) return c
@@ -7656,11 +7722,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'ring' implicitly has an 'any' type.
   function ringContains(ring, point) {
-    var x = point[0],
+    let x = point[0],
       y = point[1],
       contains = -1
-    for (var i = 0, n = ring.length, j = n - 1; i < n; j = i++) {
-      var pi = ring[i],
+    for (let i = 0, n = ring.length, j = n - 1; i < n; j = i++) {
+      const pi = ring[i],
         xi = pi[0],
         yi = pi[1],
         pj = ring[j],
@@ -7674,7 +7740,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function segmentContains(a, b, c) {
-    var i
+    let i
     return collinear(a, b, c) && within(a[(i = +(a[0] === b[0]))], c[i], b[i])
   }
 
@@ -7690,7 +7756,7 @@
 
   function noop$1() {}
 
-  var cases = [
+  const cases = [
     [],
     [
       [
@@ -7788,19 +7854,19 @@
   ]
 
   function contours() {
-    var dx = 1,
+    let dx = 1,
       dy = 1,
       threshold = thresholdSturges,
       smooth = smoothLinear
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
     function contours(values) {
-      var tz = threshold(values)
+      let tz = threshold(values)
 
       // Convert number of thresholds into uniform thresholds.
       if (!Array.isArray(tz)) {
         // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
-        var domain = extent(values),
+        const domain = extent(values),
           start = domain[0],
           stop = domain[1]
         tz = tickStep(start, stop, tz)
@@ -7822,7 +7888,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
     function contour(values, value) {
       // @ts-expect-error TS(7034) FIXME: Variable 'polygons' implicitly has type 'any[]' in... Remove this comment to see the full error message
-      var polygons = [],
+      const polygons = [],
         // @ts-expect-error TS(7034) FIXME: Variable 'holes' implicitly has type 'any[]' in so... Remove this comment to see the full error message
         holes = []
 
@@ -7856,10 +7922,11 @@
     // Based on https://github.com/topojson/topojson-client/blob/v3.0.0/src/stitch.js
     // @ts-expect-error TS(7006) FIXME: Parameter 'values' implicitly has an 'any' type.
     function isorings(values, value, callback) {
-      var fragmentByStart = new Array(),
-        fragmentByEnd = new Array(),
+      let fragmentByStart = [],
+        fragmentByEnd = [],
         // @ts-expect-error TS(7034) FIXME: Variable 'x' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         x,
+        // @ts-expect-error TS(7034) FIXME: Variable 'y' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         y,
         t0,
         t1,
@@ -7912,7 +7979,7 @@
       // @ts-expect-error TS(7006) FIXME: Parameter 'line' implicitly has an 'any' type.
       function stitch(line) {
         // @ts-expect-error TS(7005) FIXME: Variable 'x' implicitly has an 'any' type.
-        var start = [line[0][0] + x, line[0][1] + y],
+        let start = [line[0][0] + x, line[0][1] + y],
           // @ts-expect-error TS(7005) FIXME: Variable 'x' implicitly has an 'any' type.
           end = [line[1][0] + x, line[1][1] + y],
           startIndex = index(start),
@@ -7976,7 +8043,7 @@
     function smoothLinear(ring, values, value) {
       // @ts-expect-error TS(7006) FIXME: Parameter 'point' implicitly has an 'any' type.
       ring.forEach(function (point) {
-        var x = point[0],
+        let x = point[0],
           y = point[1],
           xt = x | 0,
           yt = y | 0,
@@ -7998,7 +8065,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     contours.size = function (_) {
       if (!arguments.length) return [dx, dy]
-      var _0 = Math.floor(_[0]),
+      const _0 = Math.floor(_[0]),
         _1 = Math.floor(_[1])
       if (!(_0 >= 0 && _1 >= 0)) throw new Error('invalid size')
       return (dx = _0), (dy = _1), contours
@@ -8025,11 +8092,11 @@
   // TODO Optimize arguments.
   // @ts-expect-error TS(7006) FIXME: Parameter 'source' implicitly has an 'any' type.
   function blurX(source, target, r) {
-    var n = source.width,
+    const n = source.width,
       m = source.height,
       w = (r << 1) + 1
-    for (var j = 0; j < m; ++j) {
-      for (var i = 0, sr = 0; i < n + r; ++i) {
+    for (let j = 0; j < m; ++j) {
+      for (let i = 0, sr = 0; i < n + r; ++i) {
         if (i < n) {
           sr += source.data[i + j * n]
         }
@@ -8048,11 +8115,11 @@
   // TODO Optimize arguments.
   // @ts-expect-error TS(7006) FIXME: Parameter 'source' implicitly has an 'any' type.
   function blurY(source, target, r) {
-    var n = source.width,
+    const n = source.width,
       m = source.height,
       w = (r << 1) + 1
-    for (var i = 0; i < n; ++i) {
-      for (var j = 0, sr = 0; j < m + r; ++j) {
+    for (let i = 0; i < n; ++i) {
+      for (let j = 0, sr = 0; j < m + r; ++j) {
         if (j < m) {
           sr += source.data[i + j * n]
         }
@@ -8081,7 +8148,7 @@
   }
 
   function density() {
-    var x = defaultX,
+    let x = defaultX,
       y = defaultY,
       weight = defaultWeight,
       dx = 960,
@@ -8095,13 +8162,13 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function density(data) {
-      var values0 = new Float32Array(n * m),
+      const values0 = new Float32Array(n * m),
         values1 = new Float32Array(n * m)
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
       data.forEach(function (d, i, data) {
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
-        var xi = (+x(d, i, data) + o) >> k,
+        const xi = (+x(d, i, data) + o) >> k,
           // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
           yi = (+y(d, i, data) + o) >> k,
           // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 3.
@@ -8120,12 +8187,12 @@
       blurY({ width: n, height: m, data: values1 }, { width: n, height: m, data: values0 }, r >> k)
 
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
-      var tz = threshold(values0)
+      let tz = threshold(values0)
 
       // Convert number of thresholds into uniform thresholds.
       if (!Array.isArray(tz)) {
         // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
-        var stop = max(values0)
+        const stop = max(values0)
         tz = tickStep(0, stop, tz)
         tz = sequence(0, Math.floor(stop / tz) * tz, tz)
         tz.shift()
@@ -8189,7 +8256,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     density.size = function (_) {
       if (!arguments.length) return [dx, dy]
-      var _0 = +_[0],
+      const _0 = +_[0],
         _1 = +_[1]
       if (!(_0 >= 0 && _1 >= 0)) throw new Error('invalid size')
       return (dx = _0), (dy = _1), resize()
@@ -8803,9 +8870,11 @@
     constructor() {
       // @ts-expect-error TS(2339) FIXME: Property '_x0' does not exist on type 'Path$1'.
       this._x0 =
+        // @ts-expect-error TS(2339) FIXME: Property '_y0' does not exist on type 'Path$1'.
         this._y0 = // start of current subpath
         // @ts-expect-error TS(2339) FIXME: Property '_x1' does not exist on type 'Path$1'.
         this._x1 =
+        // @ts-expect-error TS(2339) FIXME: Property '_y1' does not exist on type 'Path$1'.
         this._y1 =
           null // end of current subpath
       // @ts-expect-error TS(2339) FIXME: Property '_' does not exist on type 'Path$1'.
@@ -8903,9 +8972,10 @@
       return this
     }
     _init() {
-      // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
       const {
+        // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
         delaunay: { points, hull, triangles },
+        // @ts-expect-error TS(2339) FIXME: Property 'vectors' does not exist on type 'Voronoi... Remove this comment to see the full error message
         vectors,
       } = this
 
@@ -8968,10 +9038,12 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     render(context) {
       const buffer = context == null ? (context = new Path$1()) : undefined
-      // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
       const {
+        // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
         delaunay: { halfedges, inedges, hull },
+        // @ts-expect-error TS(2339) FIXME: Property 'circumcenters' does not exist on type 'V... Remove this comment to see the full error message
         circumcenters,
+        // @ts-expect-error TS(2339) FIXME: Property 'vectors' does not exist on type 'Voronoi... Remove this comment to see the full error message
         vectors,
       } = this
       if (hull.length <= 1) return null
@@ -9021,8 +9093,8 @@
       return buffer && buffer.value()
     }
     *cellPolygons() {
-      // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
       const {
+        // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
         delaunay: { points },
       } = this
       for (let i = 0, n = points.length / 2; i < n; ++i) {
@@ -9058,8 +9130,8 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
     *neighbors(i) {
       const ci = this._clip(i)
-      // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
       if (ci)
+        // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
         for (const j of this.delaunay.neighbors(i)) {
           const cj = this._clip(j)
           // find the common edge
@@ -9081,9 +9153,10 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
     _cell(i) {
-      // @ts-expect-error TS(2339) FIXME: Property 'circumcenters' does not exist on type 'V... Remove this comment to see the full error message
       const {
+        // @ts-expect-error TS(2339) FIXME: Property 'circumcenters' does not exist on type 'V... Remove this comment to see the full error message
         circumcenters,
+        // @ts-expect-error TS(2339) FIXME: Property 'delaunay' does not exist on type 'Vorono... Remove this comment to see the full error message
         delaunay: { inedges, halfedges, triangles },
       } = this
       const e0 = inedges[i]
@@ -9187,11 +9260,11 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
     _clipInfinite(i, points, vx0, vy0, vxn, vyn) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       let P = Array.from(points),
         p
       if ((p = this._project(P[0], P[1], vx0, vy0))) P.unshift(p[0], p[1])
       if ((p = this._project(P[P.length - 2], P[P.length - 1], vxn, vyn))) P.push(p[0], p[1])
-      // @ts-expect-error TS(2322) FIXME: Type 'any[] | null' is not assignable to type 'unk... Remove this comment to see the full error message
       if ((P = this._clipFinite(i, P))) {
         for (let j = 0, n = P.length, c0, c1 = this._edgecode(P[n - 2], P[n - 1]); j < n; j += 2) {
           ;(c0 = c1), (c1 = this._edgecode(P[j], P[j + 1]))
@@ -9212,29 +9285,29 @@
           case 0b0101:
             e0 = 0b0100
             continue // top-left
-          // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
           case 0b0100:
+            // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
             ;(e0 = 0b0110), (x = this.xmax), (y = this.ymin)
             break // top
           case 0b0110:
             e0 = 0b0010
             continue // top-right
-          // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
           case 0b0010:
+            // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
             ;(e0 = 0b1010), (x = this.xmax), (y = this.ymax)
             break // right
           case 0b1010:
             e0 = 0b1000
             continue // bottom-right
-          // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
           case 0b1000:
+            // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
             ;(e0 = 0b1001), (x = this.xmin), (y = this.ymax)
             break // bottom
           case 0b1001:
             e0 = 0b0001
             continue // bottom-left
-          // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
           case 0b0001:
+            // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
             ;(e0 = 0b0101), (x = this.xmin), (y = this.ymin)
             break // left
         }
@@ -9288,8 +9361,8 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     _edgecode(x, y) {
-      // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
       return (
+        // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
         (x === this.xmin
           ? 0b0001
           : // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
@@ -9307,8 +9380,8 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     _regioncode(x, y) {
-      // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
       return (
+        // @ts-expect-error TS(2339) FIXME: Property 'xmin' does not exist on type 'Voronoi'.
         (x < this.xmin
           ? 0b0001
           : // @ts-expect-error TS(2339) FIXME: Property 'xmax' does not exist on type 'Voronoi'.
@@ -9364,6 +9437,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'points' implicitly has an 'any' type.
     static from(points, fx = pointX, fy = pointY, that) {
       return new Delaunay(
+        // @ts-expect-error TS(2345) FIXME: Argument of type '{}' is not assignable to paramet... Remove this comment to see the full error message
         'length' in points ? flatArray(points, fx, fy, that) : Float64Array.from(flatIterable(points, fx, fy, that))
       )
     }
@@ -9388,6 +9462,7 @@
     _init() {
       // @ts-expect-error TS(2339) FIXME: Property '_delaunator' does not exist on type 'Del... Remove this comment to see the full error message
       const d = this._delaunator,
+        // @ts-expect-error TS(2339) FIXME: Property 'points' does not exist on type 'Delaunay... Remove this comment to see the full error message
         points = this.points
 
       // check for collinear
@@ -9398,8 +9473,10 @@
         ) // for exact neighbors
         // @ts-expect-error TS(2339) FIXME: Property 'collinear' does not exist on type 'Delau... Remove this comment to see the full error message
         const e = this.collinear[0],
+          // @ts-expect-error TS(2339) FIXME: Property 'collinear' does not exist on type 'Delau... Remove this comment to see the full error message
           f = this.collinear[this.collinear.length - 1],
           bounds = [points[2 * e], points[2 * e + 1], points[2 * f], points[2 * f + 1]],
+          // @ts-expect-error TS(2550) FIXME: Property 'hypot' does not exist on type 'Math'. Do... Remove this comment to see the full error message
           r = 1e-8 * Math.hypot(bounds[3] - bounds[1], bounds[2] - bounds[0])
         for (let i = 0, n = points.length / 2; i < n; ++i) {
           const p = jitter(points[2 * i], points[2 * i + 1], r)
@@ -9502,7 +9579,7 @@
       const e0 = inedges[i]
       let e = e0
       do {
-        let t = triangles[e]
+        const t = triangles[e]
         const dt = pow(x - points[t * 2], 2) + pow(y - points[t * 2 + 1], 2)
         if (dt < dc) (dc = dt), (c = t)
         e = e % 3 === 2 ? e - 2 : e + 1
@@ -9618,7 +9695,7 @@
     }
   }
 
-  var EOL = {},
+  const EOL = {},
     EOF = {},
     QUOTE = 34,
     NEWLINE = 10,
@@ -9626,11 +9703,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'columns' implicitly has an 'any' type.
   function objectConverter(columns) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
     return new Function(
       'd',
       'return {' +
         columns
+          // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
           .map(function (name, i) {
             return JSON.stringify(name) + ': d[' + i + '] || ""'
           })
@@ -9641,7 +9718,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'columns' implicitly has an 'any' type.
   function customConverter(columns, f) {
-    var object = objectConverter(columns)
+    const object = objectConverter(columns)
     // @ts-expect-error TS(7006) FIXME: Parameter 'row' implicitly has an 'any' type.
     return function (row, i) {
       return f(object(row), i, columns)
@@ -9651,13 +9728,13 @@
   // Compute unique columns in order of discovery.
   // @ts-expect-error TS(7006) FIXME: Parameter 'rows' implicitly has an 'any' type.
   function inferColumns(rows) {
-    var columnSet = Object.create(null),
+    const columnSet = Object.create(null),
       // @ts-expect-error TS(7034) FIXME: Variable 'columns' implicitly has type 'any[]' in ... Remove this comment to see the full error message
       columns = []
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'row' implicitly has an 'any' type.
     rows.forEach(function (row) {
-      for (var column in row) {
+      for (const column in row) {
         if (!(column in columnSet)) {
           columns.push((columnSet[column] = column))
         }
@@ -9670,7 +9747,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function pad(value, width) {
-    var s = value + '',
+    const s = value + '',
       length = s.length
     // @ts-expect-error TS(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
     return length < width ? new Array(width - length + 1).join(0) + s : s
@@ -9683,7 +9760,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
   function formatDate(date) {
-    var hours = date.getUTCHours(),
+    const hours = date.getUTCHours(),
       minutes = date.getUTCMinutes(),
       seconds = date.getUTCSeconds(),
       milliseconds = date.getUTCMilliseconds()
@@ -9705,14 +9782,15 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'delimiter' implicitly has an 'any' type... Remove this comment to see the full error message
   function dsvFormat(delimiter) {
-    var reFormat = new RegExp('["' + delimiter + '\n\r]'),
+    const reFormat = new RegExp('["' + delimiter + '\n\r]'),
       DELIMITER = delimiter.charCodeAt(0)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'text' implicitly has an 'any' type.
     function parse(text, f) {
       // @ts-expect-error TS(7034) FIXME: Variable 'convert' implicitly has type 'any' in so... Remove this comment to see the full error message
-      var convert,
+      let convert,
         columns,
+        // @ts-expect-error TS(7006) FIXME: Parameter 'row' implicitly has an 'any' type.
         rows = parseRows(text, function (row, i) {
           // @ts-expect-error TS(7005) FIXME: Variable 'convert' implicitly has an 'any' type.
           if (convert) return convert(row, i - 1)
@@ -9725,7 +9803,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'text' implicitly has an 'any' type.
     function parseRows(text, f) {
-      var rows = [], // output rows
+      let rows = [], // output rows
         N = text.length,
         I = 0, // current character index
         n = 0, // current line number
@@ -9742,7 +9820,7 @@
         if (eol) return (eol = false), EOL
 
         // Unescape quotes.
-        var i,
+        let i,
           j = I,
           c
         if (text.charCodeAt(j) === QUOTE) {
@@ -9771,7 +9849,7 @@
       }
 
       while ((t = token()) !== EOF) {
-        var row = []
+        let row = []
         while (t !== EOL && t !== EOF) row.push(t), (t = token())
         if (f && (row = f(row, n++)) == null) continue
         rows.push(row)
@@ -9784,12 +9862,14 @@
     function preformatBody(rows, columns) {
       // @ts-expect-error TS(7006) FIXME: Parameter 'row' implicitly has an 'any' type.
       return rows.map(function (row) {
-        // @ts-expect-error TS(7006) FIXME: Parameter 'column' implicitly has an 'any' type.
-        return columns
-          .map(function (column) {
-            return formatValue(row[column])
-          })
-          .join(delimiter)
+        return (
+          columns
+            // @ts-expect-error TS(7006) FIXME: Parameter 'column' implicitly has an 'any' type.
+            .map(function (column) {
+              return formatValue(row[column])
+            })
+            .join(delimiter)
+        )
       })
     }
 
@@ -9837,29 +9917,29 @@
     }
   }
 
-  var csv = dsvFormat(',')
+  const csv = dsvFormat(',')
 
-  var csvParse = csv.parse
-  var csvParseRows = csv.parseRows
-  var csvFormat = csv.format
-  var csvFormatBody = csv.formatBody
-  var csvFormatRows = csv.formatRows
-  var csvFormatRow = csv.formatRow
-  var csvFormatValue = csv.formatValue
+  const csvParse = csv.parse
+  const csvParseRows = csv.parseRows
+  const csvFormat = csv.format
+  const csvFormatBody = csv.formatBody
+  const csvFormatRows = csv.formatRows
+  const csvFormatRow = csv.formatRow
+  const csvFormatValue = csv.formatValue
 
-  var tsv = dsvFormat('\t')
+  const tsv = dsvFormat('\t')
 
-  var tsvParse = tsv.parse
-  var tsvParseRows = tsv.parseRows
-  var tsvFormat = tsv.format
-  var tsvFormatBody = tsv.formatBody
-  var tsvFormatRows = tsv.formatRows
-  var tsvFormatRow = tsv.formatRow
-  var tsvFormatValue = tsv.formatValue
+  const tsvParse = tsv.parse
+  const tsvParseRows = tsv.parseRows
+  const tsvFormat = tsv.format
+  const tsvFormatBody = tsv.formatBody
+  const tsvFormatRows = tsv.formatRows
+  const tsvFormatRow = tsv.formatRow
+  const tsvFormatValue = tsv.formatValue
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
   function autoType(object) {
-    for (var key in object) {
+    for (const key in object) {
       var value = object[key].trim(),
         number,
         m
@@ -9929,21 +10009,22 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'delimiter' implicitly has an 'any' type... Remove this comment to see the full error message
   function dsv(delimiter, input, init, row) {
     if (arguments.length === 3 && typeof init === 'function') (row = init), (init = undefined)
-    var format = dsvFormat(delimiter)
+    const format = dsvFormat(delimiter)
     return text(input, init).then(function (response) {
       return format.parse(response, row)
     })
   }
 
-  var csv$1 = dsvParse(csvParse)
-  var tsv$1 = dsvParse(tsvParse)
+  const csv$1 = dsvParse(csvParse)
+  const tsv$1 = dsvParse(tsvParse)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'input' implicitly has an 'any' type.
   function image(input, init) {
+    // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
     return new Promise(function (resolve, reject) {
-      var image = new Image()
+      const image = new Image()
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      for (var key in init) image[key] = init[key]
+      for (const key in init) image[key] = init[key]
       image.onerror = reject
       image.onload = function () {
         resolve(image)
@@ -9970,23 +10051,23 @@
     return (input, init) => text(input, init).then(text => new DOMParser().parseFromString(text, type))
   }
 
-  var xml = parser('application/xml')
+  const xml = parser('application/xml')
 
-  var html = parser('text/html')
+  const html = parser('text/html')
 
-  var svg = parser('image/svg+xml')
+  const svg = parser('image/svg+xml')
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function center$1(x, y) {
     // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
-    var nodes,
+    let nodes,
       strength = 1
 
     if (x == null) x = 0
     if (y == null) y = 0
 
     function force() {
-      var i,
+      let i,
         // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
         node,
@@ -10043,7 +10124,7 @@
   function add(tree, x, y, d) {
     if (isNaN(x) || isNaN(y)) return tree // ignore invalid points
 
-    var parent,
+    let parent,
       node = tree._root,
       leaf = { data: d },
       x0 = tree._x0,
@@ -10093,7 +10174,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
   function addAll(data) {
-    var d,
+    let d,
       i,
       n = data.length,
       x,
@@ -10127,7 +10208,7 @@
 
     // Add the new points.
     for (i = 0; i < n; ++i) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'add'.
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       add(this, xz[i], yz[i], data[i])
     }
 
@@ -10141,7 +10222,7 @@
     if (isNaN((x = +x)) || isNaN((y = +y))) return this // ignore invalid points
 
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var x0 = this._x0,
+    let x0 = this._x0,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       y0 = this._y0,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -10159,7 +10240,7 @@
 
     // Otherwise, double repeatedly to cover.
     else {
-      var z = x1 - x0 || 1,
+      let z = x1 - x0 || 1,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         node = this._root,
         parent,
@@ -10203,7 +10284,7 @@
 
   function tree_data() {
     // @ts-expect-error TS(7034) FIXME: Variable 'data' implicitly has type 'any[]' in som... Remove this comment to see the full error message
-    var data = []
+    const data = []
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     this.visit(function (node) {
       if (!node.length)
@@ -10223,7 +10304,9 @@
       isNaN(this._x0)
       ? undefined
       : [
+          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           [this._x0, this._y0],
+          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           [this._x1, this._y1],
         ]
   }
@@ -10244,7 +10327,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function tree_find(x, y, radius) {
-    var data,
+    let data,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       x0 = this._x0,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -10279,7 +10362,7 @@
       // Bisect the current quadrant.
       if (node.length) {
         // @ts-expect-error TS(7022) FIXME: 'xm' implicitly has type 'any' because it does not... Remove this comment to see the full error message
-        var xm = (x1 + x2) / 2,
+        const xm = (x1 + x2) / 2,
           // @ts-expect-error TS(7022) FIXME: 'ym' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           ym = (y1 + y2) / 2
 
@@ -10295,7 +10378,7 @@
         )
 
         // Visit the closest quadrant first.
-        // @ts-expect-error TS(2364) FIXME: The left-hand side of an assignment expression mus... Remove this comment to see the full error message
+        // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
         if ((i = ((y >= ym) << 1) | (x >= xm))) {
           q = quads[quads.length - 1]
           quads[quads.length - 1] = quads[quads.length - 1 - i]
@@ -10306,12 +10389,12 @@
       // Visit this point. (Visiting coincident points isn’t necessary!)
       else {
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-        var dx = x - +this._x.call(null, node.data),
+        const dx = x - +this._x.call(null, node.data),
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           dy = y - +this._y.call(null, node.data),
           d2 = dx * dx + dy * dy
         if (d2 < radius) {
-          var d = Math.sqrt((radius = d2))
+          const d = Math.sqrt((radius = d2))
           ;(x0 = x - d), (y0 = y - d)
           ;(x3 = x + d), (y3 = y + d)
           data = node.data
@@ -10327,7 +10410,7 @@
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (isNaN((x = +this._x.call(null, d))) || isNaN((y = +this._y.call(null, d)))) return this // ignore invalid points
 
-    var parent,
+    let parent,
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       node = this._root,
       retainer,
@@ -10404,7 +10487,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
   function removeAll(data) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    for (var i = 0, n = data.length; i < n; ++i) this.remove(data[i])
+    for (let i = 0, n = data.length; i < n; ++i) this.remove(data[i])
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this
   }
@@ -10415,7 +10498,7 @@
   }
 
   function tree_size() {
-    var size = 0
+    let size = 0
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     this.visit(function (node) {
       if (!node.length)
@@ -10427,9 +10510,9 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function tree_visit(callback) {
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var quads = [],
+    let quads = [],
       q,
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       node = this._root,
       child,
       x0,
@@ -10441,7 +10524,8 @@
     while ((q = quads.pop())) {
       if (!callback((node = q.node), (x0 = q.x0), (y0 = q.y0), (x1 = q.x1), (y1 = q.y1)) && node.length) {
         // @ts-expect-error TS(7022) FIXME: 'xm' implicitly has type 'any' because it does not... Remove this comment to see the full error message
-        var xm = (x0 + x1) / 2,
+        const xm = (x0 + x1) / 2,
+          // @ts-expect-error TS(7022) FIXME: 'ym' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           ym = (y0 + y1) / 2
         // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
         if ((child = node[3])) quads.push(new Quad(child, xm, ym, x1, y1))
@@ -10459,22 +10543,27 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function tree_visitAfter(callback) {
-    var quads = [],
+    let quads = [],
       next = [],
       q
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     if (this._root) quads.push(new Quad(this._root, this._x0, this._y0, this._x1, this._y1))
     while ((q = quads.pop())) {
       // @ts-expect-error TS(7022) FIXME: 'node' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var node = q.node
+      const node = q.node
       if (node.length) {
-        // @ts-expect-error TS(7022) FIXME: 'x0' implicitly has type 'any' because it does not... Remove this comment to see the full error message
         var child,
+          // @ts-expect-error TS(7022) FIXME: 'x0' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           x0 = q.x0,
+          // @ts-expect-error TS(7022) FIXME: 'y0' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           y0 = q.y0,
+          // @ts-expect-error TS(7022) FIXME: 'x1' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           x1 = q.x1,
+          // @ts-expect-error TS(7022) FIXME: 'y1' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           y1 = q.y1,
+          // @ts-expect-error TS(7022) FIXME: 'xm' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           xm = (x0 + x1) / 2,
+          // @ts-expect-error TS(7022) FIXME: 'ym' implicitly has type 'any' because it does not... Remove this comment to see the full error message
           ym = (y0 + y1) / 2
         // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
         if ((child = node[0])) quads.push(new Quad(child, x0, y0, xm, ym))
@@ -10519,7 +10608,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'nodes' implicitly has an 'any' type.
   function quadtree(nodes, x, y) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var tree = new Quadtree(x == null ? defaultX$1 : x, y == null ? defaultY$1 : y, NaN, NaN, NaN, NaN)
+    const tree = new Quadtree(x == null ? defaultX$1 : x, y == null ? defaultY$1 : y, NaN, NaN, NaN, NaN)
     return nodes == null ? tree : tree.addAll(nodes)
   }
 
@@ -10543,18 +10632,18 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'leaf' implicitly has an 'any' type.
   function leaf_copy(leaf) {
-    var copy = { data: leaf.data },
+    let copy = { data: leaf.data },
       next = copy
     // @ts-expect-error TS(2339) FIXME: Property 'next' does not exist on type '{ data: an... Remove this comment to see the full error message
     while ((leaf = leaf.next)) next = next.next = { data: leaf.data }
     return copy
   }
 
-  var treeProto = (quadtree.prototype = Quadtree.prototype)
+  const treeProto = (quadtree.prototype = Quadtree.prototype)
 
   treeProto.copy = function () {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var copy = new Quadtree(this._x, this._y, this._x0, this._y0, this._x1, this._y1),
+    let copy = new Quadtree(this._x, this._y, this._x0, this._y0, this._x1, this._y1),
       node = this._root,
       nodes,
       child
@@ -10565,7 +10654,7 @@
 
     nodes = [{ source: node, target: (copy._root = new Array(4)) }]
     while ((node = nodes.pop())) {
-      for (var i = 0; i < 4; ++i) {
+      for (let i = 0; i < 4; ++i) {
         if ((child = node.source[i])) {
           if (child.length) nodes.push({ source: child, target: (node.target[i] = new Array(4)) })
           else node.target[i] = leaf_copy(child)
@@ -10576,7 +10665,6 @@
     return copy
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'tree_add'.
   treeProto.add = tree_add
   treeProto.addAll = addAll
   treeProto.cover = tree_cover
@@ -10617,7 +10705,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'radius' implicitly has an 'any' type.
   function collide(radius) {
     // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
-    var nodes,
+    let nodes,
       // @ts-expect-error TS(7034) FIXME: Variable 'radii' implicitly has type 'any' in some... Remove this comment to see the full error message
       radii,
       // @ts-expect-error TS(7034) FIXME: Variable 'random' implicitly has type 'any' in som... Remove this comment to see the full error message
@@ -10628,8 +10716,8 @@
     if (typeof radius !== 'function') radius = constant$7(radius == null ? 1 : +radius)
 
     function force() {
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
         tree,
         // @ts-expect-error TS(7034) FIXME: Variable 'node' implicitly has type 'any' in some ... Remove this comment to see the full error message
@@ -10643,7 +10731,7 @@
         // @ts-expect-error TS(7034) FIXME: Variable 'ri2' implicitly has type 'any' in some l... Remove this comment to see the full error message
         ri2
 
-      for (var k = 0; k < iterations; ++k) {
+      for (let k = 0; k < iterations; ++k) {
         // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
         tree = quadtree(nodes, x, y).visitAfter(prepare)
         // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
@@ -10660,15 +10748,15 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'quad' implicitly has an 'any' type.
       function apply(quad, x0, y0, x1, y1) {
-        // @ts-expect-error TS(7005) FIXME: Variable 'ri' implicitly has an 'any' type.
-        var data = quad.data,
+        let data = quad.data,
           rj = quad.r,
+          // @ts-expect-error TS(7005) FIXME: Variable 'ri' implicitly has an 'any' type.
           r = ri + rj
         if (data) {
           // @ts-expect-error TS(7005) FIXME: Variable 'node' implicitly has an 'any' type.
           if (data.index > node.index) {
             // @ts-expect-error TS(7005) FIXME: Variable 'xi' implicitly has an 'any' type.
-            var x = xi - data.x - data.vx,
+            let x = xi - data.x - data.vx,
               // @ts-expect-error TS(7005) FIXME: Variable 'yi' implicitly has an 'any' type.
               y = yi - data.y - data.vy,
               l = x * x + y * y
@@ -10697,7 +10785,7 @@
     function prepare(quad) {
       // @ts-expect-error TS(7005) FIXME: Variable 'radii' implicitly has an 'any' type.
       if (quad.data) return (quad.r = radii[quad.data.index])
-      for (var i = (quad.r = 0); i < 4; ++i) {
+      for (let i = (quad.r = 0); i < 4; ++i) {
         if (quad[i] && quad[i].r > quad.r) {
           quad.r = quad[i].r
         }
@@ -10707,8 +10795,8 @@
     function initialize() {
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
         node
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
@@ -10749,14 +10837,14 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'nodeById' implicitly has an 'any' type.
   function find$1(nodeById, nodeId) {
-    var node = nodeById.get(nodeId)
+    const node = nodeById.get(nodeId)
     if (!node) throw new Error('node not found: ' + nodeId)
     return node
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'links' implicitly has an 'any' type.
   function link(links) {
-    var id = index$1,
+    let id = index$1,
       strength = defaultStrength,
       // @ts-expect-error TS(7034) FIXME: Variable 'strengths' implicitly has type 'any' in ... Remove this comment to see the full error message
       strengths,
@@ -10783,7 +10871,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'alpha' implicitly has an 'any' type.
     function force(alpha) {
-      for (var k = 0, n = links.length; k < iterations; ++k) {
+      for (let k = 0, n = links.length; k < iterations; ++k) {
         for (var i = 0, link, source, target, x, y, l, b; i < n; ++i) {
           ;(link = links[i]), (source = link.source), (target = link.target)
           // @ts-expect-error TS(7005) FIXME: Variable 'random' implicitly has an 'any' type.
@@ -10807,11 +10895,11 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
 
-      var i,
+      let i,
         // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
         m = links.length,
-        // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
+        // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
         nodeById = new Map(nodes.map((d, i) => [id(d, i, nodes), d])),
         link
 
@@ -10836,7 +10924,7 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
 
-      for (var i = 0, n = links.length; i < n; ++i) {
+      for (let i = 0, n = links.length; i < n; ++i) {
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
         strengths[i] = +strength(links[i], i, links)
       }
@@ -10846,7 +10934,7 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
 
-      for (var i = 0, n = links.length; i < n; ++i) {
+      for (let i = 0, n = links.length; i < n; ++i) {
         // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 3.
         distances[i] = +distance(links[i], i, links)
       }
@@ -10911,22 +10999,23 @@
     return d.y
   }
 
-  var initialRadius = 10,
+  const initialRadius = 10,
     initialAngle = Math.PI * (3 - Math.sqrt(5))
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'nodes' implicitly has an 'any' type.
   function simulation(nodes) {
     // @ts-expect-error TS(7034) FIXME: Variable 'simulation' implicitly has type 'any' in... Remove this comment to see the full error message
-    var simulation,
+    let simulation,
       alpha = 1,
       alphaMin = 0.001,
       alphaDecay = 1 - Math.pow(alphaMin, 1 / 300),
       alphaTarget = 0,
       velocityDecay = 0.6,
+      // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
       forces = new Map(),
-      // @ts-expect-error TS(2552) FIXME: Cannot find name 'timer'. Did you mean 'time'?
+      // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 1.
       stepper = timer(step),
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'dispatch'.
+      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
       event = dispatch('tick', 'end'),
       random = lcg()
 
@@ -10946,15 +11035,16 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'iterations' implicitly has an 'any' typ... Remove this comment to see the full error message
     function tick(iterations) {
-      var i,
+      let i,
         n = nodes.length,
         node
 
       if (iterations === undefined) iterations = 1
 
-      for (var k = 0; k < iterations; ++k) {
+      for (let k = 0; k < iterations; ++k) {
         alpha += (alphaTarget - alpha) * alphaDecay
 
+        // @ts-expect-error TS(7006) FIXME: Parameter 'force' implicitly has an 'any' type.
         forces.forEach(function (force) {
           force(alpha)
         })
@@ -10978,7 +11068,7 @@
         if (node.fx != null) node.x = node.fx
         if (node.fy != null) node.y = node.fy
         if (isNaN(node.x) || isNaN(node.y)) {
-          var radius = initialRadius * Math.sqrt(0.5 + i),
+          const radius = initialRadius * Math.sqrt(0.5 + i),
             angle = i * initialAngle
           node.x = radius * Math.cos(angle)
           node.y = radius * Math.sin(angle)
@@ -11054,15 +11144,15 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
       force: function (name, _) {
-        // @ts-expect-error TS(7005) FIXME: Variable 'simulation' implicitly has an 'any' type... Remove this comment to see the full error message
         return arguments.length > 1
-          ? (_ == null ? forces.delete(name) : forces.set(name, initializeForce(_)), simulation)
+          ? // @ts-expect-error TS(7005) FIXME: Variable 'simulation' implicitly has an 'any' type... Remove this comment to see the full error message
+            (_ == null ? forces.delete(name) : forces.set(name, initializeForce(_)), simulation)
           : forces.get(name)
       },
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       find: function (x, y, radius) {
-        var i = 0,
+        let i = 0,
           n = nodes.length,
           dx,
           dy,
@@ -11094,7 +11184,7 @@
 
   function manyBody() {
     // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
-    var nodes,
+    let nodes,
       // @ts-expect-error TS(7034) FIXME: Variable 'node' implicitly has type 'any' in some ... Remove this comment to see the full error message
       node,
       // @ts-expect-error TS(7034) FIXME: Variable 'random' implicitly has type 'any' in som... Remove this comment to see the full error message
@@ -11110,9 +11200,10 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     function force(_) {
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
+        // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
         tree = quadtree(nodes, x$1, y$1).visitAfter(accumulate)
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
       for (alpha = _, i = 0; i < n; ++i) (node = nodes[i]), tree.visit(apply)
@@ -11121,8 +11212,8 @@
     function initialize() {
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length,
         node
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
@@ -11133,7 +11224,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'quad' implicitly has an 'any' type.
     function accumulate(quad) {
-      var strength = 0,
+      let strength = 0,
         q,
         c,
         weight = 0,
@@ -11170,7 +11261,7 @@
       if (!quad.value) return true
 
       // @ts-expect-error TS(7005) FIXME: Variable 'node' implicitly has an 'any' type.
-      var x = quad.x - node.x,
+      let x = quad.x - node.x,
         // @ts-expect-error TS(7005) FIXME: Variable 'node' implicitly has an 'any' type.
         y = quad.y - node.y,
         w = x2 - x1,
@@ -11206,8 +11297,8 @@
         if (l < distanceMin2) l = Math.sqrt(distanceMin2 * l)
       }
 
-      // @ts-expect-error TS(7005) FIXME: Variable 'node' implicitly has an 'any' type.
       do
+        // @ts-expect-error TS(7005) FIXME: Variable 'node' implicitly has an 'any' type.
         if (quad.data !== node) {
           // @ts-expect-error TS(7005) FIXME: Variable 'strengths' implicitly has an 'any' type.
           w = (strengths[quad.data.index] * alpha) / l
@@ -11254,7 +11345,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'radius' implicitly has an 'any' type.
   function radial(radius, x, y) {
     // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
-    var nodes,
+    let nodes,
       strength = constant$7(0.1),
       // @ts-expect-error TS(7034) FIXME: Variable 'strengths' implicitly has type 'any' in ... Remove this comment to see the full error message
       strengths,
@@ -11268,9 +11359,9 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'alpha' implicitly has an 'any' type.
     function force(alpha) {
       // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      for (var i = 0, n = nodes.length; i < n; ++i) {
+      for (let i = 0, n = nodes.length; i < n; ++i) {
         // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
-        var node = nodes[i],
+        const node = nodes[i],
           dx = node.x - x || 1e-6,
           dy = node.y - y || 1e-6,
           r = Math.sqrt(dx * dx + dy * dy),
@@ -11284,8 +11375,8 @@
     function initialize() {
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
       strengths = new Array(n)
@@ -11332,7 +11423,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function x$2(x) {
-    var strength = constant$7(0.1),
+    let strength = constant$7(0.1),
       // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
       nodes,
       // @ts-expect-error TS(7034) FIXME: Variable 'strengths' implicitly has type 'any' in ... Remove this comment to see the full error message
@@ -11354,8 +11445,8 @@
     function initialize() {
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
       strengths = new Array(n)
@@ -11391,7 +11482,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
   function y$2(y) {
-    var strength = constant$7(0.1),
+    let strength = constant$7(0.1),
       // @ts-expect-error TS(7034) FIXME: Variable 'nodes' implicitly has type 'any' in some... Remove this comment to see the full error message
       nodes,
       // @ts-expect-error TS(7034) FIXME: Variable 'strengths' implicitly has type 'any' in ... Remove this comment to see the full error message
@@ -11413,8 +11504,8 @@
     function initialize() {
       // @ts-expect-error TS(7005) FIXME: Variable 'nodes' implicitly has an 'any' type.
       if (!nodes) return
-      // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var i,
+      let i,
+        // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
         n = nodes.length
       // @ts-expect-error TS(7005) FIXME: Variable 'n' implicitly has an 'any' type.
       strengths = new Array(n)
@@ -11459,7 +11550,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function formatDecimalParts(x, p) {
     if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf('e')) < 0) return null // NaN, ±Infinity
-    var i,
+    let i,
       coefficient = x.slice(0, i)
 
     // The string returned by toExponential either has the form \d\.\d+e[-+]\d+
@@ -11477,7 +11568,7 @@
   function formatGroup(grouping, thousands) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
     return function (value, width) {
-      var i = value.length,
+      let i = value.length,
         t = [],
         j = 0,
         g = grouping[0],
@@ -11506,12 +11597,12 @@
   }
 
   // [[fill]align][sign][symbol][0][width][,][.precision][~][type]
-  var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i
+  const re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
   function formatSpecifier(specifier) {
     if (!(match = re.exec(specifier))) throw new Error('invalid format: ' + specifier)
-    var match
+    let match
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
     return new FormatSpecifier({
       fill: match[1],
@@ -11591,13 +11682,13 @@
   }
 
   // @ts-expect-error TS(7034) FIXME: Variable 'prefixExponent' implicitly has type 'any... Remove this comment to see the full error message
-  var prefixExponent
+  let prefixExponent
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function formatPrefixAuto(x, p) {
-    var d = formatDecimalParts(x, p)
+    const d = formatDecimalParts(x, p)
     if (!d) return x + ''
-    var coefficient = d[0],
+    const coefficient = d[0],
       exponent = d[1],
       i = exponent - (prefixExponent = Math.max(-8, Math.min(8, Math.floor(exponent / 3))) * 3) + 1,
       n = coefficient.length
@@ -11613,9 +11704,9 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function formatRounded(x, p) {
-    var d = formatDecimalParts(x, p)
+    const d = formatDecimalParts(x, p)
     if (!d) return x + ''
-    var coefficient = d[0],
+    const coefficient = d[0],
       exponent = d[1]
     return exponent < 0
       ? '0.' + new Array(-exponent).join('0') + coefficient
@@ -11624,7 +11715,7 @@
       : coefficient + new Array(exponent - coefficient.length + 2).join('0')
   }
 
-  var formatTypes = {
+  const formatTypes = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     '%': (x, p) => (x * 100).toFixed(p),
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
@@ -11655,12 +11746,12 @@
     return x
   }
 
-  var map$1 = Array.prototype.map,
+  const map$1 = Array.prototype.map,
     prefixes = ['y', 'z', 'a', 'f', 'p', 'n', '\xB5', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'locale' implicitly has an 'any' type.
   function formatLocale(locale) {
-    var group =
+    const group =
         locale.grouping === undefined || locale.thousands === undefined
           ? identity$3
           : formatGroup(map$1.call(locale.grouping, Number), locale.thousands + ''),
@@ -11676,7 +11767,7 @@
     function newFormat(specifier) {
       specifier = formatSpecifier(specifier)
 
-      var fill = specifier.fill,
+      let fill = specifier.fill,
         align = specifier.align,
         sign = specifier.sign,
         symbol = specifier.symbol,
@@ -11698,7 +11789,7 @@
 
       // Compute the prefix and suffix.
       // For SI-prefix, the suffix is lazily computed.
-      var prefix =
+      const prefix =
           symbol === '$' ? currencyPrefix : symbol === '#' && /[boxX]/.test(type) ? '0' + type.toLowerCase() : '',
         suffix = symbol === '$' ? currencySuffix : /[%p]/.test(type) ? percent : ''
 
@@ -11706,7 +11797,7 @@
       // Is this an integer type?
       // Can this type generate exponential notation?
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      var formatType = formatTypes[type],
+      const formatType = formatTypes[type],
         maybeSuffix = /[defgprs%]/.test(type)
 
       // Set the default precision if not specified,
@@ -11722,7 +11813,7 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
       function format(value) {
-        var valuePrefix = prefix,
+        let valuePrefix = prefix,
           valueSuffix = suffix,
           i,
           n,
@@ -11735,7 +11826,7 @@
           value = +value
 
           // Determine the sign. -0 is not less than 0, but 1 / -0 is!
-          var valueNegative = value < 0 || 1 / value < 0
+          let valueNegative = value < 0 || 1 / value < 0
 
           // Perform the initial formatting.
           value = isNaN(value) ? nan : formatType(Math.abs(value), precision)
@@ -11749,8 +11840,8 @@
           // Compute the prefix and suffix.
           valuePrefix =
             (valueNegative ? (sign === '(' ? sign : minus) : sign === '-' || sign === '(' ? '' : sign) + valuePrefix
-          // @ts-expect-error TS(7005) FIXME: Variable 'prefixExponent' implicitly has an 'any' ... Remove this comment to see the full error message
           valueSuffix =
+            // @ts-expect-error TS(7005) FIXME: Variable 'prefixExponent' implicitly has an 'any' ... Remove this comment to see the full error message
             (type === 's' ? prefixes[8 + prefixExponent / 3] : '') +
             valueSuffix +
             (valueNegative && sign === '(' ? ')' : '')
@@ -11773,7 +11864,7 @@
         if (comma && !zero) value = group(value, Infinity)
 
         // Compute the padding.
-        var length = valuePrefix.length + value.length + valueSuffix.length,
+        let length = valuePrefix.length + value.length + valueSuffix.length,
           padding = length < width ? new Array(width - length + 1).join(fill) : ''
 
         // If the fill character is "0", grouping is applied after padding.
@@ -11813,7 +11904,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
     function formatPrefix(specifier, value) {
-      var f = newFormat(((specifier = formatSpecifier(specifier)), (specifier.type = 'f'), specifier)),
+      const f = newFormat(((specifier = formatSpecifier(specifier)), (specifier.type = 'f'), specifier)),
         e = Math.max(-8, Math.min(8, Math.floor(exponent$1(value) / 3))) * 3,
         k = Math.pow(10, -e),
         prefix = prefixes[8 + e / 3]
@@ -11829,7 +11920,7 @@
     }
   }
 
-  var locale
+  let locale
 
   defaultLocale({
     thousands: ',',
@@ -11840,9 +11931,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'definition' implicitly has an 'any' typ... Remove this comment to see the full error message
   function defaultLocale(definition) {
     locale = formatLocale(definition)
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.format = locale.format
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.formatPrefix = locale.formatPrefix
     return locale
   }
@@ -11863,33 +11952,36 @@
     return Math.max(0, exponent$1(max) - exponent$1(step)) + 1
   }
 
-  var epsilon$4 = 1e-6
-  var epsilon2$1 = 1e-12
-  var pi$3 = Math.PI
-  var halfPi$2 = pi$3 / 2
-  var quarterPi = pi$3 / 4
-  var tau$4 = pi$3 * 2
+  const epsilon$4 = 1e-6
+  const epsilon2$1 = 1e-12
+  const pi$3 = Math.PI
+  const halfPi$2 = pi$3 / 2
+  const quarterPi = pi$3 / 4
+  const tau$4 = pi$3 * 2
 
-  var degrees$2 = 180 / pi$3
-  var radians$1 = pi$3 / 180
+  const degrees$2 = 180 / pi$3
+  const radians$1 = pi$3 / 180
 
-  var abs$2 = Math.abs
-  var atan = Math.atan
-  var atan2 = Math.atan2
-  var cos$1 = Math.cos
-  var ceil = Math.ceil
-  var exp = Math.exp
-  var hypot = Math.hypot
-  var log = Math.log
-  var pow$1 = Math.pow
-  var sin$1 = Math.sin
-  var sign =
+  const abs$2 = Math.abs
+  const atan = Math.atan
+  const atan2 = Math.atan2
+  const cos$1 = Math.cos
+  const ceil = Math.ceil
+  const exp = Math.exp
+  // @ts-expect-error TS(2550) FIXME: Property 'hypot' does not exist on type 'Math'. Do... Remove this comment to see the full error message
+  const hypot = Math.hypot
+  const log = Math.log
+  const pow$1 = Math.pow
+  const sin$1 = Math.sin
+  const sign =
+    // @ts-expect-error TS(2550) FIXME: Property 'sign' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
     Math.sign ||
+    // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function (x) {
       return x > 0 ? 1 : x < 0 ? -1 : 0
     }
-  var sqrt = Math.sqrt
-  var tan = Math.tan
+  const sqrt = Math.sqrt
+  const tan = Math.tan
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function acos(x) {
@@ -11916,14 +12008,14 @@
     }
   }
 
-  var streamObjectType = {
+  const streamObjectType = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     Feature: function (object, stream) {
       streamGeometry(object.geometry, stream)
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     FeatureCollection: function (object, stream) {
-      var features = object.features,
+      let features = object.features,
         i = -1,
         n = features.length
       while (++i < n) streamGeometry(features[i].geometry, stream)
@@ -11942,7 +12034,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiPoint: function (object, stream) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) (object = coordinates[i]), stream.point(object[0], object[1], object[2])
@@ -11953,7 +12045,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiLineString: function (object, stream) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) streamLine(coordinates[i], stream, 0)
@@ -11964,14 +12056,14 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiPolygon: function (object, stream) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) streamPolygon(coordinates[i], stream)
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     GeometryCollection: function (object, stream) {
-      var geometries = object.geometries,
+      let geometries = object.geometries,
         i = -1,
         n = geometries.length
       while (++i < n) streamGeometry(geometries[i], stream)
@@ -11980,7 +12072,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
   function streamLine(coordinates, stream, closed) {
-    var i = -1,
+    let i = -1,
       n = coordinates.length - closed,
       coordinate
     stream.lineStart()
@@ -11990,7 +12082,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
   function streamPolygon(coordinates, stream) {
-    var i = -1,
+    let i = -1,
       n = coordinates.length
     stream.polygonStart()
     while (++i < n) streamLine(coordinates[i], stream, 1)
@@ -12007,13 +12099,11 @@
     }
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
-  var areaRingSum = new Adder()
+  let areaRingSum = new Adder()
 
   // hello?
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
-  var areaSum = new Adder(),
+  let areaSum = new Adder(),
     // @ts-expect-error TS(7034) FIXME: Variable 'lambda00' implicitly has type 'any' in s... Remove this comment to see the full error message
     lambda00,
     // @ts-expect-error TS(7034) FIXME: Variable 'phi00' implicitly has type 'any' in some... Remove this comment to see the full error message
@@ -12030,13 +12120,12 @@
     lineStart: noop$2,
     lineEnd: noop$2,
     polygonStart: function () {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
       areaRingSum = new Adder()
       areaStream.lineStart = areaRingStart
       areaStream.lineEnd = areaRingEnd
     },
     polygonEnd: function () {
-      var areaRing = +areaRingSum
+      const areaRing = +areaRingSum
       areaSum.add(areaRing < 0 ? tau$4 + areaRing : areaRing)
       this.lineStart = this.lineEnd = this.point = noop$2
     },
@@ -12073,7 +12162,7 @@
     // previous point, current point.  Uses a formula derived from Cagnoli’s
     // theorem.  See Todhunter, Spherical Trig. (1871), Sec. 103, Eq. (2).
     // @ts-expect-error TS(7005) FIXME: Variable 'lambda0' implicitly has an 'any' type.
-    var dLambda = lambda - lambda0,
+    const dLambda = lambda - lambda0,
       sdLambda = dLambda >= 0 ? 1 : -1,
       adLambda = sdLambda * dLambda,
       cosPhi = cos$1(phi),
@@ -12091,9 +12180,9 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
   function area$1(object) {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
     areaSum = new Adder()
     geoStream(object, areaStream)
+    // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
     return areaSum * 2
   }
 
@@ -12104,7 +12193,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'spherical' implicitly has an 'any' type... Remove this comment to see the full error message
   function cartesian(spherical) {
-    var lambda = spherical[0],
+    const lambda = spherical[0],
       phi = spherical[1],
       cosPhi = cos$1(phi)
     return [cosPhi * cos$1(lambda), cosPhi * sin$1(lambda), sin$1(phi)]
@@ -12134,19 +12223,23 @@
   // TODO return d
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function cartesianNormalizeInPlace(d) {
-    var l = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2])
+    const l = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2])
     ;(d[0] /= l), (d[1] /= l), (d[2] /= l)
   }
 
   // @ts-expect-error TS(7034) FIXME: Variable 'lambda0$1' implicitly has type 'any' in ... Remove this comment to see the full error message
-  var lambda0$1,
+  let lambda0$1,
+    // @ts-expect-error TS(7034) FIXME: Variable 'phi0' implicitly has type 'any' in some ... Remove this comment to see the full error message
     phi0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'lambda1' implicitly has type 'any' in so... Remove this comment to see the full error message
     lambda1,
+    // @ts-expect-error TS(7034) FIXME: Variable 'phi1' implicitly has type 'any' in some ... Remove this comment to see the full error message
     phi1, // bounds
     // @ts-expect-error TS(7034) FIXME: Variable 'lambda2' implicitly has type 'any' in so... Remove this comment to see the full error message
     lambda2, // previous lambda-coordinate
     // @ts-expect-error TS(7034) FIXME: Variable 'lambda00$1' implicitly has type 'any' in... Remove this comment to see the full error message
     lambda00$1,
+    // @ts-expect-error TS(7034) FIXME: Variable 'phi00$1' implicitly has type 'any' in so... Remove this comment to see the full error message
     phi00$1, // first point
     // @ts-expect-error TS(7034) FIXME: Variable 'p0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     p0, // previous 3D point
@@ -12164,7 +12257,6 @@
       boundsStream.point = boundsRingPoint
       boundsStream.lineStart = boundsRingStart
       boundsStream.lineEnd = boundsRingEnd
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
       deltaSum = new Adder()
       areaStream.polygonStart()
     },
@@ -12173,12 +12265,14 @@
       boundsStream.point = boundsPoint
       boundsStream.lineStart = boundsLineStart
       boundsStream.lineEnd = boundsLineEnd
+      // @ts-expect-error TS(2365) FIXME: Operator '<' cannot be applied to types 'Adder' an... Remove this comment to see the full error message
       if (areaRingSum < 0) (lambda0$1 = -(lambda1 = 180)), (phi0 = -(phi1 = 90))
       // @ts-expect-error TS(7005) FIXME: Variable 'deltaSum' implicitly has an 'any' type.
       else if (deltaSum > epsilon$4) phi1 = 90
       // @ts-expect-error TS(7005) FIXME: Variable 'deltaSum' implicitly has an 'any' type.
-      else if (deltaSum < -epsilon$4) phi0 = -90
-      // @ts-expect-error TS(7005) FIXME: Variable 'lambda0$1' implicitly has an 'any' type.
+      else if (deltaSum < -epsilon$4)
+        phi0 = -90
+        // @ts-expect-error TS(7005) FIXME: Variable 'lambda0$1' implicitly has an 'any' type.
       ;(range$1[0] = lambda0$1), (range$1[1] = lambda1)
     },
     sphere: function () {
@@ -12197,17 +12291,17 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function linePoint(lambda, phi) {
-    var p = cartesian([lambda * radians$1, phi * radians$1])
+    const p = cartesian([lambda * radians$1, phi * radians$1])
     // @ts-expect-error TS(7005) FIXME: Variable 'p0' implicitly has an 'any' type.
     if (p0) {
       // @ts-expect-error TS(7005) FIXME: Variable 'p0' implicitly has an 'any' type.
-      var normal = cartesianCross(p0, p),
+      let normal = cartesianCross(p0, p),
         equatorial = [normal[1], -normal[0], 0],
         inflection = cartesianCross(equatorial, normal)
       cartesianNormalizeInPlace(inflection)
       inflection = spherical(inflection)
       // @ts-expect-error TS(7005) FIXME: Variable 'lambda2' implicitly has an 'any' type.
-      var delta = lambda - lambda2,
+      let delta = lambda - lambda2,
         sign = delta > 0 ? 1 : -1,
         lambdai = inflection[0] * degrees$2 * sign,
         phii,
@@ -12217,9 +12311,9 @@
         phii = inflection[1] * degrees$2
         // @ts-expect-error TS(7005) FIXME: Variable 'phi1' implicitly has an 'any' type.
         if (phii > phi1) phi1 = phii
-        // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
       } else if (
         ((lambdai = ((lambdai + 360) % 360) - 180),
+        // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
         antimeridian ^ (sign * lambda2 < lambdai && lambdai < sign * lambda))
       ) {
         phii = -inflection[1] * degrees$2
@@ -12284,7 +12378,7 @@
     // @ts-expect-error TS(7005) FIXME: Variable 'p0' implicitly has an 'any' type.
     if (p0) {
       // @ts-expect-error TS(7005) FIXME: Variable 'lambda2' implicitly has an 'any' type.
-      var delta = lambda - lambda2
+      const delta = lambda - lambda2
       // @ts-expect-error TS(7005) FIXME: Variable 'deltaSum' implicitly has an 'any' type.
       deltaSum.add(abs$2(delta) > 180 ? delta + (delta > 0 ? 360 : -360) : delta)
     } else {
@@ -12304,8 +12398,9 @@
     boundsRingPoint(lambda00$1, phi00$1)
     areaStream.lineEnd()
     // @ts-expect-error TS(7005) FIXME: Variable 'deltaSum' implicitly has an 'any' type.
-    if (abs$2(deltaSum) > epsilon$4) lambda0$1 = -(lambda1 = 180)
-    // @ts-expect-error TS(7005) FIXME: Variable 'lambda0$1' implicitly has an 'any' type.
+    if (abs$2(deltaSum) > epsilon$4)
+      lambda0$1 = -(lambda1 = 180)
+      // @ts-expect-error TS(7005) FIXME: Variable 'lambda0$1' implicitly has an 'any' type.
     ;(range$1[0] = lambda0$1), (range$1[1] = lambda1)
     p0 = null
   }
@@ -12330,7 +12425,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'feature' implicitly has an 'any' type.
   function bounds(feature) {
-    var i, n, a, b, merged, deltaMax, delta
+    let i, n, a, b, merged, deltaMax, delta
 
     phi1 = lambda1 = -(lambda0$1 = phi0 = Infinity)
     ranges = []
@@ -12376,26 +12471,36 @@
   }
 
   // @ts-expect-error TS(7034) FIXME: Variable 'W0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-  var W0,
+  let W0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'W1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     W1,
     // @ts-expect-error TS(7034) FIXME: Variable 'X0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     X0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Y0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Z0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Z0,
     // @ts-expect-error TS(7034) FIXME: Variable 'X1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     X1,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Y1,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Z1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Z1,
     // @ts-expect-error TS(7034) FIXME: Variable 'X2' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     X2,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Y2' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Y2,
+    // @ts-expect-error TS(7034) FIXME: Variable 'Z2' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     Z2,
     // @ts-expect-error TS(7034) FIXME: Variable 'lambda00$2' implicitly has type 'any' in... Remove this comment to see the full error message
     lambda00$2,
+    // @ts-expect-error TS(7034) FIXME: Variable 'phi00$2' implicitly has type 'any' in so... Remove this comment to see the full error message
     phi00$2, // first point
     // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     x0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     y0,
+    // @ts-expect-error TS(7034) FIXME: Variable 'z0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
     z0 // previous point
 
   var centroidStream = {
@@ -12417,7 +12522,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function centroidPoint(lambda, phi) {
     ;(lambda *= radians$1), (phi *= radians$1)
-    var cosPhi = cos$1(phi)
+    const cosPhi = cos$1(phi)
     centroidPointCartesian(cosPhi * cos$1(lambda), cosPhi * sin$1(lambda), sin$1(phi))
   }
 
@@ -12440,7 +12545,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function centroidLinePointFirst(lambda, phi) {
     ;(lambda *= radians$1), (phi *= radians$1)
-    var cosPhi = cos$1(phi)
+    const cosPhi = cos$1(phi)
     x0 = cosPhi * cos$1(lambda)
     y0 = cosPhi * sin$1(lambda)
     z0 = sin$1(phi)
@@ -12455,9 +12560,10 @@
       x = cosPhi * cos$1(lambda),
       y = cosPhi * sin$1(lambda),
       z = sin$1(phi),
-      // @ts-expect-error TS(7005) FIXME: Variable 'y0' implicitly has an 'any' type.
       w = atan2(
+        // @ts-expect-error TS(7005) FIXME: Variable 'y0' implicitly has an 'any' type.
         sqrt((w = y0 * z - z0 * y) * w + (w = z0 * x - x0 * z) * w + (w = x0 * y - y0 * x) * w),
+        // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
         x0 * x + y0 * y + z0 * z
       )
     // @ts-expect-error TS(7005) FIXME: Variable 'W1' implicitly has an 'any' type.
@@ -12492,7 +12598,7 @@
     ;(lambda00$2 = lambda), (phi00$2 = phi)
     ;(lambda *= radians$1), (phi *= radians$1)
     centroidStream.point = centroidRingPoint
-    var cosPhi = cos$1(phi)
+    const cosPhi = cos$1(phi)
     x0 = cosPhi * cos$1(lambda)
     y0 = cosPhi * sin$1(lambda)
     z0 = sin$1(phi)
@@ -12502,7 +12608,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function centroidRingPoint(lambda, phi) {
     ;(lambda *= radians$1), (phi *= radians$1)
-    var cosPhi = cos$1(phi),
+    const cosPhi = cos$1(phi),
       x = cosPhi * cos$1(lambda),
       y = cosPhi * sin$1(lambda),
       z = sin$1(phi),
@@ -12535,15 +12641,12 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
   function centroid(object) {
     W0 = W1 = X0 = Y0 = Z0 = X1 = Y1 = Z1 = 0
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
     X2 = new Adder()
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
     Y2 = new Adder()
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
     Z2 = new Adder()
     geoStream(object, centroidStream)
 
-    var x = +X2,
+    let x = +X2,
       y = +Y2,
       z = +Z2,
       m = hypot(x, y, z)
@@ -12575,8 +12678,8 @@
       return (x = a(x, y)), b(x[0], x[1])
     }
 
-    // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     if (a.invert && b.invert)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       compose.invert = function (x, y) {
         return (x = b.invert(x, y)), x && a.invert(x[0], x[1])
       }
@@ -12612,7 +12715,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'deltaLambda' implicitly has an 'any' ty... Remove this comment to see the full error message
   function rotationLambda(deltaLambda) {
-    var rotation = forwardRotationLambda(deltaLambda)
+    const rotation = forwardRotationLambda(deltaLambda)
     // @ts-expect-error TS(2339) FIXME: Property 'invert' does not exist on type '(lambda:... Remove this comment to see the full error message
     rotation.invert = forwardRotationLambda(-deltaLambda)
     return rotation
@@ -12620,14 +12723,14 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'deltaPhi' implicitly has an 'any' type.
   function rotationPhiGamma(deltaPhi, deltaGamma) {
-    var cosDeltaPhi = cos$1(deltaPhi),
+    const cosDeltaPhi = cos$1(deltaPhi),
       sinDeltaPhi = sin$1(deltaPhi),
       cosDeltaGamma = cos$1(deltaGamma),
       sinDeltaGamma = sin$1(deltaGamma)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     function rotation(lambda, phi) {
-      var cosPhi = cos$1(phi),
+      const cosPhi = cos$1(phi),
         x = cos$1(lambda) * cosPhi,
         y = sin$1(lambda) * cosPhi,
         z = sin$1(phi),
@@ -12640,7 +12743,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     rotation.invert = function (lambda, phi) {
-      var cosPhi = cos$1(phi),
+      const cosPhi = cos$1(phi),
         x = cos$1(lambda) * cosPhi,
         y = sin$1(lambda) * cosPhi,
         z = sin$1(phi),
@@ -12677,7 +12780,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
   function circleStream(stream, radius, delta, direction, t0, t1) {
     if (!delta) return
-    var cosRadius = cos$1(radius),
+    const cosRadius = cos$1(radius),
       sinRadius = sin$1(radius),
       step = direction * delta
     if (t0 == null) {
@@ -12699,12 +12802,12 @@
   function circleRadius(cosRadius, point) {
     ;(point = cartesian(point)), (point[0] -= cosRadius)
     cartesianNormalizeInPlace(point)
-    var radius = acos(-point[1])
+    const radius = acos(-point[1])
     return ((-point[2] < 0 ? -radius : radius) + tau$4 - epsilon$4) % tau$4
   }
 
   function circle() {
-    var center = constant$8([0, 0]),
+    let center = constant$8([0, 0]),
       radius = constant$8(90),
       precision = constant$8(6),
       // @ts-expect-error TS(7034) FIXME: Variable 'ring' implicitly has type 'any[]' in som... Remove this comment to see the full error message
@@ -12722,7 +12825,7 @@
 
     function circle() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var c = center.apply(this, arguments),
+      let c = center.apply(this, arguments),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         r = radius.apply(this, arguments) * radians$1,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -12758,7 +12861,7 @@
 
   function clipBuffer() {
     // @ts-expect-error TS(7034) FIXME: Variable 'lines' implicitly has type 'any[]' in so... Remove this comment to see the full error message
-    var lines = [],
+    let lines = [],
       line
     return {
       // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
@@ -12775,7 +12878,7 @@
       },
       result: function () {
         // @ts-expect-error TS(7005) FIXME: Variable 'lines' implicitly has an 'any[]' type.
-        var result = lines
+        const result = lines
         lines = []
         line = null
         return result
@@ -12810,7 +12913,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'segments' implicitly has an 'any' type.
   function clipRejoin(segments, compareIntersection, startInside, interpolate, stream) {
     // @ts-expect-error TS(7034) FIXME: Variable 'subject' implicitly has type 'any[]' in ... Remove this comment to see the full error message
-    var subject = [],
+    let subject = [],
       // @ts-expect-error TS(7034) FIXME: Variable 'clip' implicitly has type 'any[]' in som... Remove this comment to see the full error message
       clip = [],
       i,
@@ -12819,7 +12922,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'segment' implicitly has an 'any' type.
     segments.forEach(function (segment) {
       if ((n = segment.length - 1) <= 0) return
-      var n,
+      let n,
         p0 = segment[0],
         p1 = segment[n],
         x
@@ -12860,13 +12963,13 @@
     }
 
     // @ts-expect-error TS(7005) FIXME: Variable 'subject' implicitly has an 'any[]' type.
-    var start = subject[0],
+    let start = subject[0],
       points,
       point
 
     while (1) {
       // Find first unvisited intersection.
-      var current = start,
+      let current = start,
         isSubject = true
       while (current.v) if ((current = current.n) === start) return
       points = current.z
@@ -12900,7 +13003,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'array' implicitly has an 'any' type.
   function link$1(array) {
     if (!(n = array.length)) return
-    var n,
+    let n,
       i = 0,
       a = array[0],
       b
@@ -12921,20 +13024,19 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'polygon' implicitly has an 'any' type.
   function polygonContains(polygon, point) {
-    var lambda = longitude(point),
+    let lambda = longitude(point),
       phi = point[1],
       sinPhi = sin$1(phi),
       normal = [sin$1(lambda), -cos$1(lambda), 0],
       angle = 0,
       winding = 0
 
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
-    var sum = new Adder()
+    const sum = new Adder()
 
     if (sinPhi === 1) phi = halfPi$2 + epsilon$4
     else if (sinPhi === -1) phi = -halfPi$2 - epsilon$4
 
-    for (var i = 0, n = polygon.length; i < n; ++i) {
+    for (let i = 0, n = polygon.length; i < n; ++i) {
       if (!(m = (ring = polygon[i]).length)) continue
       var ring,
         m,
@@ -12944,7 +13046,7 @@
         sinPhi0 = sin$1(phi0),
         cosPhi0 = cos$1(phi0)
 
-      for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
+      for (let j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
         var point1 = ring[j],
           lambda1 = longitude(point1),
           phi1 = point1[1] / 2 + quarterPi,
@@ -12963,12 +13065,12 @@
         // and are the latitudes smaller than the parallel (phi)?
         // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
         if (antimeridian ^ (lambda0 >= lambda) ^ (lambda1 >= lambda)) {
-          var arc = cartesianCross(cartesian(point0), cartesian(point1))
+          const arc = cartesianCross(cartesian(point0), cartesian(point1))
           cartesianNormalizeInPlace(arc)
-          var intersection = cartesianCross(normal, arc)
+          const intersection = cartesianCross(normal, arc)
           cartesianNormalizeInPlace(intersection)
           // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
-          var phiArc = (antimeridian ^ (delta >= 0) ? -1 : 1) * asin(intersection[2])
+          const phiArc = (antimeridian ^ (delta >= 0) ? -1 : 1) * asin(intersection[2])
           if (phi > phiArc || (phi === phiArc && (arc[0] || arc[1]))) {
             // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
             winding += antimeridian ^ (delta >= 0) ? 1 : -1
@@ -12996,7 +13098,7 @@
   function clip(pointVisible, clipLine, interpolate, start) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'sink' implicitly has an 'any' type.
     return function (sink) {
-      var line = clipLine(sink),
+      let line = clipLine(sink),
         ringBuffer = clipBuffer(),
         ringSink = clipLine(ringBuffer),
         polygonStarted = false,
@@ -13022,10 +13124,10 @@
           clip.point = point
           clip.lineStart = lineStart
           clip.lineEnd = lineEnd
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'merge'.
+          // @ts-expect-error TS(7005) FIXME: Variable 'segments' implicitly has an 'any' type.
           segments = merge(segments)
           // @ts-expect-error TS(7005) FIXME: Variable 'polygon' implicitly has an 'any' type.
-          var startInside = polygonContains(polygon, start)
+          const startInside = polygonContains(polygon, start)
           if (segments.length) {
             if (!polygonStarted) sink.polygonStart(), (polygonStarted = true)
             clipRejoin(segments, compareIntersection, startInside, interpolate, sink)
@@ -13083,7 +13185,7 @@
         pointRing(ring[0][0], ring[0][1])
         ringSink.lineEnd()
 
-        var clean = ringSink.clean(),
+        let clean = ringSink.clean(),
           ringSegments = ringBuffer.result(),
           i,
           n = ringSegments.length,
@@ -13137,7 +13239,7 @@
     )
   }
 
-  var clipAntimeridian = clip(
+  const clipAntimeridian = clip(
     function () {
       return true
     },
@@ -13151,7 +13253,7 @@
   // intersections, and the first and last segments should be rejoined.
   // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
   function clipAntimeridianLine(stream) {
-    var lambda0 = NaN,
+    let lambda0 = NaN,
       phi0 = NaN,
       sign0 = NaN,
       // @ts-expect-error TS(7034) FIXME: Variable 'clean' implicitly has type 'any' in some... Remove this comment to see the full error message
@@ -13164,7 +13266,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'lambda1' implicitly has an 'any' type.
       point: function (lambda1, phi1) {
-        var sign1 = lambda1 > 0 ? pi$3 : -pi$3,
+        const sign1 = lambda1 > 0 ? pi$3 : -pi$3,
           delta = abs$2(lambda1 - lambda0)
         if (abs$2(delta - pi$3) < epsilon$4) {
           // line crosses a pole
@@ -13202,7 +13304,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda0' implicitly has an 'any' type.
   function clipAntimeridianIntersect(lambda0, phi0, lambda1, phi1) {
-    var cosPhi0,
+    let cosPhi0,
       cosPhi1,
       sinLambda0Lambda1 = sin$1(lambda0 - lambda1)
     return abs$2(sinLambda0Lambda1) > epsilon$4
@@ -13216,7 +13318,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'from' implicitly has an 'any' type.
   function clipAntimeridianInterpolate(from, to, direction, stream) {
-    var phi
+    let phi
     if (from == null) {
       phi = direction * halfPi$2
       stream.point(-pi$3, phi)
@@ -13229,7 +13331,7 @@
       stream.point(-pi$3, 0)
       stream.point(-pi$3, phi)
     } else if (abs$2(from[0] - to[0]) > epsilon$4) {
-      var lambda = from[0] < to[0] ? pi$3 : -pi$3
+      const lambda = from[0] < to[0] ? pi$3 : -pi$3
       phi = (direction * lambda) / 2
       stream.point(-lambda, phi)
       stream.point(0, phi)
@@ -13241,7 +13343,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'radius' implicitly has an 'any' type.
   function clipCircle(radius) {
-    var cr = cos$1(radius),
+    const cr = cos$1(radius),
       delta = 6 * radians$1,
       smallRadius = cr > 0,
       notHemisphere = abs$2(cr) > epsilon$4 // TODO optimise for this common case
@@ -13263,7 +13365,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
     function clipLine(stream) {
       // @ts-expect-error TS(7034) FIXME: Variable 'point0' implicitly has type 'any' in som... Remove this comment to see the full error message
-      var point0, // previous point
+      let point0, // previous point
         // @ts-expect-error TS(7034) FIXME: Variable 'c0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         c0, // code for previous point
         // @ts-expect-error TS(7034) FIXME: Variable 'v0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
@@ -13279,7 +13381,7 @@
         },
         // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
         point: function (lambda, phi) {
-          var point1 = [lambda, phi],
+          let point1 = [lambda, phi],
             point2,
             v = visible(lambda, phi),
             c = smallRadius ? (v ? 0 : code(lambda, phi)) : v ? code(lambda + (lambda < 0 ? pi$3 : -pi$3), phi) : 0
@@ -13311,7 +13413,7 @@
             point0 = point2
             // @ts-expect-error TS(7005) FIXME: Variable 'point0' implicitly has an 'any' type.
           } else if (notHemisphere && point0 && smallRadius ^ v) {
-            var t
+            let t
             // If the codes for two points are different, or are both zero,
             // and there this segment intersects with the small circle.
             // @ts-expect-error TS(7005) FIXME: Variable 'c0' implicitly has an 'any' type.
@@ -13353,12 +13455,12 @@
     // Intersects the great circle between a and b with the clip circle.
     // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     function intersect(a, b, two) {
-      var pa = cartesian(a),
+      const pa = cartesian(a),
         pb = cartesian(b)
 
       // We have two planes, n1.p = d1 and n2.p = d2.
       // Find intersection line p(t) = c1 n1 + c2 n2 + t (n1 ⨯ n2).
-      var n1 = [1, 0, 0], // normal
+      const n1 = [1, 0, 0], // normal
         n2 = cartesianCross(pa, pb),
         n2n2 = cartesianDot(n2, n2),
         n1n2 = n2[0], // cartesianDot(n1, n2),
@@ -13367,7 +13469,7 @@
       // Two polar points.
       if (!determinant) return !two && a
 
-      var c1 = (cr * n2n2) / determinant,
+      const c1 = (cr * n2n2) / determinant,
         c2 = (-cr * n1n2) / determinant,
         n1xn2 = cartesianCross(n1, n2),
         A = cartesianScale(n1, c1),
@@ -13375,14 +13477,14 @@
       cartesianAddInPlace(A, B)
 
       // Solve |p(t)|^2 = 1.
-      var u = n1xn2,
+      const u = n1xn2,
         w = cartesianDot(A, u),
         uu = cartesianDot(u, u),
         t2 = w * w - uu * (cartesianDot(A, A) - 1)
 
       if (t2 < 0) return
 
-      var t = sqrt(t2),
+      let t = sqrt(t2),
         q = cartesianScale(u, (-w - t) / uu)
       cartesianAddInPlace(q, A)
       q = spherical(q)
@@ -13390,7 +13492,7 @@
       if (!two) return q
 
       // Two intersection points.
-      var lambda0 = a[0],
+      let lambda0 = a[0],
         lambda1 = b[0],
         phi0 = a[1],
         phi1 = b[1],
@@ -13398,7 +13500,7 @@
 
       if (lambda1 < lambda0) (z = lambda0), (lambda0 = lambda1), (lambda1 = z)
 
-      var delta = lambda1 - lambda0,
+      const delta = lambda1 - lambda0,
         polar = abs$2(delta - pi$3) < epsilon$4,
         meridian = polar || delta < epsilon$4
 
@@ -13414,7 +13516,7 @@
           : // @ts-expect-error TS(2447) FIXME: The '^' operator is not allowed for boolean types.... Remove this comment to see the full error message
             (delta > pi$3) ^ (lambda0 <= q[0] && q[0] <= lambda1)
       ) {
-        var q1 = cartesianScale(u, (-w + t) / uu)
+        const q1 = cartesianScale(u, (-w + t) / uu)
         cartesianAddInPlace(q1, A)
         return [q, spherical(q1)]
       }
@@ -13424,7 +13526,7 @@
     // the small circle's bounding box.
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     function code(lambda, phi) {
-      var r = smallRadius ? radius : pi$3 - radius,
+      let r = smallRadius ? radius : pi$3 - radius,
         code = 0
       if (lambda < -r) code |= 1 // left
       else if (lambda > r) code |= 2 // right
@@ -13438,7 +13540,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function clipLine(a, b, x0, y0, x1, y1) {
-    var ax = a[0],
+    let ax = a[0],
       ay = a[1],
       bx = b[0],
       by = b[1],
@@ -13497,7 +13599,7 @@
     return true
   }
 
-  var clipMax = 1e9,
+  const clipMax = 1e9,
     clipMin = -clipMax
 
   // TODO Use d3-polygon’s polygonContains here for the ring check?
@@ -13512,7 +13614,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'from' implicitly has an 'any' type.
     function interpolate(from, to, direction, stream) {
-      var a = 0,
+      let a = 0,
         a1 = 0
       if (
         from == null ||
@@ -13553,7 +13655,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     function comparePoint(a, b) {
-      var ca = corner(a, 1),
+      const ca = corner(a, 1),
         cb = corner(b, 1)
       return ca !== cb
         ? ca - cb
@@ -13568,7 +13670,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
     return function (stream) {
-      var activeStream = stream,
+      let activeStream = stream,
         bufferStream = clipBuffer(),
         // @ts-expect-error TS(7034) FIXME: Variable 'segments' implicitly has type 'any' in s... Remove this comment to see the full error message
         segments,
@@ -13577,18 +13679,22 @@
         ring,
         // @ts-expect-error TS(7034) FIXME: Variable 'x__' implicitly has type 'any' in some l... Remove this comment to see the full error message
         x__,
+        // @ts-expect-error TS(7034) FIXME: Variable 'y__' implicitly has type 'any' in some l... Remove this comment to see the full error message
         y__,
+        // @ts-expect-error TS(7034) FIXME: Variable 'v__' implicitly has type 'any' in some l... Remove this comment to see the full error message
         v__, // first point
         // @ts-expect-error TS(7034) FIXME: Variable 'x_' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         x_,
+        // @ts-expect-error TS(7034) FIXME: Variable 'y_' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         y_,
+        // @ts-expect-error TS(7034) FIXME: Variable 'v_' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         v_, // previous point
         // @ts-expect-error TS(7034) FIXME: Variable 'first' implicitly has type 'any' in some... Remove this comment to see the full error message
         first,
         // @ts-expect-error TS(7034) FIXME: Variable 'clean' implicitly has type 'any' in some... Remove this comment to see the full error message
         clean
 
-      var clipStream = {
+      const clipStream = {
         point: point,
         lineStart: lineStart,
         lineEnd: lineEnd,
@@ -13602,12 +13708,12 @@
       }
 
       function polygonInside() {
-        var winding = 0
+        let winding = 0
 
         // @ts-expect-error TS(7034) FIXME: Variable 'n' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-        for (var i = 0, n = polygon.length; i < n; ++i) {
-          // @ts-expect-error TS(7005) FIXME: Variable 'polygon' implicitly has an 'any' type.
+        for (let i = 0, n = polygon.length; i < n; ++i) {
           for (
+            // @ts-expect-error TS(7005) FIXME: Variable 'polygon' implicitly has an 'any' type.
             var ring = polygon[i], j = 1, m = ring.length, point = ring[0], a0, a1, b0 = point[0], b1 = point[1];
             j < m;
             ++j
@@ -13630,10 +13736,10 @@
       }
 
       function polygonEnd() {
-        var startInside = polygonInside(),
+        const startInside = polygonInside(),
           // @ts-expect-error TS(7005) FIXME: Variable 'clean' implicitly has an 'any' type.
           cleanInside = clean && startInside,
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'merge'.
+          // @ts-expect-error TS(7005) FIXME: Variable 'segments' implicitly has an 'any' type.
           visible = (segments = merge(segments)).length
         if (cleanInside || visible) {
           stream.polygonStart()
@@ -13678,7 +13784,7 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       function linePoint(x, y) {
-        var v = visible(x, y)
+        const v = visible(x, y)
         // @ts-expect-error TS(7005) FIXME: Variable 'polygon' implicitly has an 'any' type.
         if (polygon) ring.push([x, y])
         // @ts-expect-error TS(7005) FIXME: Variable 'first' implicitly has an 'any' type.
@@ -13694,7 +13800,10 @@
           if (v && v_) activeStream.point(x, y)
           else {
             // @ts-expect-error TS(7005) FIXME: Variable 'x_' implicitly has an 'any' type.
-            var a = [(x_ = Math.max(clipMin, Math.min(clipMax, x_))), (y_ = Math.max(clipMin, Math.min(clipMax, y_)))],
+            const a = [
+                (x_ = Math.max(clipMin, Math.min(clipMax, x_))),
+                (y_ = Math.max(clipMin, Math.min(clipMax, y_))),
+              ],
               b = [(x = Math.max(clipMin, Math.min(clipMax, x))), (y = Math.max(clipMin, Math.min(clipMax, y)))]
             if (clipLine(a, b, x0, y0, x1, y1)) {
               // @ts-expect-error TS(7005) FIXME: Variable 'v_' implicitly has an 'any' type.
@@ -13720,7 +13829,7 @@
   }
 
   function extent$1() {
-    var x0 = 0,
+    let x0 = 0,
       y0 = 0,
       x1 = 960,
       y1 = 500,
@@ -13739,9 +13848,9 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
       extent: function (_) {
-        // @ts-expect-error TS(7005) FIXME: Variable 'clip' implicitly has an 'any' type.
         return arguments.length
-          ? ((x0 = +_[0][0]), (y0 = +_[0][1]), (x1 = +_[1][0]), (y1 = +_[1][1]), (cache = cacheStream = null), clip)
+          ? // @ts-expect-error TS(7005) FIXME: Variable 'clip' implicitly has an 'any' type.
+            ((x0 = +_[0][0]), (y0 = +_[0][1]), (x1 = +_[1][0]), (y1 = +_[1][1]), (cache = cacheStream = null), clip)
           : [
               [x0, y0],
               [x1, y1],
@@ -13751,7 +13860,7 @@
   }
 
   // @ts-expect-error TS(7034) FIXME: Variable 'lengthSum' implicitly has type 'any' in ... Remove this comment to see the full error message
-  var lengthSum,
+  let lengthSum,
     // @ts-expect-error TS(7034) FIXME: Variable 'lambda0$2' implicitly has type 'any' in ... Remove this comment to see the full error message
     lambda0$2,
     // @ts-expect-error TS(7034) FIXME: Variable 'sinPhi0$1' implicitly has type 'any' in ... Remove this comment to see the full error message
@@ -13759,7 +13868,7 @@
     // @ts-expect-error TS(7034) FIXME: Variable 'cosPhi0$1' implicitly has type 'any' in ... Remove this comment to see the full error message
     cosPhi0$1
 
-  var lengthStream = {
+  const lengthStream = {
     sphere: noop$2,
     point: noop$2,
     lineStart: lengthLineStart,
@@ -13789,7 +13898,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function lengthPoint(lambda, phi) {
     ;(lambda *= radians$1), (phi *= radians$1)
-    var sinPhi = sin$1(phi),
+    const sinPhi = sin$1(phi),
       cosPhi = cos$1(phi),
       // @ts-expect-error TS(7005) FIXME: Variable 'lambda0$2' implicitly has an 'any' type.
       delta = abs$2(lambda - lambda0$2),
@@ -13807,13 +13916,12 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
   function length$2(object) {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
     lengthSum = new Adder()
     geoStream(object, lengthStream)
     return +lengthSum
   }
 
-  var coordinates = [null, null],
+  const coordinates = [null, null],
     object$1 = { type: 'LineString', coordinates: coordinates }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
@@ -13823,14 +13931,14 @@
     return length$2(object$1)
   }
 
-  var containsObjectType = {
+  const containsObjectType = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     Feature: function (object, point) {
       return containsGeometry(object.geometry, point)
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     FeatureCollection: function (object, point) {
-      var features = object.features,
+      let features = object.features,
         i = -1,
         n = features.length
       while (++i < n) if (containsGeometry(features[i].geometry, point)) return true
@@ -13838,7 +13946,7 @@
     },
   }
 
-  var containsGeometryType = {
+  const containsGeometryType = {
     Sphere: function () {
       return true
     },
@@ -13848,7 +13956,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiPoint: function (object, point) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) if (containsPoint(coordinates[i], point)) return true
@@ -13860,7 +13968,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiLineString: function (object, point) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) if (containsLine(coordinates[i], point)) return true
@@ -13872,7 +13980,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     MultiPolygon: function (object, point) {
-      var coordinates = object.coordinates,
+      let coordinates = object.coordinates,
         i = -1,
         n = coordinates.length
       while (++i < n) if (containsPolygon(coordinates[i], point)) return true
@@ -13880,7 +13988,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'object' implicitly has an 'any' type.
     GeometryCollection: function (object, point) {
-      var geometries = object.geometries,
+      let geometries = object.geometries,
         i = -1,
         n = geometries.length
       while (++i < n) if (containsGeometry(geometries[i], point)) return true
@@ -13903,8 +14011,8 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
   function containsLine(coordinates, point) {
-    var ao, bo, ab
-    for (var i = 0, n = coordinates.length; i < n; i++) {
+    let ao, bo, ab
+    for (let i = 0, n = coordinates.length; i < n; i++) {
       bo = distance(coordinates[i], point)
       if (bo === 0) return true
       if (i > 0) {
@@ -13951,8 +14059,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y0' implicitly has an 'any' type.
   function graticuleX(y0, y1, dy) {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
-    var y = sequence(y0, y1 - epsilon$4, dy).concat(y1)
+    const y = sequence(y0, y1 - epsilon$4, dy).concat(y1)
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x) {
       return y.map(function (y) {
@@ -13963,8 +14070,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x0' implicitly has an 'any' type.
   function graticuleY(x0, x1, dx) {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
-    var x = sequence(x0, x1 - epsilon$4, dx).concat(x1)
+    const x = sequence(x0, x1 - epsilon$4, dx).concat(x1)
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
     return function (y) {
       return x.map(function (x) {
@@ -13975,14 +14081,20 @@
 
   function graticule() {
     // @ts-expect-error TS(7034) FIXME: Variable 'x1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-    var x1,
+    let x1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'X1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       X1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'X0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       X0,
       // @ts-expect-error TS(7034) FIXME: Variable 'y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'Y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       Y1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'Y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       Y0,
       dx = 10,
       dy = dx,
@@ -13990,8 +14102,11 @@
       DY = 360,
       // @ts-expect-error TS(7034) FIXME: Variable 'x' implicitly has type 'any' in some loc... Remove this comment to see the full error message
       x,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y' implicitly has type 'any' in some loc... Remove this comment to see the full error message
       y,
+      // @ts-expect-error TS(7034) FIXME: Variable 'X' implicitly has type 'any' in some loc... Remove this comment to see the full error message
       X,
+      // @ts-expect-error TS(7034) FIXME: Variable 'Y' implicitly has type 'any' in some loc... Remove this comment to see the full error message
       Y,
       precision = 2.5
 
@@ -14000,33 +14115,35 @@
     }
 
     function lines() {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
       return (
+        // @ts-expect-error TS(7005) FIXME: Variable 'X0' implicitly has an 'any' type.
         sequence(ceil(X0 / DX) * DX, X1, DX)
+          // @ts-expect-error TS(7005) FIXME: Variable 'X' implicitly has an 'any' type.
           .map(X)
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
+          // @ts-expect-error TS(7005) FIXME: Variable 'Y0' implicitly has an 'any' type.
           .concat(sequence(ceil(Y0 / DY) * DY, Y1, DY).map(Y))
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
           .concat(
+            // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
             sequence(ceil(x0 / dx) * dx, x1, dx)
               .filter(function (x) {
                 return abs$2(x % DX) > epsilon$4
               })
+              // @ts-expect-error TS(7005) FIXME: Variable 'x' implicitly has an 'any' type.
               .map(x)
           )
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
           .concat(
+            // @ts-expect-error TS(7005) FIXME: Variable 'y0' implicitly has an 'any' type.
             sequence(ceil(y0 / dy) * dy, y1, dy)
               .filter(function (y) {
                 return abs$2(y % DY) > epsilon$4
               })
+              // @ts-expect-error TS(7005) FIXME: Variable 'y' implicitly has an 'any' type.
               .map(y)
           )
       )
     }
 
     graticule.lines = function () {
-      // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
       return lines().map(function (coordinates) {
         return { type: 'LineString', coordinates: coordinates }
       })
@@ -14059,10 +14176,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     graticule.extentMajor = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'X0' implicitly has an 'any' type.
       if (!arguments.length)
         return [
+          // @ts-expect-error TS(7005) FIXME: Variable 'X0' implicitly has an 'any' type.
           [X0, Y0],
+          // @ts-expect-error TS(7005) FIXME: Variable 'X1' implicitly has an 'any' type.
           [X1, Y1],
         ]
       ;(X0 = +_[0][0]), (X1 = +_[1][0])
@@ -14074,10 +14192,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     graticule.extentMinor = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
       if (!arguments.length)
         return [
+          // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
           [x0, y0],
+          // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
           [x1, y1],
         ]
       ;(x0 = +_[0][0]), (x1 = +_[1][0])
@@ -14087,7 +14206,7 @@
       return graticule.precision(precision)
     }
 
-    // @ts-expect-error TS(7023) FIXME: 'step' implicitly has return type 'any' because it... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     graticule.step = function (_) {
       // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
       if (!arguments.length) return graticule.stepMinor()
@@ -14144,7 +14263,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function interpolate$2(a, b) {
-    var x0 = a[0] * radians$1,
+    const x0 = a[0] * radians$1,
       y0 = a[1] * radians$1,
       x1 = b[0] * radians$1,
       y1 = b[1] * radians$1,
@@ -14159,10 +14278,10 @@
       d = 2 * asin(sqrt(haversin(y1 - y0) + cy0 * cy1 * haversin(x1 - x0))),
       k = sin$1(d)
 
-    // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
-    var interpolate = d
-      ? function (t) {
-          var B = sin$1((t *= d)) / k,
+    const interpolate = d
+      ? // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
+        function (t) {
+          const B = sin$1((t *= d)) / k,
             A = sin$1(d - t) / k,
             x = A * kx0 + B * kx1,
             y = A * ky0 + B * ky1,
@@ -14180,11 +14299,9 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var identity$4 = x => x
+  const identity$4 = x => x
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
-  var areaSum$1 = new Adder(),
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
+  let areaSum$1 = new Adder(),
     areaRingSum$1 = new Adder(),
     // @ts-expect-error TS(7034) FIXME: Variable 'x00' implicitly has type 'any' in some l... Remove this comment to see the full error message
     x00,
@@ -14205,13 +14322,13 @@
     },
     polygonEnd: function () {
       areaStream$1.lineStart = areaStream$1.lineEnd = areaStream$1.point = noop$2
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'Adder' is not assignable to para... Remove this comment to see the full error message
       areaSum$1.add(abs$2(areaRingSum$1))
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
       areaRingSum$1 = new Adder()
     },
     result: function () {
-      var area = areaSum$1 / 2
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
+      // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+      const area = areaSum$1 / 2
       areaSum$1 = new Adder()
       return area
     },
@@ -14241,19 +14358,19 @@
     areaPoint$1(x00, y00)
   }
 
-  var x0$2 = Infinity,
+  let x0$2 = Infinity,
     y0$2 = x0$2,
     x1 = -x0$2,
     y1 = x1
 
-  var boundsStream$1 = {
+  const boundsStream$1 = {
     point: boundsPoint$1,
     lineStart: noop$2,
     lineEnd: noop$2,
     polygonStart: noop$2,
     polygonEnd: noop$2,
     result: function () {
-      var bounds = [
+      const bounds = [
         [x0$2, y0$2],
         [x1, y1],
       ]
@@ -14272,7 +14389,7 @@
 
   // TODO Enforce positive area for exterior, negative area for interior?
 
-  var X0$1 = 0,
+  let X0$1 = 0,
     Y0$1 = 0,
     Z0$1 = 0,
     X1$1 = 0,
@@ -14304,7 +14421,7 @@
       centroidStream$1.lineEnd = centroidLineEnd$1
     },
     result: function () {
-      var centroid = Z2$1
+      const centroid = Z2$1
         ? [X2$1 / Z2$1, Y2$1 / Z2$1]
         : Z1$1
         ? [X1$1 / Z1$1, Y1$1 / Z1$1]
@@ -14336,7 +14453,8 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function centroidPointLine(x, y) {
     // @ts-expect-error TS(7005) FIXME: Variable 'x0$3' implicitly has an 'any' type.
-    var dx = x - x0$3,
+    const dx = x - x0$3,
+      // @ts-expect-error TS(7005) FIXME: Variable 'y0$3' implicitly has an 'any' type.
       dy = y - y0$3,
       z = sqrt(dx * dx + dy * dy)
     // @ts-expect-error TS(7005) FIXME: Variable 'x0$3' implicitly has an 'any' type.
@@ -14369,7 +14487,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function centroidPointRing(x, y) {
     // @ts-expect-error TS(7005) FIXME: Variable 'x0$3' implicitly has an 'any' type.
-    var dx = x - x0$3,
+    let dx = x - x0$3,
       // @ts-expect-error TS(7005) FIXME: Variable 'y0$3' implicitly has an 'any' type.
       dy = y - y0$3,
       z = sqrt(dx * dx + dy * dy)
@@ -14437,8 +14555,7 @@
     result: noop$2,
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
-  var lengthSum$1 = new Adder(),
+  let lengthSum$1 = new Adder(),
     // @ts-expect-error TS(7034) FIXME: Variable 'lengthRing' implicitly has type 'any' in... Remove this comment to see the full error message
     lengthRing,
     // @ts-expect-error TS(7034) FIXME: Variable 'x00$2' implicitly has type 'any' in some... Remove this comment to see the full error message
@@ -14468,8 +14585,7 @@
       lengthRing = null
     },
     result: function () {
-      var length = +lengthSum$1
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'Adder'.
+      const length = +lengthSum$1
       lengthSum$1 = new Adder()
       return length
     },
@@ -14538,7 +14654,7 @@
     },
     result: function () {
       if (this._string.length) {
-        var result = this._string.join('')
+        const result = this._string.join('')
         this._string = []
         return result
       } else {
@@ -14570,7 +14686,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projection' implicitly has an 'any' typ... Remove this comment to see the full error message
   function index$2(projection, context) {
-    var pointRadius = 4.5,
+    let pointRadius = 4.5,
       // @ts-expect-error TS(7034) FIXME: Variable 'projectionStream' implicitly has type 'a... Remove this comment to see the full error message
       projectionStream,
       // @ts-expect-error TS(7034) FIXME: Variable 'contextStream' implicitly has type 'any'... Remove this comment to see the full error message
@@ -14654,42 +14770,34 @@
   function transformer(methods) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
     return function (stream) {
-      var s = new TransformStream()
-      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      for (var key in methods) s[key] = methods[key]
-      // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
+      // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+      const s = new TransformStream()
+      for (const key in methods) s[key] = methods[key]
       s.stream = stream
       return s
     }
   }
 
-  // @ts-expect-error TS(2300) FIXME: Duplicate identifier 'TransformStream'.
   function TransformStream() {}
 
   TransformStream.prototype = {
-    // @ts-expect-error TS(2322) FIXME: Type '{ constructor: { new <I = any, O = any>(tran... Remove this comment to see the full error message
     constructor: TransformStream,
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     point: function (x, y) {
       this.stream.point(x, y)
     },
-    // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
     sphere: function () {
       this.stream.sphere()
     },
-    // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
     lineStart: function () {
       this.stream.lineStart()
     },
-    // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
     lineEnd: function () {
       this.stream.lineEnd()
     },
-    // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
     polygonStart: function () {
       this.stream.polygonStart()
     },
-    // @ts-expect-error TS(2339) FIXME: Property 'stream' does not exist on type 'Transfor... Remove this comment to see the full error message
     polygonEnd: function () {
       this.stream.polygonEnd()
     },
@@ -14697,7 +14805,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projection' implicitly has an 'any' typ... Remove this comment to see the full error message
   function fit(projection, fitBounds, object) {
-    var clip = projection.clipExtent && projection.clipExtent()
+    const clip = projection.clipExtent && projection.clipExtent()
     projection.scale(150).translate([0, 0])
     if (clip != null) projection.clipExtent(null)
     geoStream(object, projection.stream(boundsStream$1))
@@ -14708,11 +14816,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projection' implicitly has an 'any' typ... Remove this comment to see the full error message
   function fitExtent(projection, extent, object) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
     return fit(
       projection,
+      // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
       function (b) {
-        var w = extent[1][0] - extent[0][0],
+        const w = extent[1][0] - extent[0][0],
           h = extent[1][1] - extent[0][1],
           k = Math.min(w / (b[1][0] - b[0][0]), h / (b[1][1] - b[0][1])),
           x = +extent[0][0] + (w - k * (b[1][0] + b[0][0])) / 2,
@@ -14730,11 +14838,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projection' implicitly has an 'any' typ... Remove this comment to see the full error message
   function fitWidth(projection, width, object) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
     return fit(
       projection,
+      // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
       function (b) {
-        var w = +width,
+        const w = +width,
           k = w / (b[1][0] - b[0][0]),
           x = (w - k * (b[1][0] + b[0][0])) / 2,
           y = -k * b[0][1]
@@ -14746,11 +14854,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projection' implicitly has an 'any' typ... Remove this comment to see the full error message
   function fitHeight(projection, height, object) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
     return fit(
       projection,
+      // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
       function (b) {
-        var h = +height,
+        const h = +height,
           k = h / (b[1][1] - b[0][1]),
           x = -k * b[0][0],
           y = (h - k * (b[1][1] + b[0][1])) / 2
@@ -14760,7 +14868,7 @@
     )
   }
 
-  var maxDepth = 16, // maximum depth of subdivision
+  const maxDepth = 16, // maximum depth of subdivision
     cosMinDistance = cos$1(30 * radians$1) // cos(minimum angular distance)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'project' implicitly has an 'any' type.
@@ -14783,11 +14891,11 @@
   function resample$1(project, delta2) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x0' implicitly has an 'any' type.
     function resampleLineTo(x0, y0, lambda0, a0, b0, c0, x1, y1, lambda1, a1, b1, c1, depth, stream) {
-      var dx = x1 - x0,
+      const dx = x1 - x0,
         dy = y1 - y0,
         d2 = dx * dx + dy * dy
       if (d2 > 4 * delta2 && depth--) {
-        var a = a0 + a1,
+        let a = a0 + a1,
           b = b0 + b1,
           c = c0 + c1,
           m = sqrt(a * a + b * b + c * c),
@@ -14817,18 +14925,28 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'stream' implicitly has an 'any' type.
     return function (stream) {
       // @ts-expect-error TS(7034) FIXME: Variable 'lambda00' implicitly has type 'any' in s... Remove this comment to see the full error message
-      var lambda00,
+      let lambda00,
+        // @ts-expect-error TS(7034) FIXME: Variable 'x00' implicitly has type 'any' in some l... Remove this comment to see the full error message
         x00,
+        // @ts-expect-error TS(7034) FIXME: Variable 'y00' implicitly has type 'any' in some l... Remove this comment to see the full error message
         y00,
+        // @ts-expect-error TS(7034) FIXME: Variable 'a00' implicitly has type 'any' in some l... Remove this comment to see the full error message
         a00,
+        // @ts-expect-error TS(7034) FIXME: Variable 'b00' implicitly has type 'any' in some l... Remove this comment to see the full error message
         b00,
+        // @ts-expect-error TS(7034) FIXME: Variable 'c00' implicitly has type 'any' in some l... Remove this comment to see the full error message
         c00, // first point
         // @ts-expect-error TS(7034) FIXME: Variable 'lambda0' implicitly has type 'any' in so... Remove this comment to see the full error message
         lambda0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         x0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         y0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'a0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         a0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'b0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         b0,
+        // @ts-expect-error TS(7034) FIXME: Variable 'c0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
         c0 // previous point
 
       var resampleStream = {
@@ -14859,15 +14977,20 @@
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
       function linePoint(lambda, phi) {
-        var c = cartesian([lambda, phi]),
+        const c = cartesian([lambda, phi]),
           p = project(lambda, phi)
-        // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
         resampleLineTo(
+          // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
           x0,
+          // @ts-expect-error TS(7005) FIXME: Variable 'y0' implicitly has an 'any' type.
           y0,
+          // @ts-expect-error TS(7005) FIXME: Variable 'lambda0' implicitly has an 'any' type.
           lambda0,
+          // @ts-expect-error TS(7005) FIXME: Variable 'a0' implicitly has an 'any' type.
           a0,
+          // @ts-expect-error TS(7005) FIXME: Variable 'b0' implicitly has an 'any' type.
           b0,
+          // @ts-expect-error TS(7005) FIXME: Variable 'c0' implicitly has an 'any' type.
           c0,
           (x0 = p[0]),
           (y0 = p[1]),
@@ -14910,7 +15033,7 @@
     }
   }
 
-  var transformRadians = transformer({
+  const transformRadians = transformer({
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     point: function (x, y) {
       this.stream.point(x * radians$1, y * radians$1)
@@ -14922,7 +15045,7 @@
     return transformer({
       // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       point: function (x, y) {
-        var r = rotate(x, y)
+        const r = rotate(x, y)
         return this.stream.point(r[0], r[1])
       },
     })
@@ -14946,7 +15069,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'k' implicitly has an 'any' type.
   function scaleTranslateRotate(k, dx, dy, sx, sy, alpha) {
     if (!alpha) return scaleTranslate(k, dx, dy, sx, sy)
-    var cosAlpha = cos$1(alpha),
+    const cosAlpha = cos$1(alpha),
       sinAlpha = sin$1(alpha),
       a = cosAlpha * k,
       b = sinAlpha * k,
@@ -14977,16 +15100,16 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'projectAt' implicitly has an 'any' type... Remove this comment to see the full error message
   function projectionMutator(projectAt) {
     // @ts-expect-error TS(7034) FIXME: Variable 'project' implicitly has type 'any' in so... Remove this comment to see the full error message
-    var project,
+    let project,
       k = 150, // scale
       x = 480,
       y = 250, // translate
       lambda = 0,
       phi = 0, // center
-      // @ts-expect-error TS(7034) FIXME: Variable 'rotate' implicitly has type 'any' in som... Remove this comment to see the full error message
       deltaLambda = 0,
       deltaPhi = 0,
       deltaGamma = 0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'rotate' implicitly has type 'any' in som... Remove this comment to see the full error message
       rotate, // pre-rotate
       alpha = 0, // post-rotate angle
       sx = 1, // reflectX
@@ -14996,8 +15119,11 @@
       preclip = clipAntimeridian, // pre-clip angle
       // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x0 = null,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'x1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y1,
       postclip = identity$4, // post-clip extent
       delta2 = 0.5, // precision
@@ -15029,8 +15155,10 @@
     projection.stream = function (stream) {
       // @ts-expect-error TS(7005) FIXME: Variable 'cache' implicitly has an 'any' type.
       return cache && cacheStream === stream
-        ? cache
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'cache' implicitly has an 'any' type.
+          cache
         : (cache = transformRadians(
+            // @ts-expect-error TS(7005) FIXME: Variable 'rotate' implicitly has an 'any' type.
             transformRotate(rotate)(preclip(projectResample(postclip((cacheStream = stream)))))
           ))
     }
@@ -15047,25 +15175,27 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     projection.clipAngle = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'theta' implicitly has an 'any' type.
       return arguments.length
         ? ((preclip = +_ ? clipCircle((theta = _ * radians$1)) : ((theta = null), clipAntimeridian)), reset())
-        : theta * degrees$2
+        : // @ts-expect-error TS(7005) FIXME: Variable 'theta' implicitly has an 'any' type.
+          theta * degrees$2
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     projection.clipExtent = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
       return arguments.length
         ? ((postclip =
             _ == null
               ? ((x0 = y0 = x1 = y1 = null), identity$4)
               : clipRectangle((x0 = +_[0][0]), (y0 = +_[0][1]), (x1 = +_[1][0]), (y1 = +_[1][1]))),
           reset())
-        : x0 == null
+        : // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
+        x0 == null
         ? null
         : [
+            // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
             [x0, y0],
+            // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
             [x1, y1],
           ]
     }
@@ -15114,9 +15244,9 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     projection.precision = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'projectTransform' implicitly has an 'any... Remove this comment to see the full error message
       return arguments.length
-        ? ((projectResample = resample(projectTransform, (delta2 = _ * _))), reset())
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'projectTransform' implicitly has an 'any... Remove this comment to see the full error message
+          ((projectResample = resample(projectTransform, (delta2 = _ * _))), reset())
         : sqrt(delta2)
     }
 
@@ -15142,7 +15272,7 @@
 
     function recenter() {
       // @ts-expect-error TS(7005) FIXME: Variable 'project' implicitly has an 'any' type.
-      var center = scaleTranslateRotate(k, 0, 0, sx, sy, alpha).apply(null, project(lambda, phi)),
+      const center = scaleTranslateRotate(k, 0, 0, sx, sy, alpha).apply(null, project(lambda, phi)),
         transform = scaleTranslateRotate(k, x - center[0], y - center[1], sx, sy, alpha)
       rotate = rotateRadians(deltaLambda, deltaPhi, deltaGamma)
       // @ts-expect-error TS(7005) FIXME: Variable 'project' implicitly has an 'any' type.
@@ -15168,7 +15298,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'projectAt' implicitly has an 'any' type... Remove this comment to see the full error message
   function conicProjection(projectAt) {
-    var phi0 = 0,
+    let phi0 = 0,
       phi1 = pi$3 / 3,
       m = projectionMutator(projectAt),
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
@@ -15176,9 +15306,9 @@
 
     // @ts-expect-error TS(2339) FIXME: Property 'parallels' does not exist on type '{ (po... Remove this comment to see the full error message
     p.parallels = function (_) {
-      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
       return arguments.length
-        ? m((phi0 = _[0] * radians$1), (phi1 = _[1] * radians$1))
+        ? // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
+          m((phi0 = _[0] * radians$1), (phi1 = _[1] * radians$1))
         : [phi0 * degrees$2, phi1 * degrees$2]
     }
 
@@ -15187,7 +15317,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'phi0' implicitly has an 'any' type.
   function cylindricalEqualAreaRaw(phi0) {
-    var cosPhi0 = cos$1(phi0)
+    const cosPhi0 = cos$1(phi0)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     function forward(lambda, phi) {
@@ -15204,24 +15334,24 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y0' implicitly has an 'any' type.
   function conicEqualAreaRaw(y0, y1) {
-    var sy0 = sin$1(y0),
+    const sy0 = sin$1(y0),
       n = (sy0 + sin$1(y1)) / 2
 
     // Are the parallels symmetrical around the Equator?
     if (abs$2(n) < epsilon$4) return cylindricalEqualAreaRaw(y0)
 
-    var c = 1 + sy0 * (2 * n - sy0),
+    const c = 1 + sy0 * (2 * n - sy0),
       r0 = sqrt(c) / n
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function project(x, y) {
-      var r = sqrt(c - 2 * n * sin$1(y)) / n
+      const r = sqrt(c - 2 * n * sin$1(y)) / n
       return [r * sin$1((x *= n)), r0 - r * cos$1(x)]
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     project.invert = function (x, y) {
-      var r0y = r0 - y,
+      let r0y = r0 - y,
         l = atan2(x, abs$2(r0y)) * sign(r0y)
       if (r0y * n < 0) l -= pi$3 * sign(x) * sign(r0y)
       return [l / n, asin((c - (x * x + r0y * r0y) * n * n) / (2 * n))]
@@ -15252,31 +15382,31 @@
   // as this will avoid emitting interleaving lines and polygons.
   // @ts-expect-error TS(7006) FIXME: Parameter 'streams' implicitly has an 'any' type.
   function multiplex(streams) {
-    var n = streams.length
+    const n = streams.length
     return {
       // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       point: function (x, y) {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].point(x, y)
       },
       sphere: function () {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].sphere()
       },
       lineStart: function () {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].lineStart()
       },
       lineEnd: function () {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].lineEnd()
       },
       polygonStart: function () {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].polygonStart()
       },
       polygonEnd: function () {
-        var i = -1
+        let i = -1
         while (++i < n) streams[i].polygonEnd()
       },
     }
@@ -15289,21 +15419,21 @@
   // http://egsc.usgs.gov/isb/pubs/MapProjections/projections.html#albers
   function albersUsa() {
     // @ts-expect-error TS(7034) FIXME: Variable 'cache' implicitly has type 'any' in some... Remove this comment to see the full error message
-    var cache,
+    let cache,
       // @ts-expect-error TS(7034) FIXME: Variable 'cacheStream' implicitly has type 'any' i... Remove this comment to see the full error message
       cacheStream,
-      // @ts-expect-error TS(7034) FIXME: Variable 'lower48Point' implicitly has type 'any' ... Remove this comment to see the full error message
       lower48 = albers(),
+      // @ts-expect-error TS(7034) FIXME: Variable 'lower48Point' implicitly has type 'any' ... Remove this comment to see the full error message
       lower48Point,
-      // @ts-expect-error TS(7034) FIXME: Variable 'alaskaPoint' implicitly has type 'any' i... Remove this comment to see the full error message
       alaska = conicEqualArea().rotate([154, 0]).center([-2, 58.5]).parallels([55, 65]),
+      // @ts-expect-error TS(7034) FIXME: Variable 'alaskaPoint' implicitly has type 'any' i... Remove this comment to see the full error message
       alaskaPoint, // EPSG:3338
-      // @ts-expect-error TS(7034) FIXME: Variable 'hawaiiPoint' implicitly has type 'any' i... Remove this comment to see the full error message
       hawaii = conicEqualArea().rotate([157, 0]).center([-3, 19.9]).parallels([8, 18]),
+      // @ts-expect-error TS(7034) FIXME: Variable 'hawaiiPoint' implicitly has type 'any' i... Remove this comment to see the full error message
       hawaiiPoint, // ESRI:102007
-      // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
       point,
       pointStream = {
+        // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
         point: function (x, y) {
           point = [x, y]
         },
@@ -15311,7 +15441,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
     function albersUsa(coordinates) {
-      var x = coordinates[0],
+      const x = coordinates[0],
         y = coordinates[1]
       return (
         (point = null),
@@ -15326,7 +15456,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'coordinates' implicitly has an 'any' ty... Remove this comment to see the full error message
     albersUsa.invert = function (coordinates) {
-      var k = lower48.scale(),
+      const k = lower48.scale(),
         t = lower48.translate(),
         x = (coordinates[0] - t[0]) / k,
         y = (coordinates[1] - t[1]) / k
@@ -15343,7 +15473,8 @@
     albersUsa.stream = function (stream) {
       // @ts-expect-error TS(7005) FIXME: Variable 'cache' implicitly has an 'any' type.
       return cache && cacheStream === stream
-        ? cache
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'cache' implicitly has an 'any' type.
+          cache
         : (cache = multiplex([lower48.stream((cacheStream = stream)), alaska.stream(stream), hawaii.stream(stream)]))
     }
 
@@ -15364,7 +15495,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     albersUsa.translate = function (_) {
       if (!arguments.length) return lower48.translate()
-      var k = lower48.scale(),
+      const k = lower48.scale(),
         x = +_[0],
         y = +_[1]
 
@@ -15427,7 +15558,7 @@
   function azimuthalRaw(scale) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x, y) {
-      var cx = cos$1(x),
+      const cx = cos$1(x),
         cy = cos$1(y),
         k = scale(cx * cy)
       if (k === Infinity) return [2, 0]
@@ -15439,7 +15570,7 @@
   function azimuthalInvert(angle) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x, y) {
-      var z = sqrt(x * x + y * y),
+      const z = sqrt(x * x + y * y),
         c = angle(z),
         sc = sin$1(c),
         cc = cos$1(c)
@@ -15448,7 +15579,7 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'cxcy' implicitly has an 'any' type.
-  var azimuthalEqualAreaRaw = azimuthalRaw(function (cxcy) {
+  const azimuthalEqualAreaRaw = azimuthalRaw(function (cxcy) {
     return sqrt(2 / (1 + cxcy))
   })
 
@@ -15467,7 +15598,7 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'c' implicitly has an 'any' type.
-  var azimuthalEquidistantRaw = azimuthalRaw(function (c) {
+  const azimuthalEquidistantRaw = azimuthalRaw(function (c) {
     return (c = acos(c)) && c / sin$1(c)
   })
 
@@ -15496,8 +15627,8 @@
   }
 
   function mercator() {
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     return (
+      // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       mercatorProjection(mercatorRaw)
         // @ts-expect-error TS(2339) FIXME: Property 'scale' does not exist on type 'any[][] |... Remove this comment to see the full error message
         .scale(961 / tau$4)
@@ -15506,15 +15637,18 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'project' implicitly has an 'any' type.
   function mercatorProjection(project) {
-    var m = projection(project),
+    let m = projection(project),
       center = m.center,
       scale = m.scale,
       translate = m.translate,
       clipExtent = m.clipExtent,
       // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x0 = null,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'x1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y1 // clip extent
 
     // @ts-expect-error TS(2322) FIXME: Type '(_: any) => number | any[][] | { (point: any... Remove this comment to see the full error message
@@ -15536,41 +15670,45 @@
     }
 
     m.clipExtent = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
       return arguments.length
         ? (_ == null
             ? (x0 = y0 = x1 = y1 = null)
             : ((x0 = +_[0][0]), (y0 = +_[0][1]), (x1 = +_[1][0]), (y1 = +_[1][1])),
           reclip())
-        : x0 == null
+        : // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
+        x0 == null
         ? null
         : [
+            // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
             [x0, y0],
+            // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
             [x1, y1],
           ]
     }
 
     function reclip() {
       // @ts-expect-error TS(2363) FIXME: The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
-      var k = pi$3 * scale(),
+      const k = pi$3 * scale(),
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
         t = m(rotation(m.rotate()).invert([0, 0]))
-      // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
       return clipExtent(
+        // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
         x0 == null
           ? [
               [t[0] - k, t[1] - k],
               [t[0] + k, t[1] + k],
             ]
           : project === mercatorRaw
-          ? // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
-            [
+          ? [
+              // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
               [Math.max(t[0] - k, x0), y0],
+              // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
               [Math.min(t[0] + k, x1), y1],
             ]
-          : // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
-            [
+          : [
+              // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
               [x0, Math.max(t[1] - k, y0)],
+              // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
               [x1, Math.min(t[1] + k, y1)],
             ]
       )
@@ -15586,7 +15724,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y0' implicitly has an 'any' type.
   function conicConformalRaw(y0, y1) {
-    var cy0 = cos$1(y0),
+    const cy0 = cos$1(y0),
       n = y0 === y1 ? sin$1(y0) : log(cy0 / cos$1(y1)) / log(tany(y1) / tany(y0)),
       f = (cy0 * pow$1(tany(y0), n)) / n
 
@@ -15599,13 +15737,13 @@
       } else {
         if (y > halfPi$2 - epsilon$4) y = halfPi$2 - epsilon$4
       }
-      var r = f / pow$1(tany(y), n)
+      const r = f / pow$1(tany(y), n)
       return [r * sin$1(n * x), f - r * cos$1(n * x)]
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     project.invert = function (x, y) {
-      var fy = f - y,
+      let fy = f - y,
         r = sign(n) * sqrt(x * x + fy * fy),
         l = atan2(x, abs$2(fy)) * sign(fy)
       if (fy * n < 0) l -= pi$3 * sign(x) * sign(fy)
@@ -15637,7 +15775,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'y0' implicitly has an 'any' type.
   function conicEquidistantRaw(y0, y1) {
-    var cy0 = cos$1(y0),
+    const cy0 = cos$1(y0),
       n = y0 === y1 ? sin$1(y0) : (cy0 - cos$1(y1)) / (y1 - y0),
       g = cy0 / n + y0
 
@@ -15645,14 +15783,14 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function project(x, y) {
-      var gy = g - y,
+      const gy = g - y,
         nx = n * x
       return [gy * sin$1(nx), g - gy * cos$1(nx)]
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     project.invert = function (x, y) {
-      var gy = g - y,
+      let gy = g - y,
         l = atan2(x, abs$2(gy)) * sign(gy)
       if (gy * n < 0) l -= pi$3 * sign(x) * sign(gy)
       return [l / n, g - sign(n) * sqrt(x * x + gy * gy)]
@@ -15670,7 +15808,7 @@
     )
   }
 
-  var A1 = 1.340264,
+  const A1 = 1.340264,
     A2 = -0.081106,
     A3 = 0.000893,
     A4 = 0.003796,
@@ -15679,7 +15817,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function equalEarthRaw(lambda, phi) {
-    var l = asin(M * sin$1(phi)),
+    const l = asin(M * sin$1(phi)),
       l2 = l * l,
       l6 = l2 * l2 * l2
     return [
@@ -15690,7 +15828,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   equalEarthRaw.invert = function (x, y) {
-    var l = y,
+    let l = y,
       l2 = l * l,
       l6 = l2 * l2 * l2
     for (var i = 0, delta, fy, fpy; i < iterations; ++i) {
@@ -15708,7 +15846,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function gnomonicRaw(x, y) {
-    var cy = cos$1(y),
+    const cy = cos$1(y),
       k = cos$1(x) * cy
     return [(cy * sin$1(x)) / k, sin$1(y) / k]
   }
@@ -15725,26 +15863,30 @@
   }
 
   function identity$5() {
-    var k = 1,
+    let k = 1,
       tx = 0,
       ty = 0,
       sx = 1,
       sy = 1, // scale, translate and reflect
-      // @ts-expect-error TS(7034) FIXME: Variable 'ca' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       alpha = 0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'ca' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       ca,
+      // @ts-expect-error TS(7034) FIXME: Variable 'sa' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       sa, // angle
       // @ts-expect-error TS(7034) FIXME: Variable 'x0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x0 = null,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y0,
+      // @ts-expect-error TS(7034) FIXME: Variable 'x1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       x1,
+      // @ts-expect-error TS(7034) FIXME: Variable 'y1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       y1, // clip extent
       kx = 1,
       ky = 1,
       transform = transformer({
         // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
         point: function (x, y) {
-          var p = projection([x, y])
+          const p = projection([x, y])
           this.stream.point(p[0], p[1])
         },
       }),
@@ -15763,11 +15905,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'p' implicitly has an 'any' type.
     function projection(p) {
-      var x = p[0] * kx,
+      let x = p[0] * kx,
         y = p[1] * ky
       if (alpha) {
         // @ts-expect-error TS(7005) FIXME: Variable 'ca' implicitly has an 'any' type.
-        var t = y * ca - x * sa
+        const t = y * ca - x * sa
         // @ts-expect-error TS(7005) FIXME: Variable 'ca' implicitly has an 'any' type.
         x = x * ca + y * sa
         y = t
@@ -15776,11 +15918,11 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter 'p' implicitly has an 'any' type.
     projection.invert = function (p) {
-      var x = p[0] - tx,
+      let x = p[0] - tx,
         y = p[1] - ty
       if (alpha) {
         // @ts-expect-error TS(7005) FIXME: Variable 'ca' implicitly has an 'any' type.
-        var t = y * ca + x * sa
+        const t = y * ca + x * sa
         // @ts-expect-error TS(7005) FIXME: Variable 'ca' implicitly has an 'any' type.
         x = x * ca - y * sa
         y = t
@@ -15798,17 +15940,19 @@
     }
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     projection.clipExtent = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
       return arguments.length
         ? ((postclip =
             _ == null
               ? ((x0 = y0 = x1 = y1 = null), identity$4)
               : clipRectangle((x0 = +_[0][0]), (y0 = +_[0][1]), (x1 = +_[1][0]), (y1 = +_[1][1]))),
           reset())
-        : x0 == null
+        : // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
+        x0 == null
         ? null
         : [
+            // @ts-expect-error TS(7005) FIXME: Variable 'x0' implicitly has an 'any' type.
             [x0, y0],
+            // @ts-expect-error TS(7005) FIXME: Variable 'x1' implicitly has an 'any' type.
             [x1, y1],
           ]
     }
@@ -15856,7 +16000,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
   function naturalEarth1Raw(lambda, phi) {
-    var phi2 = phi * phi,
+    const phi2 = phi * phi,
       phi4 = phi2 * phi2
     return [
       lambda * (0.8707 - 0.131979 * phi2 + phi4 * (-0.013791 + phi4 * (0.003971 * phi2 - 0.001529 * phi4))),
@@ -15866,7 +16010,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   naturalEarth1Raw.invert = function (x, y) {
-    var phi = y,
+    let phi = y,
       i = 25,
       delta
     do {
@@ -15906,7 +16050,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function stereographicRaw(x, y) {
-    var cy = cos$1(y),
+    const cy = cos$1(y),
       k = 1 + cos$1(x) * cy
     return [(cy * sin$1(x)) / k, sin$1(y) / k]
   }
@@ -15936,7 +16080,7 @@
   }
 
   function transverseMercator() {
-    var m = mercatorProjection(transverseMercatorRaw),
+    const m = mercatorProjection(transverseMercatorRaw),
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       center = m.center,
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
@@ -15984,20 +16128,20 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function leafLeft(node) {
-    var children
+    let children
     while ((children = node.children)) node = children[0]
     return node
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function leafRight(node) {
-    var children
+    let children
     while ((children = node.children)) node = children[children.length - 1]
     return node
   }
 
   function cluster() {
-    var separation = defaultSeparation,
+    let separation = defaultSeparation,
       dx = 1,
       dy = 1,
       nodeSize = false
@@ -16005,13 +16149,13 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'root' implicitly has an 'any' type.
     function cluster(root) {
       // @ts-expect-error TS(7034) FIXME: Variable 'previousNode' implicitly has type 'any' ... Remove this comment to see the full error message
-      var previousNode,
+      let previousNode,
         x = 0
 
       // First walk, computing the initial x & y values.
       // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
       root.eachAfter(function (node) {
-        var children = node.children
+        const children = node.children
         if (children) {
           node.x = meanX(children)
           node.y = maxY(children)
@@ -16023,21 +16167,21 @@
         }
       })
 
-      var left = leafLeft(root),
+      const left = leafLeft(root),
         right = leafRight(root),
         x0 = left.x - separation(left, right) / 2,
         x1 = right.x + separation(right, left) / 2
 
       // Second walk, normalizing x & y to the desired size.
-      // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
       return root.eachAfter(
         nodeSize
-          ? function (node) {
+          ? // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
+            function (node) {
               node.x = (node.x - root.x) * dx
               node.y = (root.y - node.y) * dy
-              // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
             }
-          : function (node) {
+          : // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
+            function (node) {
               node.x = ((node.x - x0) / (x1 - x0)) * dx
               node.y = (1 - (root.y ? node.y / root.y : 1)) * dy
             }
@@ -16064,7 +16208,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function count$1(node) {
-    var sum = 0,
+    let sum = 0,
       children = node.children,
       i = children && children.length
     if (!i) sum = 1
@@ -16092,7 +16236,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function node_eachBefore(callback, that) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var node = this,
+    let node = this,
       nodes = [node],
       children,
       i,
@@ -16113,7 +16257,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'callback' implicitly has an 'any' type.
   function node_eachAfter(callback, that) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var node = this,
+    let node = this,
       nodes = [node],
       next = [],
       children,
@@ -16152,7 +16296,7 @@
   function node_sum(value) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     return this.eachAfter(function (node) {
-      var sum = +value(node.data) || 0,
+      let sum = +value(node.data) || 0,
         children = node.children,
         i = children && children.length
       while (--i >= 0) sum += children[i].value
@@ -16173,14 +16317,14 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'end' implicitly has an 'any' type.
   function node_path(end) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var start = this,
+    let start = this,
       ancestor = leastCommonAncestor(start, end),
       nodes = [start]
     while (start !== ancestor) {
       start = start.parent
       nodes.push(start)
     }
-    var k = nodes.length
+    const k = nodes.length
     while (end !== ancestor) {
       nodes.splice(k, 0, end)
       end = end.parent
@@ -16191,7 +16335,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function leastCommonAncestor(a, b) {
     if (a === b) return a
-    var aNodes = a.ancestors(),
+    let aNodes = a.ancestors(),
       bNodes = b.ancestors(),
       c = null
     a = aNodes.pop()
@@ -16206,7 +16350,7 @@
 
   function node_ancestors() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var node = this,
+    let node = this,
       nodes = [node]
     while ((node = node.parent)) {
       nodes.push(node)
@@ -16215,13 +16359,13 @@
   }
 
   function node_descendants() {
-    // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     return Array.from(this)
   }
 
   function node_leaves() {
     // @ts-expect-error TS(7034) FIXME: Variable 'leaves' implicitly has type 'any[]' in s... Remove this comment to see the full error message
-    var leaves = []
+    const leaves = []
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     this.eachBefore(function (node) {
       if (!node.children) {
@@ -16234,7 +16378,8 @@
 
   function node_links() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var root = this,
+    const root = this,
+      // @ts-expect-error TS(7034) FIXME: Variable 'links' implicitly has type 'any[]' in so... Remove this comment to see the full error message
       links = []
     // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
     root.each(function (node) {
@@ -16249,7 +16394,7 @@
 
   function* node_iterator() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var node = this,
+    let node = this,
       current,
       next = [node],
       children,
@@ -16270,6 +16415,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
   function hierarchy(data, children) {
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
     if (data instanceof Map) {
       data = [undefined, data]
       if (children === undefined) children = mapChildren
@@ -16277,8 +16423,8 @@
       children = objectChildren
     }
 
-    // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
-    var root = new Node(data),
+    // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
+    let root = new Node(data),
       node,
       nodes = [root],
       child,
@@ -16287,22 +16433,18 @@
       n
 
     while ((node = nodes.pop())) {
-      // @ts-expect-error TS(2339) FIXME: Property 'data' does not exist on type 'Node'.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       if ((childs = children(node.data)) && (n = (childs = Array.from(childs)).length)) {
-        // @ts-expect-error TS(2339) FIXME: Property 'children' does not exist on type 'Node'.
         node.children = childs
         for (i = n - 1; i >= 0; --i) {
-          // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
+          // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
           nodes.push((child = childs[i] = new Node(childs[i])))
-          // @ts-expect-error TS(2339) FIXME: Property 'parent' does not exist on type 'Node'.
           child.parent = node
-          // @ts-expect-error TS(2339) FIXME: Property 'depth' does not exist on type 'Node'.
           child.depth = node.depth + 1
         }
       }
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'eachBefore' does not exist on type 'Node... Remove this comment to see the full error message
     return root.eachBefore(computeHeight)
   }
 
@@ -16329,12 +16471,12 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function computeHeight(node) {
-    var height = 0
+    let height = 0
     do node.height = height
     while ((node = node.parent) && node.height < ++height)
   }
 
-  // @ts-expect-error TS(2300) FIXME: Duplicate identifier 'Node'.
+  // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
   function Node(data) {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
     this.data = data
@@ -16346,7 +16488,6 @@
     this.parent = null
   }
 
-  // @ts-expect-error TS(2740) FIXME: Type '{ constructor: { new (): Node; prototype: No... Remove this comment to see the full error message
   Node.prototype = hierarchy.prototype = {
     constructor: Node,
     count: node_count,
@@ -16362,6 +16503,7 @@
     leaves: node_leaves,
     links: node_links,
     copy: node_copy,
+    // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
     [Symbol.iterator]: node_iterator,
   }
 
@@ -16369,12 +16511,13 @@
   function array$4(x) {
     return typeof x === 'object' && 'length' in x
       ? x // Array, TypedArray, NodeList, array-like
-      : Array.from(x) // Map, Set, iterable, string, or anything else
+      : // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+        Array.from(x) // Map, Set, iterable, string, or anything else
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'array' implicitly has an 'any' type.
   function shuffle$1(array) {
-    var m = array.length,
+    let m = array.length,
       t,
       i
 
@@ -16390,7 +16533,8 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'circles' implicitly has an 'any' type.
   function enclose(circles) {
-    var i = 0,
+    let i = 0,
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       n = (circles = shuffle$1(Array.from(circles))).length,
       B = [],
       p,
@@ -16407,7 +16551,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'B' implicitly has an 'any' type.
   function extendBasis(B, p) {
-    var i, j
+    let i, j
 
     if (enclosesWeakAll(p, B)) return [p]
 
@@ -16438,7 +16582,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function enclosesNot(a, b) {
-    var dr = a.r - b.r,
+    const dr = a.r - b.r,
       dx = b.x - a.x,
       dy = b.y - a.y
     return dr < 0 || dr * dr < dx * dx + dy * dy
@@ -16446,7 +16590,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function enclosesWeak(a, b) {
-    var dr = a.r - b.r + Math.max(a.r, b.r, 1) * 1e-9,
+    const dr = a.r - b.r + Math.max(a.r, b.r, 1) * 1e-9,
       dx = b.x - a.x,
       dy = b.y - a.y
     return dr > 0 && dr * dr > dx * dx + dy * dy
@@ -16454,7 +16598,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function enclosesWeakAll(a, B) {
-    for (var i = 0; i < B.length; ++i) {
+    for (let i = 0; i < B.length; ++i) {
       if (!enclosesWeak(a, B[i])) {
         return false
       }
@@ -16485,7 +16629,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function encloseBasis2(a, b) {
-    var x1 = a.x,
+    const x1 = a.x,
       y1 = a.y,
       r1 = a.r,
       x2 = b.x,
@@ -16504,7 +16648,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function encloseBasis3(a, b, c) {
-    var x1 = a.x,
+    const x1 = a.x,
       y1 = a.y,
       r1 = a.r,
       x2 = b.x,
@@ -16540,7 +16684,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'b' implicitly has an 'any' type.
   function place(b, a, c) {
-    var dx = b.x - a.x,
+    let dx = b.x - a.x,
       x,
       a2,
       dy = b.y - a.y,
@@ -16569,7 +16713,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function intersects(a, b) {
-    var dr = a.r + b.r - 1e-6,
+    const dr = a.r + b.r - 1e-6,
       dx = b.x - a.x,
       dy = b.y - a.y
     return dr > 0 && dr * dr > dx * dx + dy * dy
@@ -16577,7 +16721,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
   function score(node) {
-    var a = node._,
+    const a = node._,
       b = node.next._,
       ab = a.r + b.r,
       dx = (a.x * b.r + b.x * a.r) / ab,
@@ -16599,13 +16743,24 @@
   function packEnclose(circles) {
     if (!(n = (circles = array$4(circles)).length)) return 0
 
-    var a, b, c, n, aa, ca, i, j, k, sj, sk
+    let a,
+      b,
+      c,
+      n,
+      aa,
+      ca,
+      i,
+      j,
+      k,
+      sj,
+      sk
 
-    // Place the first circle.
+      // Place the first circle.
     ;(a = circles[0]), (a.x = 0), (a.y = 0)
-    if (!(n > 1)) return a.r
+    if (!(n > 1))
+      return a.r
 
-    // Place the second circle.
+      // Place the second circle.
     ;(b = circles[1]), (a.x = -b.r), (b.x = a.r), (b.y = 0)
     if (!(n > 2)) return a.r + b.r
 
@@ -16642,9 +16797,11 @@
           }
           ;(sk += k._.r), (k = k.previous)
         }
-      } while (j !== k.next)
+      } while (
+        j !== k.next
 
-      // Success! Insert the new circle c between a and b.
+        // Success! Insert the new circle c between a and b.
+      )
       ;(c.previous = a), (c.next = b), (a.next = b.previous = b = c)
 
       // Compute the new closest circle pair to the centroid.
@@ -16705,7 +16862,7 @@
 
   function index$3() {
     // @ts-expect-error TS(7034) FIXME: Variable 'radius' implicitly has type 'any' in som... Remove this comment to see the full error message
-    var radius = null,
+    let radius = null,
       dx = 1,
       dy = 1,
       padding = constantZero
@@ -16779,7 +16936,7 @@
   function translateChild(k) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
     return function (node) {
-      var parent = node.parent
+      const parent = node.parent
       node.r *= k
       if (parent) {
         node.x = parent.x + k * node.x
@@ -16798,7 +16955,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function treemapDice(parent, x0, y0, x1, y1) {
-    var nodes = parent.children,
+    let nodes = parent.children,
       node,
       i = -1,
       n = nodes.length,
@@ -16811,14 +16968,14 @@
   }
 
   function partition() {
-    var dx = 1,
+    let dx = 1,
       dy = 1,
       padding = 0,
       round = false
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'root' implicitly has an 'any' type.
     function partition(root) {
-      var n = root.height + 1
+      const n = root.height + 1
       root.x0 = root.y0 = padding
       root.x1 = dx
       root.y1 = dy / n
@@ -16834,7 +16991,7 @@
         if (node.children) {
           treemapDice(node, node.x0, (dy * (node.depth + 1)) / n, node.x1, (dy * (node.depth + 2)) / n)
         }
-        var x0 = node.x0,
+        let x0 = node.x0,
           y0 = node.y0,
           x1 = node.x1 - padding,
           y1 = node.y1 - padding
@@ -16865,7 +17022,7 @@
     return partition
   }
 
-  var preroot = { depth: -1 },
+  const preroot = { depth: -1 },
     ambiguous = {}
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
@@ -16879,12 +17036,13 @@
   }
 
   function stratify() {
-    var id = defaultId,
+    let id = defaultId,
       parentId = defaultParentId
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function stratify(data) {
-      var nodes = Array.from(data),
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+      let nodes = Array.from(data),
         n = nodes.length,
         d,
         i,
@@ -16893,34 +17051,31 @@
         node,
         nodeId,
         nodeKey,
+        // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
         nodeByKey = new Map()
 
       for (i = 0; i < n; ++i) {
-        // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
+        // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
         ;(d = nodes[i]), (node = nodes[i] = new Node(d))
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
         if ((nodeId = id(d, i, data)) != null && (nodeId += '')) {
-          // @ts-expect-error TS(2339) FIXME: Property 'id' does not exist on type 'Node'.
           nodeKey = node.id = nodeId
           nodeByKey.set(nodeKey, nodeByKey.has(nodeKey) ? ambiguous : node)
         }
         // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 3.
         if ((nodeId = parentId(d, i, data)) != null && (nodeId += '')) {
-          // @ts-expect-error TS(2339) FIXME: Property 'parent' does not exist on type 'Node'.
           node.parent = nodeId
         }
       }
 
       for (i = 0; i < n; ++i) {
         node = nodes[i]
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         if ((nodeId = node.parent)) {
           parent = nodeByKey.get(nodeId)
           if (!parent) throw new Error('missing: ' + nodeId)
           if (parent === ambiguous) throw new Error('ambiguous: ' + nodeId)
           if (parent.children) parent.children.push(node)
           else parent.children = [node]
-          // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
           node.parent = parent
         } else {
           if (root) throw new Error('multiple roots')
@@ -16929,16 +17084,14 @@
       }
 
       if (!root) throw new Error('no root')
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       root.parent = preroot
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       root
+        // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
         .eachBefore(function (node) {
           node.depth = node.parent.depth + 1
           --n
         })
         .eachBefore(computeHeight)
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       root.parent = null
       if (n > 0) throw new Error('cycle')
 
@@ -16973,14 +17126,14 @@
   // returns null if and only if v is on the highest level of its subtree.
   // @ts-expect-error TS(7006) FIXME: Parameter 'v' implicitly has an 'any' type.
   function nextLeft(v) {
-    var children = v.children
+    const children = v.children
     return children ? children[0] : v.t
   }
 
   // This function works analogously to nextLeft.
   // @ts-expect-error TS(7006) FIXME: Parameter 'v' implicitly has an 'any' type.
   function nextRight(v) {
-    var children = v.children
+    const children = v.children
     return children ? children[children.length - 1] : v.t
   }
 
@@ -16988,7 +17141,7 @@
   // prelim(w+) and mod(w+) by shift.
   // @ts-expect-error TS(7006) FIXME: Parameter 'wm' implicitly has an 'any' type.
   function moveSubtree(wm, wp, shift) {
-    var change = shift / (wp.i - wm.i)
+    const change = shift / (wp.i - wm.i)
     wp.c -= change
     wp.s += shift
     wm.c += change
@@ -17001,7 +17154,7 @@
   // change(w+), shift(w+), and change(w-).
   // @ts-expect-error TS(7006) FIXME: Parameter 'v' implicitly has an 'any' type.
   function executeShifts(v) {
-    var shift = 0,
+    let shift = 0,
       change = 0,
       children = v.children,
       i = children.length,
@@ -17052,7 +17205,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'root' implicitly has an 'any' type.
   function treeRoot(root) {
     // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-    var tree = new TreeNode(root, 0),
+    let tree = new TreeNode(root, 0),
       node,
       nodes = [tree],
       child,
@@ -17078,7 +17231,7 @@
 
   // Node-link tree diagram using the Reingold-Tilford "tidy" algorithm
   function tree() {
-    var separation = defaultSeparation$1,
+    let separation = defaultSeparation$1,
       dx = 1,
       dy = 1,
       // @ts-expect-error TS(7034) FIXME: Variable 'nodeSize' implicitly has type 'any' in s... Remove this comment to see the full error message
@@ -17086,7 +17239,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'root' implicitly has an 'any' type.
     function tree(root) {
-      var t = treeRoot(root)
+      const t = treeRoot(root)
 
       // Compute the layout using Buchheim et al.’s algorithm.
       t.eachAfter(firstWalk), (t.parent.m = -t.z)
@@ -17098,7 +17251,7 @@
       // If a fixed tree size is specified, scale x and y based on the extent.
       // Compute the left-most, right-most, and depth-most nodes for extents.
       else {
-        var left = root,
+        let left = root,
           right = root,
           bottom = root
         // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
@@ -17107,7 +17260,7 @@
           if (node.x > right.x) right = node
           if (node.depth > bottom.depth) bottom = node
         })
-        var s = left === right ? 1 : separation(left, right) / 2,
+        const s = left === right ? 1 : separation(left, right) / 2,
           tx = s - left.x,
           kx = dx / (right.x + s + tx),
           ky = dy / (bottom.depth || 1)
@@ -17127,12 +17280,12 @@
     // node v is placed to the midpoint of its outermost children.
     // @ts-expect-error TS(7006) FIXME: Parameter 'v' implicitly has an 'any' type.
     function firstWalk(v) {
-      var children = v.children,
+      const children = v.children,
         siblings = v.parent.children,
         w = v.i ? siblings[v.i - 1] : null
       if (children) {
         executeShifts(v)
-        var midpoint = (children[0].z + children[children.length - 1].z) / 2
+        const midpoint = (children[0].z + children[children.length - 1].z) / 2
         if (w) {
           v.z = w.z + separation(v._, w._)
           v.m = v.z - midpoint
@@ -17166,7 +17319,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'v' implicitly has an 'any' type.
     function apportion(v, w, ancestor) {
       if (w) {
-        var vip = v,
+        let vip = v,
           vop = v,
           vim = w,
           vom = vip.parent.children[0],
@@ -17231,7 +17384,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function treemapSlice(parent, x0, y0, x1, y1) {
-    var nodes = parent.children,
+    let nodes = parent.children,
       node,
       i = -1,
       n = nodes.length,
@@ -17243,11 +17396,11 @@
     }
   }
 
-  var phi = (1 + Math.sqrt(5)) / 2
+  const phi = (1 + Math.sqrt(5)) / 2
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'ratio' implicitly has an 'any' type.
   function squarifyRatio(ratio, parent, x0, y0, x1, y1) {
-    var rows = [],
+    let rows = [],
       nodes = parent.children,
       row,
       nodeValue,
@@ -17300,7 +17453,7 @@
     return rows
   }
 
-  var squarify = (function custom(ratio) {
+  const squarify = (function custom(ratio) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
     function squarify(parent, x0, y0, x1, y1) {
       squarifyRatio(ratio, parent, x0, y0, x1, y1)
@@ -17315,7 +17468,7 @@
   })(phi)
 
   function index$4() {
-    var tile = squarify,
+    let tile = squarify,
       round = false,
       dx = 1,
       dy = 1,
@@ -17339,7 +17492,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'node' implicitly has an 'any' type.
     function positionNode(node) {
-      var p = paddingStack[node.depth],
+      let p = paddingStack[node.depth],
         x0 = node.x0 + p,
         y0 = node.y0 + p,
         x1 = node.x1 - p,
@@ -17395,10 +17548,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     treemap.paddingOuter = function (x) {
-      // @ts-expect-error TS(2339) FIXME: Property 'paddingRight' does not exist on type '((... Remove this comment to see the full error message
       return arguments.length
-        ? treemap.paddingTop(x).paddingRight(x).paddingBottom(x).paddingLeft(x)
-        : treemap.paddingTop()
+        ? // @ts-expect-error TS(2339) FIXME: Property 'paddingRight' does not exist on type '((... Remove this comment to see the full error message
+          treemap.paddingTop(x).paddingRight(x).paddingBottom(x).paddingLeft(x)
+        : // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
+          treemap.paddingTop()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
@@ -17428,7 +17582,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
   function binary(parent, x0, y0, x1, y1) {
-    var nodes = parent.children,
+    let nodes = parent.children,
       i,
       n = nodes.length,
       sum,
@@ -17443,34 +17597,34 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
     function partition(i, j, value, x0, y0, x1, y1) {
       if (i >= j - 1) {
-        var node = nodes[i]
+        const node = nodes[i]
         ;(node.x0 = x0), (node.y0 = y0)
         ;(node.x1 = x1), (node.y1 = y1)
         return
       }
 
-      var valueOffset = sums[i],
+      let valueOffset = sums[i],
         valueTarget = value / 2 + valueOffset,
         k = i + 1,
         hi = j - 1
 
       while (k < hi) {
-        var mid = (k + hi) >>> 1
+        const mid = (k + hi) >>> 1
         if (sums[mid] < valueTarget) k = mid + 1
         else hi = mid
       }
 
       if (valueTarget - sums[k - 1] < sums[k] - valueTarget && i + 1 < k) --k
 
-      var valueLeft = sums[k] - valueOffset,
+      const valueLeft = sums[k] - valueOffset,
         valueRight = value - valueLeft
 
       if (x1 - x0 > y1 - y0) {
-        var xk = value ? (x0 * valueRight + x1 * valueLeft) / value : x1
+        const xk = value ? (x0 * valueRight + x1 * valueLeft) / value : x1
         partition(i, k, valueLeft, x0, y0, xk, y1)
         partition(k, j, valueRight, xk, y0, x1, y1)
       } else {
-        var yk = value ? (y0 * valueRight + y1 * valueLeft) / value : y1
+        const yk = value ? (y0 * valueRight + y1 * valueLeft) / value : y1
         partition(i, k, valueLeft, x0, y0, x1, yk)
         partition(k, j, valueRight, x0, yk, x1, y1)
       }
@@ -17482,7 +17636,7 @@
     ;(parent.depth & 1 ? treemapSlice : treemapDice)(parent, x0, y0, x1, y1)
   }
 
-  var resquarify = (function custom(ratio) {
+  const resquarify = (function custom(ratio) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'parent' implicitly has an 'any' type.
     function resquarify(parent, x0, y0, x1, y1) {
       if ((rows = parent._squarify) && rows.ratio === ratio) {
@@ -17496,7 +17650,7 @@
           value = parent.value
 
         while (++j < m) {
-          ;(row = rows[j]), (nodes = row.children)
+          (row = rows[j]), (nodes = row.children)
           for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value
           if (row.dice) treemapDice(row, x0, y0, x1, value ? (y0 += ((y1 - y0) * row.value) / value) : y1)
           else treemapSlice(row, x0, y0, value ? (x0 += ((x1 - x0) * row.value) / value) : x1, y1)
@@ -17519,7 +17673,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'polygon' implicitly has an 'any' type.
   function area$2(polygon) {
-    var i = -1,
+    let i = -1,
       n = polygon.length,
       a,
       b = polygon[n - 1],
@@ -17536,7 +17690,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'polygon' implicitly has an 'any' type.
   function centroid$1(polygon) {
-    var i = -1,
+    let i = -1,
       n = polygon.length,
       x = 0,
       y = 0,
@@ -17592,7 +17746,7 @@
   function hull(points) {
     if ((n = points.length) < 3) return null
 
-    var i,
+    let i,
       n,
       sortedPoints = new Array(n),
       flippedPoints = new Array(n)
@@ -17601,11 +17755,11 @@
     sortedPoints.sort(lexicographicOrder)
     for (i = 0; i < n; ++i) flippedPoints[i] = [sortedPoints[i][0], -sortedPoints[i][1]]
 
-    var upperIndexes = computeUpperHullIndexes(sortedPoints),
+    const upperIndexes = computeUpperHullIndexes(sortedPoints),
       lowerIndexes = computeUpperHullIndexes(flippedPoints)
 
     // Construct the hull polygon, removing possible duplicate endpoints.
-    var skipLeft = lowerIndexes[0] === upperIndexes[0],
+    const skipLeft = lowerIndexes[0] === upperIndexes[0],
       skipRight = lowerIndexes[lowerIndexes.length - 1] === upperIndexes[upperIndexes.length - 1],
       hull = []
 
@@ -17620,7 +17774,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'polygon' implicitly has an 'any' type.
   function contains$2(polygon, point) {
-    var n = polygon.length,
+    let n = polygon.length,
       p = polygon[n - 1],
       x = point[0],
       y = point[1],
@@ -17630,7 +17784,7 @@
       y1,
       inside = false
 
-    for (var i = 0; i < n; ++i) {
+    for (let i = 0; i < n; ++i) {
       ;(p = polygon[i]), (x1 = p[0]), (y1 = p[1])
       if (y1 > y !== y0 > y && x < ((x0 - x1) * (y - y1)) / (y0 - y1) + x1) inside = !inside
       ;(x0 = x1), (y0 = y1)
@@ -17641,7 +17795,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'polygon' implicitly has an 'any' type.
   function length$3(polygon) {
-    var i = -1,
+    let i = -1,
       n = polygon.length,
       b = polygon[n - 1],
       xa,
@@ -17658,15 +17812,16 @@
       yb = b[1]
       xa -= xb
       ya -= yb
+      // @ts-expect-error TS(2550) FIXME: Property 'hypot' does not exist on type 'Math'. Do... Remove this comment to see the full error message
       perimeter += Math.hypot(xa, ya)
     }
 
     return perimeter
   }
 
-  var defaultSource$1 = Math.random
+  const defaultSource$1 = Math.random
 
-  var uniform = (function sourceRandomUniform(source) {
+  const uniform = (function sourceRandomUniform(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'min' implicitly has an 'any' type.
     function randomUniform(min, max) {
       min = min == null ? 0 : +min
@@ -17683,7 +17838,7 @@
     return randomUniform
   })(defaultSource$1)
 
-  var int = (function sourceRandomInt(source) {
+  const int = (function sourceRandomInt(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'min' implicitly has an 'any' type.
     function randomInt(min, max) {
       if (arguments.length < 2) (max = min), (min = 0)
@@ -17699,15 +17854,15 @@
     return randomInt
   })(defaultSource$1)
 
-  var normal = (function sourceRandomNormal(source) {
+  const normal = (function sourceRandomNormal(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'mu' implicitly has an 'any' type.
     function randomNormal(mu, sigma) {
       // @ts-expect-error TS(7034) FIXME: Variable 'x' implicitly has type 'any' in some loc... Remove this comment to see the full error message
-      var x, r
+      let x, r
       mu = mu == null ? 0 : +mu
       sigma = sigma == null ? 1 : +sigma
       return function () {
-        var y
+        let y
 
         // If available, use the second previously-generated uniform random.
         // @ts-expect-error TS(7005) FIXME: Variable 'x' implicitly has an 'any' type.
@@ -17730,12 +17885,12 @@
     return randomNormal
   })(defaultSource$1)
 
-  var logNormal = (function sourceRandomLogNormal(source) {
-    var N = normal.source(source)
+  const logNormal = (function sourceRandomLogNormal(source) {
+    const N = normal.source(source)
 
     function randomLogNormal() {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var randomNormal = N.apply(this, arguments)
+      const randomNormal = N.apply(this, arguments)
       return function () {
         return Math.exp(randomNormal())
       }
@@ -17746,7 +17901,7 @@
     return randomLogNormal
   })(defaultSource$1)
 
-  var irwinHall = (function sourceRandomIrwinHall(source) {
+  const irwinHall = (function sourceRandomIrwinHall(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'n' implicitly has an 'any' type.
     function randomIrwinHall(n) {
       if ((n = +n) <= 0) return () => 0
@@ -17761,14 +17916,14 @@
     return randomIrwinHall
   })(defaultSource$1)
 
-  var bates = (function sourceRandomBates(source) {
-    var I = irwinHall.source(source)
+  const bates = (function sourceRandomBates(source) {
+    const I = irwinHall.source(source)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'n' implicitly has an 'any' type.
     function randomBates(n) {
       // use limiting distribution at n === 0
       if ((n = +n) === 0) return source
-      var randomIrwinHall = I(n)
+      const randomIrwinHall = I(n)
       return function () {
         return randomIrwinHall() / n
       }
@@ -17779,10 +17934,11 @@
     return randomBates
   })(defaultSource$1)
 
-  var exponential$1 = (function sourceRandomExponential(source) {
+  const exponential$1 = (function sourceRandomExponential(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     function randomExponential(lambda) {
       return function () {
+        // @ts-expect-error TS(2550) FIXME: Property 'log1p' does not exist on type 'Math'. Do... Remove this comment to see the full error message
         return -Math.log1p(-source()) / lambda
       }
     }
@@ -17792,7 +17948,7 @@
     return randomExponential
   })(defaultSource$1)
 
-  var pareto = (function sourceRandomPareto(source) {
+  const pareto = (function sourceRandomPareto(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'alpha' implicitly has an 'any' type.
     function randomPareto(alpha) {
       if ((alpha = +alpha) < 0) throw new RangeError('invalid alpha')
@@ -17807,7 +17963,7 @@
     return randomPareto
   })(defaultSource$1)
 
-  var bernoulli = (function sourceRandomBernoulli(source) {
+  const bernoulli = (function sourceRandomBernoulli(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'p' implicitly has an 'any' type.
     function randomBernoulli(p) {
       if ((p = +p) < 0 || p > 1) throw new RangeError('invalid p')
@@ -17821,14 +17977,16 @@
     return randomBernoulli
   })(defaultSource$1)
 
-  var geometric = (function sourceRandomGeometric(source) {
+  const geometric = (function sourceRandomGeometric(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'p' implicitly has an 'any' type.
     function randomGeometric(p) {
       if ((p = +p) < 0 || p > 1) throw new RangeError('invalid p')
       if (p === 0) return () => Infinity
       if (p === 1) return () => 1
+      // @ts-expect-error TS(2550) FIXME: Property 'log1p' does not exist on type 'Math'. Do... Remove this comment to see the full error message
       p = Math.log1p(-p)
       return function () {
+        // @ts-expect-error TS(2550) FIXME: Property 'log1p' does not exist on type 'Math'. Do... Remove this comment to see the full error message
         return 1 + Math.floor(Math.log1p(-source()) / p)
       }
     }
@@ -17838,9 +17996,9 @@
     return randomGeometric
   })(defaultSource$1)
 
-  var gamma$1 = (function sourceRandomGamma(source) {
+  const gamma$1 = (function sourceRandomGamma(source) {
     // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 0.
-    var randomNormal = normal.source(source)()
+    const randomNormal = normal.source(source)()
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'k' implicitly has an 'any' type.
     function randomGamma(k, theta) {
@@ -17849,9 +18007,10 @@
       if (k === 0) return () => 0
       theta = theta == null ? 1 : +theta
       // exponential distribution if k === 1
+      // @ts-expect-error TS(2550) FIXME: Property 'log1p' does not exist on type 'Math'. Do... Remove this comment to see the full error message
       if (k === 1) return () => -Math.log1p(-source()) * theta
 
-      var d = (k < 1 ? k + 1 : k) - 1 / 3,
+      const d = (k < 1 ? k + 1 : k) - 1 / 3,
         c = 1 / (3 * Math.sqrt(d)),
         multiplier = k < 1 ? () => Math.pow(source(), 1 / k) : () => 1
       return function () {
@@ -17872,17 +18031,17 @@
     return randomGamma
   })(defaultSource$1)
 
-  var beta = (function sourceRandomBeta(source) {
-    var G = gamma$1.source(source)
+  const beta = (function sourceRandomBeta(source) {
+    const G = gamma$1.source(source)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'alpha' implicitly has an 'any' type.
     function randomBeta(alpha, beta) {
       // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
-      var X = G(alpha),
+      const X = G(alpha),
         // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
         Y = G(beta)
       return function () {
-        var x = X()
+        const x = X()
         return x === 0 ? 0 : x / (x + Y())
       }
     }
@@ -17892,8 +18051,8 @@
     return randomBeta
   })(defaultSource$1)
 
-  var binomial = (function sourceRandomBinomial(source) {
-    var G = geometric.source(source),
+  const binomial = (function sourceRandomBinomial(source) {
+    const G = geometric.source(source),
       B = beta.source(source)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'n' implicitly has an 'any' type.
@@ -17902,11 +18061,11 @@
       if ((p = +p) >= 1) return () => n
       if (p <= 0) return () => 0
       return function () {
-        var acc = 0,
+        let acc = 0,
           nn = n,
           pp = p
         while (nn * pp > 16 && nn * (1 - pp) > 16) {
-          var i = Math.floor((nn + 1) * pp),
+          const i = Math.floor((nn + 1) * pp),
             y = B(i, nn - i + 1)()
           if (y <= pp) {
             acc += i
@@ -17917,7 +18076,7 @@
             pp /= y
           }
         }
-        var sign = pp < 0.5,
+        const sign = pp < 0.5,
           pFinal = sign ? pp : 1 - pp,
           g = G(pFinal)
         for (var s = g(), k = 0; s <= nn; ++k) s += g()
@@ -17930,11 +18089,11 @@
     return randomBinomial
   })(defaultSource$1)
 
-  var weibull = (function sourceRandomWeibull(source) {
+  const weibull = (function sourceRandomWeibull(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'k' implicitly has an 'any' type.
     function randomWeibull(k, a, b) {
       // @ts-expect-error TS(7034) FIXME: Variable 'outerFunc' implicitly has type 'any' in ... Remove this comment to see the full error message
-      var outerFunc
+      let outerFunc
       if ((k = +k) === 0) {
         // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
         outerFunc = x => -Math.log(x)
@@ -17956,7 +18115,7 @@
     return randomWeibull
   })(defaultSource$1)
 
-  var cauchy = (function sourceRandomCauchy(source) {
+  const cauchy = (function sourceRandomCauchy(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     function randomCauchy(a, b) {
       a = a == null ? 0 : +a
@@ -17971,13 +18130,13 @@
     return randomCauchy
   })(defaultSource$1)
 
-  var logistic = (function sourceRandomLogistic(source) {
+  const logistic = (function sourceRandomLogistic(source) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
     function randomLogistic(a, b) {
       a = a == null ? 0 : +a
       b = b == null ? 1 : +b
       return function () {
-        var u = source()
+        const u = source()
         return a + b * Math.log(u / (1 - u))
       }
     }
@@ -17987,23 +18146,24 @@
     return randomLogistic
   })(defaultSource$1)
 
-  var poisson = (function sourceRandomPoisson(source) {
-    var G = gamma$1.source(source),
+  const poisson = (function sourceRandomPoisson(source) {
+    const G = gamma$1.source(source),
       B = binomial.source(source)
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'lambda' implicitly has an 'any' type.
     function randomPoisson(lambda) {
       return function () {
-        var acc = 0,
+        let acc = 0,
           l = lambda
         while (l > 16) {
-          var n = Math.floor(0.875 * l),
+          const n = Math.floor(0.875 * l),
             // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
             t = G(n)()
           if (t > l) return acc + B(n - 1, l / t)()
           acc += n
           l -= t
         }
+        // @ts-expect-error TS(2550) FIXME: Property 'log1p' does not exist on type 'Math'. Do... Remove this comment to see the full error message
         for (var s = -Math.log1p(-source()), k = 0; s <= l; ++k) s -= Math.log1p(-source())
         return acc + k
       }
@@ -18029,12 +18189,12 @@
     switch (arguments.length) {
       case 0:
         break
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       case 1:
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         this.range(domain)
         break
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       default:
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         this.range(range).domain(domain)
         break
     }
@@ -18068,10 +18228,12 @@
     return this
   }
 
+  // @ts-expect-error TS(2585) FIXME: 'Symbol' only refers to a type, but is being used ... Remove this comment to see the full error message
   const implicit = Symbol('implicit')
 
   function ordinal() {
-    var index = new Map(),
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
+    let index = new Map(),
       // @ts-expect-error TS(7034) FIXME: Variable 'domain' implicitly has type 'any[]' in s... Remove this comment to see the full error message
       domain = [],
       // @ts-expect-error TS(7034) FIXME: Variable 'range' implicitly has type 'any[]' in so... Remove this comment to see the full error message
@@ -18080,7 +18242,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function scale(d) {
-      var key = d + '',
+      let key = d + '',
         i = index.get(key)
       if (!i) {
         if (unknown !== implicit) return unknown
@@ -18093,7 +18255,9 @@
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
       // @ts-expect-error TS(7005) FIXME: Variable 'domain' implicitly has an 'any[]' type.
-      if (!arguments.length) return domain.slice()
+      if (!arguments.length)
+        return domain.slice()
+        // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
       ;(domain = []), (index = new Map())
       for (const value of _) {
         const key = value + ''
@@ -18105,7 +18269,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'range' implicitly has an 'any[]' type.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((range = Array.from(_)), scale) : range.slice()
     }
 
@@ -18126,10 +18290,8 @@
   }
 
   function band() {
-    var scale = ordinal().unknown(undefined),
-      // @ts-expect-error TS(2339) FIXME: Property 'domain' does not exist on type 'symbol |... Remove this comment to see the full error message
+    let scale = ordinal().unknown(undefined),
       domain = scale.domain,
-      // @ts-expect-error TS(2339) FIXME: Property 'range' does not exist on type 'symbol | ... Remove this comment to see the full error message
       ordinalRange = scale.range,
       r0 = 0,
       r1 = 1,
@@ -18142,11 +18304,10 @@
       paddingOuter = 0,
       align = 0.5
 
-    // @ts-expect-error TS(2339) FIXME: Property 'unknown' does not exist on type 'symbol ... Remove this comment to see the full error message
     delete scale.unknown
 
     function rescale() {
-      var n = domain().length,
+      let n = domain().length,
         reverse = r1 < r0,
         start = reverse ? r1 : r0,
         stop = reverse ? r0 : r1
@@ -18155,66 +18316,64 @@
       start += (stop - start - step * (n - paddingInner)) * align
       bandwidth = step * (1 - paddingInner)
       if (round) (start = Math.round(start)), (bandwidth = Math.round(bandwidth))
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'sequence'.
-      var values = sequence(n).map(function (i) {
+      // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 1.
+      const values = sequence(n).map(function (i) {
+        // @ts-expect-error TS(7005) FIXME: Variable 'step' implicitly has an 'any' type.
         return start + step * i
       })
       return ordinalRange(reverse ? values.reverse() : values)
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'domain' does not exist on type 'symbol |... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
       return arguments.length ? (domain(_), rescale()) : domain()
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'range' does not exist on type 'symbol | ... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
       return arguments.length ? (([r0, r1] = _), (r0 = +r0), (r1 = +r1), rescale()) : [r0, r1]
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'rangeRound' does not exist on type 'symb... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.rangeRound = function (_) {
       return ([r0, r1] = _), (r0 = +r0), (r1 = +r1), (round = true), rescale()
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'bandwidth' does not exist on type 'symbo... Remove this comment to see the full error message
     scale.bandwidth = function () {
       // @ts-expect-error TS(7005) FIXME: Variable 'bandwidth' implicitly has an 'any' type.
       return bandwidth
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'step' does not exist on type 'symbol | {... Remove this comment to see the full error message
     scale.step = function () {
       // @ts-expect-error TS(7005) FIXME: Variable 'step' implicitly has an 'any' type.
       return step
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'round' does not exist on type 'symbol | ... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.round = function (_) {
       return arguments.length ? ((round = !!_), rescale()) : round
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'padding' does not exist on type 'symbol ... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.padding = function (_) {
       return arguments.length ? ((paddingInner = Math.min(1, (paddingOuter = +_))), rescale()) : paddingInner
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'paddingInner' does not exist on type 'sy... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.paddingInner = function (_) {
       return arguments.length ? ((paddingInner = Math.min(1, _)), rescale()) : paddingInner
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'paddingOuter' does not exist on type 'sy... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.paddingOuter = function (_) {
       return arguments.length ? ((paddingOuter = +_), rescale()) : paddingOuter
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'align' does not exist on type 'symbol | ... Remove this comment to see the full error message
+    // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.align = function (_) {
       return arguments.length ? ((align = Math.max(0, Math.min(1, _))), rescale()) : align
     }
 
-    // @ts-expect-error TS(2339) FIXME: Property 'copy' does not exist on type 'symbol | {... Remove this comment to see the full error message
     scale.copy = function () {
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
       return band(domain(), [r0, r1]).round(round).paddingInner(paddingInner).paddingOuter(paddingOuter).align(align)
@@ -18226,7 +18385,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'scale' implicitly has an 'any' type.
   function pointish(scale) {
-    var copy = scale.copy
+    const copy = scale.copy
 
     scale.padding = scale.paddingOuter
     delete scale.paddingInner
@@ -18256,7 +18415,7 @@
     return +x
   }
 
-  var unit = [0, 1]
+  const unit = [0, 1]
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function identity$6(x) {
@@ -18275,7 +18434,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'a' implicitly has an 'any' type.
   function clamper(a, b) {
-    var t
+    let t
     if (a > b) (t = a), (a = b), (b = t)
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x) {
@@ -18287,7 +18446,7 @@
   // interpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding range value x in [a,b].
   // @ts-expect-error TS(7006) FIXME: Parameter 'domain' implicitly has an 'any' type.
   function bimap(domain, range, interpolate) {
-    var d0 = domain[0],
+    let d0 = domain[0],
       d1 = domain[1],
       r0 = range[0],
       r1 = range[1]
@@ -18301,7 +18460,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'domain' implicitly has an 'any' type.
   function polymap(domain, range, interpolate) {
-    var j = Math.min(domain.length, range.length) - 1,
+    let j = Math.min(domain.length, range.length) - 1,
       d = new Array(j),
       r = new Array(j),
       i = -1
@@ -18319,8 +18478,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'bisectRight'.
-      var i = bisectRight(domain, x, 1, j) - 1
+      const i = bisectRight(domain, x, 1, j) - 1
       return r[i](d[i](x))
     }
   }
@@ -18336,9 +18494,8 @@
   }
 
   function transformer$1() {
-    var domain = unit,
+    let domain = unit,
       range = unit,
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolate'.
       interpolate$1 = interpolate,
       // @ts-expect-error TS(7034) FIXME: Variable 'transform' implicitly has type 'any' in ... Remove this comment to see the full error message
       transform,
@@ -18355,7 +18512,7 @@
       input
 
     function rescale() {
-      var n = Math.min(domain.length, range.length)
+      const n = Math.min(domain.length, range.length)
       if (clamp !== identity$6) clamp = clamper(domain[0], domain[n - 1])
       piecewise = n > 2 ? polymap : bimap
       output = input = null
@@ -18364,10 +18521,11 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return isNaN((x = +x))
-        ? unknown
-        : (output || (output = piecewise(domain.map(transform), range, interpolate$1)))(transform(clamp(x)))
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
+          unknown
+        : // @ts-expect-error TS(7005) FIXME: Variable 'output' implicitly has an 'any' type.
+          (output || (output = piecewise(domain.map(transform), range, interpolate$1)))(transform(clamp(x)))
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
@@ -18378,17 +18536,19 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((domain = Array.from(_, number$2)), rescale()) : domain.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((range = Array.from(_)), rescale()) : range.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.rangeRound = function (_) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolateRound'.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return (range = Array.from(_)), (interpolate$1 = interpolateRound), rescale()
     }
 
@@ -18422,16 +18582,14 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
   function tickFormat(start, stop, count, specifier) {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'tickStep'.
-    var step = tickStep(start, stop, count),
+    let step = tickStep(start, stop, count),
       precision
     specifier = formatSpecifier(specifier == null ? ',f' : specifier)
     switch (specifier.type) {
       case 's': {
-        var value = Math.max(Math.abs(start), Math.abs(stop))
+        const value = Math.max(Math.abs(start), Math.abs(stop))
         if (specifier.precision == null && !isNaN((precision = precisionPrefix(step, value))))
           specifier.precision = precision
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
         return exports.formatPrefix(specifier, value)
       }
       case '':
@@ -18439,40 +18597,38 @@
       case 'g':
       case 'p':
       case 'r': {
-        // @ts-expect-error TS(2363) FIXME: The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
         if (
           specifier.precision == null &&
           !isNaN((precision = precisionRound(step, Math.max(Math.abs(start), Math.abs(stop)))))
         )
+          // @ts-expect-error TS(2363) FIXME: The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
           specifier.precision = precision - (specifier.type === 'e')
         break
       }
       case 'f':
       case '%': {
-        // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
         if (specifier.precision == null && !isNaN((precision = precisionFixed(step))))
+          // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
           specifier.precision = precision - (specifier.type === '%') * 2
         break
       }
     }
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     return exports.format(specifier)
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'scale' implicitly has an 'any' type.
   function linearish(scale) {
-    var domain = scale.domain
+    const domain = scale.domain
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'count' implicitly has an 'any' type.
     scale.ticks = function (count) {
-      var d = domain()
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'ticks'.
+      const d = domain()
       return ticks(d[0], d[d.length - 1], count == null ? 10 : count)
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'count' implicitly has an 'any' type.
     scale.tickFormat = function (count, specifier) {
-      var d = domain()
+      const d = domain()
       return tickFormat(d[0], d[d.length - 1], count == null ? 10 : count, specifier)
     }
 
@@ -18480,14 +18636,14 @@
     scale.nice = function (count) {
       if (count == null) count = 10
 
-      var d = domain()
-      var i0 = 0
-      var i1 = d.length - 1
-      var start = d[i0]
-      var stop = d[i1]
-      var prestep
-      var step
-      var maxIter = 10
+      const d = domain()
+      let i0 = 0
+      let i1 = d.length - 1
+      let start = d[i0]
+      let stop = d[i1]
+      let prestep
+      let step
+      let maxIter = 10
 
       if (stop < start) {
         ;(step = start), (start = stop), (stop = step)
@@ -18495,7 +18651,6 @@
       }
 
       while (maxIter-- > 0) {
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'tickIncrement'.
         step = tickIncrement(start, stop, count)
         if (step === prestep) {
           d[i0] = start
@@ -18520,7 +18675,7 @@
   }
 
   function linear$2() {
-    var scale = continuous()
+    const scale = continuous()
 
     // @ts-expect-error TS(2339) FIXME: Property 'copy' does not exist on type '{ (x: any)... Remove this comment to see the full error message
     scale.copy = function () {
@@ -18536,7 +18691,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'domain' implicitly has an 'any' type.
   function identity$7(domain) {
     // @ts-expect-error TS(7034) FIXME: Variable 'unknown' implicitly has type 'any' in so... Remove this comment to see the full error message
-    var unknown
+    let unknown
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
@@ -18548,6 +18703,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = scale.range = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((domain = Array.from(_, number$2)), scale) : domain.slice()
     }
 
@@ -18562,6 +18718,7 @@
       return identity$7(domain).unknown(unknown)
     }
 
+    // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
     domain = arguments.length ? Array.from(domain, number$2) : [0, 1]
 
     return linearish(scale)
@@ -18571,7 +18728,7 @@
   function nice$1(domain, interval) {
     domain = domain.slice()
 
-    var i0 = 0,
+    let i0 = 0,
       i1 = domain.length - 1,
       x0 = domain[i0],
       x1 = domain[i1],
@@ -18628,9 +18785,12 @@
   function logp(base) {
     return base === Math.E
       ? Math.log
-      : (base === 10 && Math.log10) ||
+      : // @ts-expect-error TS(2550) FIXME: Property 'log10' does not exist on type 'Math'. Do... Remove this comment to see the full error message
+        (base === 10 && Math.log10) ||
+          // @ts-expect-error TS(2550) FIXME: Property 'log2' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
           (base === 2 && Math.log2) ||
           ((base = Math.log(base)),
+          // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
           function (x) {
             return Math.log(x) / base
           })
@@ -18646,7 +18806,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'transform' implicitly has an 'any' type... Remove this comment to see the full error message
   function loggish(transform) {
-    var scale = transform(transformLog, transformExp),
+    let scale = transform(transformLog, transformExp),
       domain = scale.domain,
       base = 10,
       // @ts-expect-error TS(7034) FIXME: Variable 'logs' implicitly has type 'any' in some ... Remove this comment to see the full error message
@@ -18677,7 +18837,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'count' implicitly has an 'any' type.
     scale.ticks = function (count) {
-      var d = domain(),
+      let d = domain(),
         u = d[0],
         v = d[d.length - 1],
         r
@@ -18716,10 +18876,9 @@
               z.push(t)
             }
           }
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'ticks'.
         if (z.length * 2 < n) z = ticks(u, v, n)
       } else {
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'ticks'.
+        // @ts-expect-error TS(7005) FIXME: Variable 'pows' implicitly has an 'any' type.
         z = ticks(i, j, Math.min(j - i, n)).map(pows)
       }
 
@@ -18729,15 +18888,14 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'count' implicitly has an 'any' type.
     scale.tickFormat = function (count, specifier) {
       if (specifier == null) specifier = base === 10 ? '.0e' : ','
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
       if (typeof specifier !== 'function') specifier = exports.format(specifier)
       if (count === Infinity) return specifier
       if (count == null) count = 10
-      var k = Math.max(1, (base * count) / scale.ticks().length) // TODO fast estimate?
+      const k = Math.max(1, (base * count) / scale.ticks().length) // TODO fast estimate?
       // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
       return function (d) {
         // @ts-expect-error TS(7005) FIXME: Variable 'pows' implicitly has an 'any' type.
-        var i = d / pows(Math.round(logs(d)))
+        let i = d / pows(Math.round(logs(d)))
         if (i * base < base - 0.5) i *= base
         return i <= k ? specifier(d) : ''
       }
@@ -18748,10 +18906,12 @@
         nice$1(domain(), {
           // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
           floor: function (x) {
+            // @ts-expect-error TS(7005) FIXME: Variable 'pows' implicitly has an 'any' type.
             return pows(Math.floor(logs(x)))
           },
           // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
           ceil: function (x) {
+            // @ts-expect-error TS(7005) FIXME: Variable 'pows' implicitly has an 'any' type.
             return pows(Math.ceil(logs(x)))
           },
         })
@@ -18762,7 +18922,7 @@
   }
 
   function log$1() {
-    var scale = loggish(transformer$1()).domain([1, 10])
+    const scale = loggish(transformer$1()).domain([1, 10])
 
     scale.copy = function () {
       return copy(scale, log$1()).base(scale.base())
@@ -18778,6 +18938,7 @@
   function transformSymlog(c) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x) {
+      // @ts-expect-error TS(2550) FIXME: Property 'sign' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
       return Math.sign(x) * Math.log1p(Math.abs(x / c))
     }
   }
@@ -18786,13 +18947,14 @@
   function transformSymexp(c) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     return function (x) {
+      // @ts-expect-error TS(2550) FIXME: Property 'sign' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
       return Math.sign(x) * Math.expm1(Math.abs(x)) * c
     }
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'transform' implicitly has an 'any' type... Remove this comment to see the full error message
   function symlogish(transform) {
-    var c = 1,
+    let c = 1,
       scale = transform(transformSymlog(c), transformSymexp(c))
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -18804,7 +18966,7 @@
   }
 
   function symlog() {
-    var scale = symlogish(transformer$1())
+    const scale = symlogish(transformer$1())
 
     scale.copy = function () {
       return copy(scale, symlog()).constant(scale.constant())
@@ -18834,7 +18996,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'transform' implicitly has an 'any' type... Remove this comment to see the full error message
   function powish(transform) {
-    var scale = transform(identity$6, identity$6),
+    let scale = transform(identity$6, identity$6),
       exponent = 1
 
     function rescale() {
@@ -18854,7 +19016,7 @@
   }
 
   function pow$2() {
-    var scale = powish(transformer$1())
+    const scale = powish(transformer$1())
 
     scale.copy = function () {
       return copy(scale, pow$2()).exponent(scale.exponent())
@@ -18873,16 +19035,18 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function square(x) {
+    // @ts-expect-error TS(2550) FIXME: Property 'sign' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
     return Math.sign(x) * x * x
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function unsquare(x) {
+    // @ts-expect-error TS(2550) FIXME: Property 'sign' does not exist on type 'Math'. Do ... Remove this comment to see the full error message
     return Math.sign(x) * Math.sqrt(Math.abs(x))
   }
 
   function radial$1() {
-    var squared = continuous(),
+    let squared = continuous(),
       range = [0, 1],
       round = false,
       // @ts-expect-error TS(7034) FIXME: Variable 'unknown' implicitly has type 'any' in so... Remove this comment to see the full error message
@@ -18890,7 +19054,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      var y = unsquare(squared(x))
+      const y = unsquare(squared(x))
       // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return isNaN(y) ? unknown : round ? Math.round(y) : y
     }
@@ -18908,6 +19072,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? (squared.range((range = Array.from(_, number$2)).map(square)), scale) : range.slice()
     }
 
@@ -18935,8 +19100,8 @@
     }
 
     scale.copy = function () {
-      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
       return (
+        // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 2.
         radial$1(squared.domain(), range)
           .round(round)
           // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
@@ -18954,7 +19119,7 @@
 
   function quantile$1() {
     // @ts-expect-error TS(7034) FIXME: Variable 'domain' implicitly has type 'any[]' in s... Remove this comment to see the full error message
-    var domain = [],
+    let domain = [],
       // @ts-expect-error TS(7034) FIXME: Variable 'range' implicitly has type 'any[]' in so... Remove this comment to see the full error message
       range = [],
       // @ts-expect-error TS(7034) FIXME: Variable 'thresholds' implicitly has type 'any[]' ... Remove this comment to see the full error message
@@ -18963,10 +19128,10 @@
       unknown
 
     function rescale() {
-      var i = 0,
+      let i = 0,
         n = Math.max(1, range.length)
       thresholds = new Array(n - 1)
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'quantileSorted'.
+      // @ts-expect-error TS(7005) FIXME: Variable 'domain' implicitly has an 'any[]' type.
       while (++i < n) thresholds[i - 1] = quantileSorted(domain, i / n)
       return scale
     }
@@ -18980,7 +19145,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
     scale.invertExtent = function (y) {
       // @ts-expect-error TS(7005) FIXME: Variable 'range' implicitly has an 'any[]' type.
-      var i = range.indexOf(y)
+      const i = range.indexOf(y)
       return i < 0
         ? [NaN, NaN]
         : [
@@ -18997,14 +19162,13 @@
       if (!arguments.length) return domain.slice()
       domain = []
       for (let d of _) if (d != null && !isNaN((d = +d))) domain.push(d)
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'ascending'.
       domain.sort(ascending)
       return rescale()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'range' implicitly has an 'any[]' type.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((range = Array.from(_)), rescale()) : range.slice()
     }
 
@@ -19036,7 +19200,7 @@
   }
 
   function quantize$1() {
-    var x0 = 0,
+    let x0 = 0,
       x1 = 1,
       n = 1,
       domain = [0.5],
@@ -19046,12 +19210,12 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'bisectRight'.
+      // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return x <= x ? range[bisectRight(domain, x, 0, n)] : unknown
     }
 
     function rescale() {
-      var i = -1
+      let i = -1
       domain = new Array(n)
       while (++i < n) domain[i] = ((i + 1) * x1 - (i - n) * x0) / (n + 1)
       return scale
@@ -19064,12 +19228,13 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((n = (range = Array.from(_)).length - 1), rescale()) : range.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
     scale.invertExtent = function (y) {
-      var i = range.indexOf(y)
+      const i = range.indexOf(y)
       return i < 0 ? [NaN, NaN] : i < 1 ? [x0, domain[0]] : i >= n ? [domain[n - 1], x1] : [domain[i - 1], domain[i]]
     }
 
@@ -19097,7 +19262,7 @@
   }
 
   function threshold() {
-    var domain = [0.5],
+    let domain = [0.5],
       range = [0, 1],
       // @ts-expect-error TS(7034) FIXME: Variable 'unknown' implicitly has type 'any' in so... Remove this comment to see the full error message
       unknown,
@@ -19105,27 +19270,29 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'bisectRight'.
+      // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return x <= x ? range[bisectRight(domain, x, 0, n)] : unknown
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
       return arguments.length
-        ? ((domain = Array.from(_)), (n = Math.min(domain.length, range.length - 1)), scale)
+        ? // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+          ((domain = Array.from(_)), (n = Math.min(domain.length, range.length - 1)), scale)
         : domain.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.range = function (_) {
       return arguments.length
-        ? ((range = Array.from(_)), (n = Math.min(domain.length, range.length - 1)), scale)
+        ? // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+          ((range = Array.from(_)), (n = Math.min(domain.length, range.length - 1)), scale)
         : range.slice()
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'y' implicitly has an 'any' type.
     scale.invertExtent = function (y) {
-      var i = range.indexOf(y)
+      const i = range.indexOf(y)
       return [domain[i - 1], domain[i]]
     }
 
@@ -19149,7 +19316,7 @@
     return initRange.apply(scale, arguments)
   }
 
-  var t0$1 = new Date(),
+  const t0$1 = new Date(),
     t1$1 = new Date()
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'floori' implicitly has an 'any' type.
@@ -19171,7 +19338,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     interval.round = function (date) {
-      var d0 = interval(date),
+      const d0 = interval(date),
         d1 = interval.ceil(date)
       return date - d0 < d1 - date ? d0 : d1
     }
@@ -19184,7 +19351,7 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     interval.range = function (start, stop, step) {
       // @ts-expect-error TS(7034) FIXME: Variable 'range' implicitly has type 'any[]' in so... Remove this comment to see the full error message
-      var range = [],
+      let range = [],
         previous
       start = interval.ceil(start)
       step = step == null ? 1 : Math.floor(step)
@@ -19199,10 +19366,11 @@
     interval.filter = function (test) {
       // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
       return newInterval(
+        // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
         function (date) {
           if (date >= date) while ((floori(date), !test(date))) date.setTime(date - 1)
-          // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
         },
+        // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
         function (date, step) {
           if (date >= date) {
             if (step < 0)
@@ -19251,15 +19419,15 @@
   }
 
   // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
-  var millisecond = newInterval(
+  const millisecond = newInterval(
     function () {
       // noop
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return end - start
     }
@@ -19272,90 +19440,91 @@
     if (!(k > 1)) return millisecond
     // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
     return newInterval(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date) {
         date.setTime(Math.floor(date / k) * k)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date, step) {
         date.setTime(+date + step * k)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       function (start, end) {
         return (end - start) / k
       }
     )
   }
-  var milliseconds = millisecond.range
+  const milliseconds = millisecond.range
 
-  var durationSecond = 1e3
-  var durationMinute = 6e4
-  var durationHour = 36e5
-  var durationDay = 864e5
-  var durationWeek = 6048e5
+  const durationSecond = 1e3
+  const durationMinute = 6e4
+  const durationHour = 36e5
+  const durationDay = 864e5
+  const durationWeek = 6048e5
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var second = newInterval(
+  const second = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setTime(date - date.getMilliseconds())
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step * durationSecond)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationSecond
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCSeconds()
     }
   )
-  var seconds = second.range
+  const seconds = second.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var minute = newInterval(
+  const minute = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setTime(date - date.getMilliseconds() - date.getSeconds() * durationSecond)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step * durationMinute)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationMinute
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getMinutes()
     }
   )
-  var minutes = minute.range
+  const minutes = minute.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var hour = newInterval(
+  const hour = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setTime(
         date - date.getMilliseconds() - date.getSeconds() * durationSecond - date.getMinutes() * durationMinute
       )
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step * durationHour)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationHour
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getHours()
     }
   )
-  var hours = hour.range
+  const hours = hour.range
 
-  var day = newInterval(
+  const day = newInterval(
     // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     date => date.setHours(0, 0, 0, 0),
     // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
@@ -19366,79 +19535,80 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     date => date.getDate() - 1
   )
-  var days = day.range
+  const days = day.range
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
   function weekday(i) {
     // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
     return newInterval(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date) {
         date.setDate(date.getDate() - ((date.getDay() + 7 - i) % 7))
         date.setHours(0, 0, 0, 0)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date, step) {
         date.setDate(date.getDate() + step * 7)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       function (start, end) {
         return (end - start - (end.getTimezoneOffset() - start.getTimezoneOffset()) * durationMinute) / durationWeek
       }
     )
   }
 
-  var sunday = weekday(0)
-  var monday = weekday(1)
-  var tuesday = weekday(2)
-  var wednesday = weekday(3)
-  var thursday = weekday(4)
-  var friday = weekday(5)
-  var saturday = weekday(6)
+  const sunday = weekday(0)
+  const monday = weekday(1)
+  const tuesday = weekday(2)
+  const wednesday = weekday(3)
+  const thursday = weekday(4)
+  const friday = weekday(5)
+  const saturday = weekday(6)
 
-  var sundays = sunday.range
-  var mondays = monday.range
-  var tuesdays = tuesday.range
-  var wednesdays = wednesday.range
-  var thursdays = thursday.range
-  var fridays = friday.range
-  var saturdays = saturday.range
+  const sundays = sunday.range
+  const mondays = monday.range
+  const tuesdays = tuesday.range
+  const wednesdays = wednesday.range
+  const thursdays = thursday.range
+  const fridays = friday.range
+  const saturdays = saturday.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var month = newInterval(
+  const month = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setDate(1)
       date.setHours(0, 0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setMonth(date.getMonth() + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return end.getMonth() - start.getMonth() + (end.getFullYear() - start.getFullYear()) * 12
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getMonth()
     }
   )
-  var months = month.range
+  const months = month.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var year = newInterval(
+  const year = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setMonth(0, 1)
       date.setHours(0, 0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setFullYear(date.getFullYear() + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return end.getFullYear() - start.getFullYear()
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getFullYear()
     }
@@ -19446,154 +19616,156 @@
 
   // An optimized implementation for this simple case.
   year.every = function (k) {
-    // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
     return !isFinite((k = Math.floor(k))) || !(k > 0)
       ? null
-      : newInterval(
+      : // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
+        newInterval(
+          // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           function (date) {
             date.setFullYear(Math.floor(date.getFullYear() / k) * k)
             date.setMonth(0, 1)
             date.setHours(0, 0, 0, 0)
-            // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           },
+          // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           function (date, step) {
             date.setFullYear(date.getFullYear() + step * k)
           }
         )
   }
-  var years = year.range
+  const years = year.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var utcMinute = newInterval(
+  const utcMinute = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setUTCSeconds(0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step * durationMinute)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationMinute
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCMinutes()
     }
   )
-  var utcMinutes = utcMinute.range
+  const utcMinutes = utcMinute.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var utcHour = newInterval(
+  const utcHour = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setUTCMinutes(0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setTime(+date + step * durationHour)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationHour
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCHours()
     }
   )
-  var utcHours = utcHour.range
+  const utcHours = utcHour.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var utcDay = newInterval(
+  const utcDay = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setUTCHours(0, 0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setUTCDate(date.getUTCDate() + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return (end - start) / durationDay
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCDate() - 1
     }
   )
-  var utcDays = utcDay.range
+  const utcDays = utcDay.range
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
   function utcWeekday(i) {
     // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
     return newInterval(
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date) {
         date.setUTCDate(date.getUTCDate() - ((date.getUTCDay() + 7 - i) % 7))
         date.setUTCHours(0, 0, 0, 0)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       function (date, step) {
         date.setUTCDate(date.getUTCDate() + step * 7)
-        // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       },
+      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
       function (start, end) {
         return (end - start) / durationWeek
       }
     )
   }
 
-  var utcSunday = utcWeekday(0)
-  var utcMonday = utcWeekday(1)
-  var utcTuesday = utcWeekday(2)
-  var utcWednesday = utcWeekday(3)
-  var utcThursday = utcWeekday(4)
-  var utcFriday = utcWeekday(5)
-  var utcSaturday = utcWeekday(6)
+  const utcSunday = utcWeekday(0)
+  const utcMonday = utcWeekday(1)
+  const utcTuesday = utcWeekday(2)
+  const utcWednesday = utcWeekday(3)
+  const utcThursday = utcWeekday(4)
+  const utcFriday = utcWeekday(5)
+  const utcSaturday = utcWeekday(6)
 
-  var utcSundays = utcSunday.range
-  var utcMondays = utcMonday.range
-  var utcTuesdays = utcTuesday.range
-  var utcWednesdays = utcWednesday.range
-  var utcThursdays = utcThursday.range
-  var utcFridays = utcFriday.range
-  var utcSaturdays = utcSaturday.range
+  const utcSundays = utcSunday.range
+  const utcMondays = utcMonday.range
+  const utcTuesdays = utcTuesday.range
+  const utcWednesdays = utcWednesday.range
+  const utcThursdays = utcThursday.range
+  const utcFridays = utcFriday.range
+  const utcSaturdays = utcSaturday.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var utcMonth = newInterval(
+  const utcMonth = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setUTCDate(1)
       date.setUTCHours(0, 0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setUTCMonth(date.getUTCMonth() + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return end.getUTCMonth() - start.getUTCMonth() + (end.getUTCFullYear() - start.getUTCFullYear()) * 12
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCMonth()
     }
   )
-  var utcMonths = utcMonth.range
+  const utcMonths = utcMonth.range
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
-  var utcYear = newInterval(
+  const utcYear = newInterval(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       date.setUTCMonth(0, 1)
       date.setUTCHours(0, 0, 0, 0)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date, step) {
       date.setUTCFullYear(date.getUTCFullYear() + step)
-      // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'start' implicitly has an 'any' type.
     function (start, end) {
       return end.getUTCFullYear() - start.getUTCFullYear()
-      // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     },
+    // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
     function (date) {
       return date.getUTCFullYear()
     }
@@ -19601,27 +19773,28 @@
 
   // An optimized implementation for this simple case.
   utcYear.every = function (k) {
-    // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
     return !isFinite((k = Math.floor(k))) || !(k > 0)
       ? null
-      : newInterval(
+      : // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
+        newInterval(
+          // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           function (date) {
             date.setUTCFullYear(Math.floor(date.getUTCFullYear() / k) * k)
             date.setUTCMonth(0, 1)
             date.setUTCHours(0, 0, 0, 0)
-            // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           },
+          // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
           function (date, step) {
             date.setUTCFullYear(date.getUTCFullYear() + step * k)
           }
         )
   }
-  var utcYears = utcYear.range
+  const utcYears = utcYear.range
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function localDate(d) {
     if (0 <= d.y && d.y < 100) {
-      var date = new Date(-1, d.m, d.d, d.H, d.M, d.S, d.L)
+      const date = new Date(-1, d.m, d.d, d.H, d.M, d.S, d.L)
       date.setFullYear(d.y)
       return date
     }
@@ -19631,7 +19804,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function utcDate(d) {
     if (0 <= d.y && d.y < 100) {
-      var date = new Date(Date.UTC(-1, d.m, d.d, d.H, d.M, d.S, d.L))
+      const date = new Date(Date.UTC(-1, d.m, d.d, d.H, d.M, d.S, d.L))
       date.setUTCFullYear(d.y)
       return date
     }
@@ -19645,7 +19818,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'locale' implicitly has an 'any' type.
   function formatLocale$1(locale) {
-    var locale_dateTime = locale.dateTime,
+    const locale_dateTime = locale.dateTime,
       locale_date = locale.date,
       locale_time = locale.time,
       locale_periods = locale.periods,
@@ -19654,7 +19827,7 @@
       locale_months = locale.months,
       locale_shortMonths = locale.shortMonths
 
-    var periodRe = formatRe(locale_periods),
+    const periodRe = formatRe(locale_periods),
       periodLookup = formatLookup(locale_periods),
       weekdayRe = formatRe(locale_weekdays),
       weekdayLookup = formatLookup(locale_weekdays),
@@ -19665,7 +19838,7 @@
       shortMonthRe = formatRe(locale_shortMonths),
       shortMonthLookup = formatLookup(locale_shortMonths)
 
-    var formats = {
+    const formats = {
       a: formatShortWeekday,
       A: formatWeekday,
       b: formatShortMonth,
@@ -19700,7 +19873,7 @@
       '%': formatLiteralPercent,
     }
 
-    var utcFormats = {
+    const utcFormats = {
       a: formatUTCShortWeekday,
       A: formatUTCWeekday,
       b: formatUTCShortMonth,
@@ -19735,7 +19908,7 @@
       '%': formatLiteralPercent,
     }
 
-    var parses = {
+    const parses = {
       a: parseShortWeekday,
       A: parseWeekday,
       b: parseShortMonth,
@@ -19788,7 +19961,7 @@
     function newFormat(specifier, formats) {
       // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
       return function (date) {
-        var string = [],
+        let string = [],
           i = -1,
           j = 0,
           n = specifier.length,
@@ -19819,7 +19992,7 @@
     function newParse(specifier, Z) {
       // @ts-expect-error TS(7006) FIXME: Parameter 'string' implicitly has an 'any' type.
       return function (string) {
-        var d = newDate(1900, undefined, 1),
+        let d = newDate(1900, undefined, 1),
           i = parseSpecifier(d, specifier, (string += ''), 0),
           week,
           day$1
@@ -19894,7 +20067,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parseSpecifier(d, specifier, string, j) {
-      var i = 0,
+      let i = 0,
         n = specifier.length,
         m = string.length,
         c,
@@ -19918,31 +20091,31 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parsePeriod(d, string, i) {
-      var n = periodRe.exec(string.slice(i))
+      const n = periodRe.exec(string.slice(i))
       return n ? ((d.p = periodLookup.get(n[0].toLowerCase())), i + n[0].length) : -1
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parseShortWeekday(d, string, i) {
-      var n = shortWeekdayRe.exec(string.slice(i))
+      const n = shortWeekdayRe.exec(string.slice(i))
       return n ? ((d.w = shortWeekdayLookup.get(n[0].toLowerCase())), i + n[0].length) : -1
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parseWeekday(d, string, i) {
-      var n = weekdayRe.exec(string.slice(i))
+      const n = weekdayRe.exec(string.slice(i))
       return n ? ((d.w = weekdayLookup.get(n[0].toLowerCase())), i + n[0].length) : -1
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parseShortMonth(d, string, i) {
-      var n = shortMonthRe.exec(string.slice(i))
+      const n = shortMonthRe.exec(string.slice(i))
       return n ? ((d.m = shortMonthLookup.get(n[0].toLowerCase())), i + n[0].length) : -1
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     function parseMonth(d, string, i) {
-      var n = monthRe.exec(string.slice(i))
+      const n = monthRe.exec(string.slice(i))
       return n ? ((d.m = monthLookup.get(n[0].toLowerCase())), i + n[0].length) : -1
     }
 
@@ -20024,7 +20197,7 @@
     return {
       // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
       format: function (specifier) {
-        var f = newFormat((specifier += ''), formats)
+        const f = newFormat((specifier += ''), formats)
         f.toString = function () {
           return specifier
         }
@@ -20032,7 +20205,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
       parse: function (specifier) {
-        var p = newParse((specifier += ''), false)
+        const p = newParse((specifier += ''), false)
         p.toString = function () {
           return specifier
         }
@@ -20040,7 +20213,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
       utcFormat: function (specifier) {
-        var f = newFormat((specifier += ''), utcFormats)
+        const f = newFormat((specifier += ''), utcFormats)
         f.toString = function () {
           return specifier
         }
@@ -20048,7 +20221,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
       utcParse: function (specifier) {
-        var p = newParse((specifier += ''), true)
+        const p = newParse((specifier += ''), true)
         p.toString = function () {
           return specifier
         }
@@ -20064,7 +20237,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'value' implicitly has an 'any' type.
   function pad$1(value, fill, width) {
-    var sign = value < 0 ? '-' : '',
+    const sign = value < 0 ? '-' : '',
       string = (sign ? -value : value) + '',
       length = string.length
     return sign + (length < width ? new Array(width - length + 1).join(fill) + string : string)
@@ -20082,130 +20255,130 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'names' implicitly has an 'any' type.
   function formatLookup(names) {
-    // @ts-expect-error TS(7006) FIXME: Parameter 'name' implicitly has an 'any' type.
+    // @ts-expect-error TS(2583) FIXME: Cannot find name 'Map'. Do you need to change your... Remove this comment to see the full error message
     return new Map(names.map((name, i) => [name.toLowerCase(), i]))
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseWeekdayNumberSunday(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 1))
+    const n = numberRe.exec(string.slice(i, i + 1))
     return n ? ((d.w = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseWeekdayNumberMonday(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 1))
+    const n = numberRe.exec(string.slice(i, i + 1))
     return n ? ((d.u = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseWeekNumberSunday(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.U = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseWeekNumberISO(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.V = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseWeekNumberMonday(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.W = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseFullYear(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 4))
+    const n = numberRe.exec(string.slice(i, i + 4))
     return n ? ((d.y = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseYear(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.y = +n[0] + (+n[0] > 68 ? 1900 : 2000)), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseZone(d, string, i) {
-    var n = /^(Z)|([+-]\d\d)(?::?(\d\d))?/.exec(string.slice(i, i + 6))
+    const n = /^(Z)|([+-]\d\d)(?::?(\d\d))?/.exec(string.slice(i, i + 6))
     return n ? ((d.Z = n[1] ? 0 : -(n[2] + (n[3] || '00'))), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseQuarter(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 1))
+    const n = numberRe.exec(string.slice(i, i + 1))
     // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
     return n ? ((d.q = n[0] * 3 - 3), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseMonthNumber(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
     return n ? ((d.m = n[0] - 1), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseDayOfMonth(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.d = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseDayOfYear(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 3))
+    const n = numberRe.exec(string.slice(i, i + 3))
     return n ? ((d.m = 0), (d.d = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseHour24(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.H = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseMinutes(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.M = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseSeconds(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 2))
+    const n = numberRe.exec(string.slice(i, i + 2))
     return n ? ((d.S = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseMilliseconds(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 3))
+    const n = numberRe.exec(string.slice(i, i + 3))
     return n ? ((d.L = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseMicroseconds(d, string, i) {
-    var n = numberRe.exec(string.slice(i, i + 6))
+    const n = numberRe.exec(string.slice(i, i + 6))
     // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
     return n ? ((d.L = Math.floor(n[0] / 1000)), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseLiteralPercent(d, string, i) {
-    var n = percentRe.exec(string.slice(i, i + 1))
+    const n = percentRe.exec(string.slice(i, i + 1))
     return n ? i + n[0].length : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseUnixTimestamp(d, string, i) {
-    var n = numberRe.exec(string.slice(i))
+    const n = numberRe.exec(string.slice(i))
     return n ? ((d.Q = +n[0]), i + n[0].length) : -1
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function parseUnixTimestampSeconds(d, string, i) {
-    var n = numberRe.exec(string.slice(i))
+    const n = numberRe.exec(string.slice(i))
     return n ? ((d.s = +n[0]), i + n[0].length) : -1
   }
 
@@ -20256,7 +20429,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function formatWeekdayNumberMonday(d) {
-    var day = d.getDay()
+    const day = d.getDay()
     return day === 0 ? 7 : day
   }
 
@@ -20267,7 +20440,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function dISO(d) {
-    var day = d.getDay()
+    const day = d.getDay()
     return day >= 4 || day === 0 ? thursday(d) : thursday.ceil(d)
   }
 
@@ -20306,14 +20479,14 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function formatFullYearISO(d, p) {
-    var day = d.getDay()
+    const day = d.getDay()
     d = day >= 4 || day === 0 ? thursday(d) : thursday.ceil(d)
     return pad$1(d.getFullYear() % 10000, p, 4)
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function formatZone(d) {
-    var z = d.getTimezoneOffset()
+    let z = d.getTimezoneOffset()
     return (z > 0 ? '-' : ((z *= -1), '+')) + pad$1((z / 60) | 0, '0', 2) + pad$1(z % 60, '0', 2)
   }
 
@@ -20364,7 +20537,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function formatUTCWeekdayNumberMonday(d) {
-    var dow = d.getUTCDay()
+    const dow = d.getUTCDay()
     return dow === 0 ? 7 : dow
   }
 
@@ -20375,7 +20548,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function UTCdISO(d) {
-    var day = d.getUTCDay()
+    const day = d.getUTCDay()
     return day >= 4 || day === 0 ? utcThursday(d) : utcThursday.ceil(d)
   }
 
@@ -20414,7 +20587,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
   function formatUTCFullYearISO(d, p) {
-    var day = d.getUTCDay()
+    const day = d.getUTCDay()
     d = day >= 4 || day === 0 ? utcThursday(d) : utcThursday.ceil(d)
     return pad$1(d.getUTCFullYear() % 10000, p, 4)
   }
@@ -20437,7 +20610,7 @@
     return Math.floor(+d / 1000)
   }
 
-  var locale$1
+  let locale$1
 
   defaultLocale$1({
     dateTime: '%x, %X',
@@ -20466,18 +20639,14 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'definition' implicitly has an 'any' typ... Remove this comment to see the full error message
   function defaultLocale$1(definition) {
     locale$1 = formatLocale$1(definition)
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.timeFormat = locale$1.format
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.timeParse = locale$1.parse
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.utcFormat = locale$1.utcFormat
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     exports.utcParse = locale$1.utcParse
     return locale$1
   }
 
-  var isoSpecifier = '%Y-%m-%dT%H:%M:%S.%LZ'
+  const isoSpecifier = '%Y-%m-%dT%H:%M:%S.%LZ'
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'date' implicitly has an 'any' type.
   function formatIsoNative(date) {
@@ -20485,24 +20654,18 @@
   }
 
   // @ts-expect-error TS(2774) FIXME: This condition will always return true since this ... Remove this comment to see the full error message
-  var formatIso = Date.prototype.toISOString
-    ? formatIsoNative
-    : // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
-      exports.utcFormat(isoSpecifier)
+  const formatIso = Date.prototype.toISOString ? formatIsoNative : exports.utcFormat(isoSpecifier)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'string' implicitly has an 'any' type.
   function parseIsoNative(string) {
-    var date = new Date(string)
+    const date = new Date(string)
     // @ts-expect-error TS(2345) FIXME: Argument of type 'Date' is not assignable to param... Remove this comment to see the full error message
     return isNaN(date) ? null : date
   }
 
-  var parseIso = +new Date('2000-01-01T00:00:00.000Z')
-    ? parseIsoNative
-    : // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
-      exports.utcParse(isoSpecifier)
+  const parseIso = +new Date('2000-01-01T00:00:00.000Z') ? parseIsoNative : exports.utcParse(isoSpecifier)
 
-  var durationSecond$1 = 1000,
+  const durationSecond$1 = 1000,
     durationMinute$1 = durationSecond$1 * 60,
     durationHour$1 = durationMinute$1 * 60,
     durationDay$1 = durationHour$1 * 24,
@@ -20522,11 +20685,11 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'year' implicitly has an 'any' type.
   function calendar(year, month, week, day, hour, minute, second, millisecond, format) {
-    var scale = continuous(),
+    const scale = continuous(),
       invert = scale.invert,
       domain = scale.domain
 
-    var formatMillisecond = format('.%L'),
+    const formatMillisecond = format('.%L'),
       formatSecond = format(':%S'),
       formatMinute = format('%I:%M'),
       formatHour = format('%I %p'),
@@ -20535,7 +20698,7 @@
       formatMonth = format('%B'),
       formatYear = format('%Y')
 
-    var tickIntervals = [
+    const tickIntervals = [
       [second, 1, durationSecond$1],
       [second, 5, 5 * durationSecond$1],
       [second, 15, 15 * durationSecond$1],
@@ -20585,14 +20748,14 @@
       // based on the extent of the domain and a rough estimate of tick size.
       // Otherwise, assume interval is already a time interval and use it.
       if (typeof interval === 'number') {
-        var target = Math.abs(stop - start) / interval,
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'bisector'.
+        let target = Math.abs(stop - start) / interval,
+          // @ts-expect-error TS(7006) FIXME: Parameter 'i' implicitly has an 'any' type.
           i = bisector(function (i) {
             return i[2]
+            // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 2.
           }).right(tickIntervals, target),
           step
         if (i === tickIntervals.length) {
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'tickStep'.
           step = tickStep(start / durationYear, stop / durationYear, interval)
           interval = year
         } else if (i) {
@@ -20600,7 +20763,6 @@
           step = i[1]
           interval = i[0]
         } else {
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'tickStep'.
           step = Math.max(tickStep(start, stop, interval), 1)
           interval = millisecond
         }
@@ -20615,14 +20777,14 @@
     }
 
     scale.domain = function (_) {
-      // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? domain(Array.from(_, number$3)) : domain().map(date$1)
     }
 
     // @ts-expect-error TS(2339) FIXME: Property 'ticks' does not exist on type '{ (x: any... Remove this comment to see the full error message
     scale.ticks = function (interval) {
       // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
-      var d = domain(),
+      let d = domain(),
         // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         t0 = d[0],
         // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
@@ -20643,7 +20805,7 @@
     // @ts-expect-error TS(2339) FIXME: Property 'nice' does not exist on type '{ (x: any)... Remove this comment to see the full error message
     scale.nice = function (interval) {
       // @ts-expect-error TS(2554) FIXME: Expected 1 arguments, but got 0.
-      var d = domain()
+      const d = domain()
       // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       return (interval = tickInterval(interval, d[0], d[d.length - 1])) ? domain(nice$1(d, interval)) : scale
     }
@@ -20657,28 +20819,28 @@
   }
 
   function time() {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     return initRange.apply(
       calendar(year, month, sunday, day, hour, minute, second, millisecond, exports.timeFormat).domain([
         new Date(2000, 0, 1),
         new Date(2000, 0, 2),
       ]),
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'IArguments' is not assignable to... Remove this comment to see the full error message
       arguments
     )
   }
 
   function utcTime() {
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
     return initRange.apply(
       calendar(utcYear, utcMonth, utcSunday, utcDay, utcHour, utcMinute, second, millisecond, exports.utcFormat).domain(
         [Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]
       ),
+      // @ts-expect-error TS(2345) FIXME: Argument of type 'IArguments' is not assignable to... Remove this comment to see the full error message
       arguments
     )
   }
 
   function transformer$2() {
-    var x0 = 0,
+    let x0 = 0,
       x1 = 1,
       // @ts-expect-error TS(7034) FIXME: Variable 't0' implicitly has type 'any' in some lo... Remove this comment to see the full error message
       t0,
@@ -20694,18 +20856,20 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return isNaN((x = +x))
-        ? unknown
-        : interpolator(k10 === 0 ? 0.5 : ((x = (transform(x) - t0) * k10), clamp ? Math.max(0, Math.min(1, x)) : x))
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
+          unknown
+        : // @ts-expect-error TS(7005) FIXME: Variable 'k10' implicitly has an 'any' type.
+          interpolator(k10 === 0 ? 0.5 : ((x = (transform(x) - t0) * k10), clamp ? Math.max(0, Math.min(1, x)) : x))
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
       return arguments.length
         ? (([x0, x1] = _),
+          // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
           (t0 = transform((x0 = +x0))),
+          // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
           (t1 = transform((x1 = +x1))),
           (k10 = t0 === t1 ? 0 : 1 / (t1 - t0)),
           scale)
@@ -20726,17 +20890,15 @@
     function range(interpolate) {
       // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
       return function (_) {
-        var r0, r1
+        let r0, r1
         return arguments.length
           ? (([r0, r1] = _), (interpolator = interpolate(r0, r1)), scale)
           : [interpolator(0), interpolator(1)]
       }
     }
 
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolate'.
     scale.range = range(interpolate)
 
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolateRound'.
     scale.rangeRound = range(interpolateRound)
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -20762,7 +20924,7 @@
   }
 
   function sequential() {
-    var scale = linearish(transformer$2()(identity$6))
+    const scale = linearish(transformer$2()(identity$6))
 
     scale.copy = function () {
       return copy$1(scale, sequential())
@@ -20773,7 +20935,7 @@
   }
 
   function sequentialLog() {
-    var scale = loggish(transformer$2()).domain([1, 10])
+    const scale = loggish(transformer$2()).domain([1, 10])
 
     scale.copy = function () {
       return copy$1(scale, sequentialLog()).base(scale.base())
@@ -20784,7 +20946,7 @@
   }
 
   function sequentialSymlog() {
-    var scale = symlogish(transformer$2())
+    const scale = symlogish(transformer$2())
 
     scale.copy = function () {
       return copy$1(scale, sequentialSymlog()).constant(scale.constant())
@@ -20795,7 +20957,7 @@
   }
 
   function sequentialPow() {
-    var scale = powish(transformer$2())
+    const scale = powish(transformer$2())
 
     scale.copy = function () {
       return copy$1(scale, sequentialPow()).exponent(scale.exponent())
@@ -20812,12 +20974,12 @@
 
   function sequentialQuantile() {
     // @ts-expect-error TS(7034) FIXME: Variable 'domain' implicitly has type 'any[]' in s... Remove this comment to see the full error message
-    var domain = [],
+    let domain = [],
       interpolator = identity$6
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'bisectRight'.
+      // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
       if (!isNaN((x = +x))) return interpolator((bisectRight(domain, x, 1) - 1) / (domain.length - 1))
     }
 
@@ -20827,7 +20989,6 @@
       if (!arguments.length) return domain.slice()
       domain = []
       for (let d of _) if (d != null && !isNaN((d = +d))) domain.push(d)
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'ascending'.
       domain.sort(ascending)
       return scale
     }
@@ -20844,7 +21005,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'n' implicitly has an 'any' type.
     scale.quantiles = function (n) {
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'quantile'.
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return Array.from({ length: n + 1 }, (_, i) => quantile(domain, i / n))
     }
 
@@ -20858,7 +21019,7 @@
   }
 
   function transformer$3() {
-    var x0 = 0,
+    let x0 = 0,
       x1 = 0.5,
       x2 = 1,
       s = 1,
@@ -20879,20 +21040,23 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     function scale(x) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
       return isNaN((x = +x))
-        ? unknown
-        : ((x = 0.5 + ((x = +transform(x)) - t1) * (s * x < s * t1 ? k10 : k21)),
+        ? // @ts-expect-error TS(7005) FIXME: Variable 'unknown' implicitly has an 'any' type.
+          unknown
+        : // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
+          ((x = 0.5 + ((x = +transform(x)) - t1) * (s * x < s * t1 ? k10 : k21)),
           interpolator(clamp ? Math.max(0, Math.min(1, x)) : x))
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     scale.domain = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
       return arguments.length
         ? (([x0, x1, x2] = _),
+          // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
           (t0 = transform((x0 = +x0))),
+          // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
           (t1 = transform((x1 = +x1))),
+          // @ts-expect-error TS(7005) FIXME: Variable 'transform' implicitly has an 'any' type.
           (t2 = transform((x2 = +x2))),
           (k10 = t0 === t1 ? 0 : 0.5 / (t1 - t0)),
           (k21 = t1 === t2 ? 0 : 0.5 / (t2 - t1)),
@@ -20915,18 +21079,15 @@
     function range(interpolate) {
       // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
       return function (_) {
-        var r0, r1, r2
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'piecewise'.
+        let r0, r1, r2
         return arguments.length
           ? (([r0, r1, r2] = _), (interpolator = piecewise(interpolate, [r0, r1, r2])), scale)
           : [interpolator(0), interpolator(0.5), interpolator(1)]
       }
     }
 
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolate'.
     scale.range = range(interpolate)
 
-    // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolateRound'.
     scale.rangeRound = range(interpolateRound)
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -20949,7 +21110,7 @@
   }
 
   function diverging() {
-    var scale = linearish(transformer$3()(identity$6))
+    const scale = linearish(transformer$3()(identity$6))
 
     scale.copy = function () {
       return copy$1(scale, diverging())
@@ -20960,7 +21121,7 @@
   }
 
   function divergingLog() {
-    var scale = loggish(transformer$3()).domain([0.1, 1, 10])
+    const scale = loggish(transformer$3()).domain([0.1, 1, 10])
 
     scale.copy = function () {
       return copy$1(scale, divergingLog()).base(scale.base())
@@ -20971,7 +21132,7 @@
   }
 
   function divergingSymlog() {
-    var scale = symlogish(transformer$3())
+    const scale = symlogish(transformer$3())
 
     scale.copy = function () {
       return copy$1(scale, divergingSymlog()).constant(scale.constant())
@@ -20982,7 +21143,7 @@
   }
 
   function divergingPow() {
-    var scale = powish(transformer$3())
+    const scale = powish(transformer$3())
 
     scale.copy = function () {
       return copy$1(scale, divergingPow()).exponent(scale.exponent())
@@ -20999,37 +21160,37 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'specifier' implicitly has an 'any' type... Remove this comment to see the full error message
   function colors(specifier) {
-    var n = (specifier.length / 6) | 0,
+    let n = (specifier.length / 6) | 0,
       colors = new Array(n),
       i = 0
     while (i < n) colors[i] = '#' + specifier.slice(i * 6, ++i * 6)
     return colors
   }
 
-  var category10 = colors('1f77b4ff7f0e2ca02cd627289467bd8c564be377c27f7f7fbcbd2217becf')
+  const category10 = colors('1f77b4ff7f0e2ca02cd627289467bd8c564be377c27f7f7fbcbd2217becf')
 
-  var Accent = colors('7fc97fbeaed4fdc086ffff99386cb0f0027fbf5b17666666')
+  const Accent = colors('7fc97fbeaed4fdc086ffff99386cb0f0027fbf5b17666666')
 
-  var Dark2 = colors('1b9e77d95f027570b3e7298a66a61ee6ab02a6761d666666')
+  const Dark2 = colors('1b9e77d95f027570b3e7298a66a61ee6ab02a6761d666666')
 
-  var Paired = colors('a6cee31f78b4b2df8a33a02cfb9a99e31a1cfdbf6fff7f00cab2d66a3d9affff99b15928')
+  const Paired = colors('a6cee31f78b4b2df8a33a02cfb9a99e31a1cfdbf6fff7f00cab2d66a3d9affff99b15928')
 
-  var Pastel1 = colors('fbb4aeb3cde3ccebc5decbe4fed9a6ffffcce5d8bdfddaecf2f2f2')
+  const Pastel1 = colors('fbb4aeb3cde3ccebc5decbe4fed9a6ffffcce5d8bdfddaecf2f2f2')
 
-  var Pastel2 = colors('b3e2cdfdcdaccbd5e8f4cae4e6f5c9fff2aef1e2cccccccc')
+  const Pastel2 = colors('b3e2cdfdcdaccbd5e8f4cae4e6f5c9fff2aef1e2cccccccc')
 
-  var Set1 = colors('e41a1c377eb84daf4a984ea3ff7f00ffff33a65628f781bf999999')
+  const Set1 = colors('e41a1c377eb84daf4a984ea3ff7f00ffff33a65628f781bf999999')
 
-  var Set2 = colors('66c2a5fc8d628da0cbe78ac3a6d854ffd92fe5c494b3b3b3')
+  const Set2 = colors('66c2a5fc8d628da0cbe78ac3a6d854ffd92fe5c494b3b3b3')
 
-  var Set3 = colors('8dd3c7ffffb3bebadafb807280b1d3fdb462b3de69fccde5d9d9d9bc80bdccebc5ffed6f')
+  const Set3 = colors('8dd3c7ffffb3bebadafb807280b1d3fdb462b3de69fccde5d9d9d9bc80bdccebc5ffed6f')
 
-  var Tableau10 = colors('4e79a7f28e2ce1575976b7b259a14fedc949af7aa1ff9da79c755fbab0ab')
+  const Tableau10 = colors('4e79a7f28e2ce1575976b7b259a14fedc949af7aa1ff9da79c755fbab0ab')
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'scheme' implicitly has an 'any' type.
-  var ramp = scheme => rgbBasis(scheme[scheme.length - 1])
+  const ramp = scheme => rgbBasis(scheme[scheme.length - 1])
 
-  var scheme = new Array(3)
+  const scheme = new Array(3)
     .concat(
       'd8b365f5f5f55ab4ac',
       'a6611adfc27d80cdc1018571',
@@ -21043,9 +21204,9 @@
     )
     .map(colors)
 
-  var BrBG = ramp(scheme)
+  const BrBG = ramp(scheme)
 
-  var scheme$1 = new Array(3)
+  const scheme$1 = new Array(3)
     .concat(
       'af8dc3f7f7f77fbf7b',
       '7b3294c2a5cfa6dba0008837',
@@ -21059,9 +21220,9 @@
     )
     .map(colors)
 
-  var PRGn = ramp(scheme$1)
+  const PRGn = ramp(scheme$1)
 
-  var scheme$2 = new Array(3)
+  const scheme$2 = new Array(3)
     .concat(
       'e9a3c9f7f7f7a1d76a',
       'd01c8bf1b6dab8e1864dac26',
@@ -21075,9 +21236,9 @@
     )
     .map(colors)
 
-  var PiYG = ramp(scheme$2)
+  const PiYG = ramp(scheme$2)
 
-  var scheme$3 = new Array(3)
+  const scheme$3 = new Array(3)
     .concat(
       '998ec3f7f7f7f1a340',
       '5e3c99b2abd2fdb863e66101',
@@ -21091,9 +21252,9 @@
     )
     .map(colors)
 
-  var PuOr = ramp(scheme$3)
+  const PuOr = ramp(scheme$3)
 
-  var scheme$4 = new Array(3)
+  const scheme$4 = new Array(3)
     .concat(
       'ef8a62f7f7f767a9cf',
       'ca0020f4a58292c5de0571b0',
@@ -21107,9 +21268,9 @@
     )
     .map(colors)
 
-  var RdBu = ramp(scheme$4)
+  const RdBu = ramp(scheme$4)
 
-  var scheme$5 = new Array(3)
+  const scheme$5 = new Array(3)
     .concat(
       'ef8a62ffffff999999',
       'ca0020f4a582bababa404040',
@@ -21123,9 +21284,9 @@
     )
     .map(colors)
 
-  var RdGy = ramp(scheme$5)
+  const RdGy = ramp(scheme$5)
 
-  var scheme$6 = new Array(3)
+  const scheme$6 = new Array(3)
     .concat(
       'fc8d59ffffbf91bfdb',
       'd7191cfdae61abd9e92c7bb6',
@@ -21139,9 +21300,9 @@
     )
     .map(colors)
 
-  var RdYlBu = ramp(scheme$6)
+  const RdYlBu = ramp(scheme$6)
 
-  var scheme$7 = new Array(3)
+  const scheme$7 = new Array(3)
     .concat(
       'fc8d59ffffbf91cf60',
       'd7191cfdae61a6d96a1a9641',
@@ -21155,9 +21316,9 @@
     )
     .map(colors)
 
-  var RdYlGn = ramp(scheme$7)
+  const RdYlGn = ramp(scheme$7)
 
-  var scheme$8 = new Array(3)
+  const scheme$8 = new Array(3)
     .concat(
       'fc8d59ffffbf99d594',
       'd7191cfdae61abdda42b83ba',
@@ -21171,9 +21332,9 @@
     )
     .map(colors)
 
-  var Spectral = ramp(scheme$8)
+  const Spectral = ramp(scheme$8)
 
-  var scheme$9 = new Array(3)
+  const scheme$9 = new Array(3)
     .concat(
       'e5f5f999d8c92ca25f',
       'edf8fbb2e2e266c2a4238b45',
@@ -21185,9 +21346,9 @@
     )
     .map(colors)
 
-  var BuGn = ramp(scheme$9)
+  const BuGn = ramp(scheme$9)
 
-  var scheme$a = new Array(3)
+  const scheme$a = new Array(3)
     .concat(
       'e0ecf49ebcda8856a7',
       'edf8fbb3cde38c96c688419d',
@@ -21199,9 +21360,9 @@
     )
     .map(colors)
 
-  var BuPu = ramp(scheme$a)
+  const BuPu = ramp(scheme$a)
 
-  var scheme$b = new Array(3)
+  const scheme$b = new Array(3)
     .concat(
       'e0f3dba8ddb543a2ca',
       'f0f9e8bae4bc7bccc42b8cbe',
@@ -21213,9 +21374,9 @@
     )
     .map(colors)
 
-  var GnBu = ramp(scheme$b)
+  const GnBu = ramp(scheme$b)
 
-  var scheme$c = new Array(3)
+  const scheme$c = new Array(3)
     .concat(
       'fee8c8fdbb84e34a33',
       'fef0d9fdcc8afc8d59d7301f',
@@ -21227,9 +21388,9 @@
     )
     .map(colors)
 
-  var OrRd = ramp(scheme$c)
+  const OrRd = ramp(scheme$c)
 
-  var scheme$d = new Array(3)
+  const scheme$d = new Array(3)
     .concat(
       'ece2f0a6bddb1c9099',
       'f6eff7bdc9e167a9cf02818a',
@@ -21241,9 +21402,9 @@
     )
     .map(colors)
 
-  var PuBuGn = ramp(scheme$d)
+  const PuBuGn = ramp(scheme$d)
 
-  var scheme$e = new Array(3)
+  const scheme$e = new Array(3)
     .concat(
       'ece7f2a6bddb2b8cbe',
       'f1eef6bdc9e174a9cf0570b0',
@@ -21255,9 +21416,9 @@
     )
     .map(colors)
 
-  var PuBu = ramp(scheme$e)
+  const PuBu = ramp(scheme$e)
 
-  var scheme$f = new Array(3)
+  const scheme$f = new Array(3)
     .concat(
       'e7e1efc994c7dd1c77',
       'f1eef6d7b5d8df65b0ce1256',
@@ -21269,9 +21430,9 @@
     )
     .map(colors)
 
-  var PuRd = ramp(scheme$f)
+  const PuRd = ramp(scheme$f)
 
-  var scheme$g = new Array(3)
+  const scheme$g = new Array(3)
     .concat(
       'fde0ddfa9fb5c51b8a',
       'feebe2fbb4b9f768a1ae017e',
@@ -21283,9 +21444,9 @@
     )
     .map(colors)
 
-  var RdPu = ramp(scheme$g)
+  const RdPu = ramp(scheme$g)
 
-  var scheme$h = new Array(3)
+  const scheme$h = new Array(3)
     .concat(
       'edf8b17fcdbb2c7fb8',
       'ffffcca1dab441b6c4225ea8',
@@ -21297,9 +21458,9 @@
     )
     .map(colors)
 
-  var YlGnBu = ramp(scheme$h)
+  const YlGnBu = ramp(scheme$h)
 
-  var scheme$i = new Array(3)
+  const scheme$i = new Array(3)
     .concat(
       'f7fcb9addd8e31a354',
       'ffffccc2e69978c679238443',
@@ -21311,9 +21472,9 @@
     )
     .map(colors)
 
-  var YlGn = ramp(scheme$i)
+  const YlGn = ramp(scheme$i)
 
-  var scheme$j = new Array(3)
+  const scheme$j = new Array(3)
     .concat(
       'fff7bcfec44fd95f0e',
       'ffffd4fed98efe9929cc4c02',
@@ -21325,9 +21486,9 @@
     )
     .map(colors)
 
-  var YlOrBr = ramp(scheme$j)
+  const YlOrBr = ramp(scheme$j)
 
-  var scheme$k = new Array(3)
+  const scheme$k = new Array(3)
     .concat(
       'ffeda0feb24cf03b20',
       'ffffb2fecc5cfd8d3ce31a1c',
@@ -21339,9 +21500,9 @@
     )
     .map(colors)
 
-  var YlOrRd = ramp(scheme$k)
+  const YlOrRd = ramp(scheme$k)
 
-  var scheme$l = new Array(3)
+  const scheme$l = new Array(3)
     .concat(
       'deebf79ecae13182bd',
       'eff3ffbdd7e76baed62171b5',
@@ -21353,9 +21514,9 @@
     )
     .map(colors)
 
-  var Blues = ramp(scheme$l)
+  const Blues = ramp(scheme$l)
 
-  var scheme$m = new Array(3)
+  const scheme$m = new Array(3)
     .concat(
       'e5f5e0a1d99b31a354',
       'edf8e9bae4b374c476238b45',
@@ -21367,9 +21528,9 @@
     )
     .map(colors)
 
-  var Greens = ramp(scheme$m)
+  const Greens = ramp(scheme$m)
 
-  var scheme$n = new Array(3)
+  const scheme$n = new Array(3)
     .concat(
       'f0f0f0bdbdbd636363',
       'f7f7f7cccccc969696525252',
@@ -21381,9 +21542,9 @@
     )
     .map(colors)
 
-  var Greys = ramp(scheme$n)
+  const Greys = ramp(scheme$n)
 
-  var scheme$o = new Array(3)
+  const scheme$o = new Array(3)
     .concat(
       'efedf5bcbddc756bb1',
       'f2f0f7cbc9e29e9ac86a51a3',
@@ -21395,9 +21556,9 @@
     )
     .map(colors)
 
-  var Purples = ramp(scheme$o)
+  const Purples = ramp(scheme$o)
 
-  var scheme$p = new Array(3)
+  const scheme$p = new Array(3)
     .concat(
       'fee0d2fc9272de2d26',
       'fee5d9fcae91fb6a4acb181d',
@@ -21409,9 +21570,9 @@
     )
     .map(colors)
 
-  var Reds = ramp(scheme$p)
+  const Reds = ramp(scheme$p)
 
-  var scheme$q = new Array(3)
+  const scheme$q = new Array(3)
     .concat(
       'fee6cefdae6be6550d',
       'feeddefdbe85fd8d3cd94701',
@@ -21423,7 +21584,7 @@
     )
     .map(colors)
 
-  var Oranges = ramp(scheme$q)
+  const Oranges = ramp(scheme$q)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
   function cividis(t) {
@@ -21448,36 +21609,36 @@
     )
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'cubehelixLong'.
-  var cubehelix$3 = cubehelixLong(cubehelix(300, 0.5, 0.0), cubehelix(-240, 0.5, 1.0))
+  // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
+  const cubehelix$3 = cubehelixLong(cubehelix(300, 0.5, 0.0), cubehelix(-240, 0.5, 1.0))
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'cubehelixLong'.
-  var warm = cubehelixLong(cubehelix(-100, 0.75, 0.35), cubehelix(80, 1.5, 0.8))
+  // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
+  const warm = cubehelixLong(cubehelix(-100, 0.75, 0.35), cubehelix(80, 1.5, 0.8))
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'cubehelixLong'.
-  var cool = cubehelixLong(cubehelix(260, 0.75, 0.35), cubehelix(80, 1.5, 0.8))
+  // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 3.
+  const cool = cubehelixLong(cubehelix(260, 0.75, 0.35), cubehelix(80, 1.5, 0.8))
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'cubehelix'.
-  var c$1 = cubehelix()
+  // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 0.
+  const c$1 = cubehelix()
 
   // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
   function rainbow(t) {
     if (t < 0 || t > 1) t -= Math.floor(t)
-    var ts = Math.abs(t - 0.5)
+    const ts = Math.abs(t - 0.5)
     c$1.h = 360 * t - 100
     c$1.s = 1.5 - 1.5 * ts
     c$1.l = 0.8 - 0.9 * ts
     return c$1 + ''
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'rgb'.
-  var c$2 = rgb(),
+  // @ts-expect-error TS(2554) FIXME: Expected 4 arguments, but got 0.
+  const c$2 = rgb(),
     pi_1_3 = Math.PI / 3,
     pi_2_3 = (Math.PI * 2) / 3
 
   // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
   function sinebow(t) {
-    var x
+    let x
     t = (0.5 - t) * Math.PI
     c$2.r = 255 * (x = Math.sin(t)) * x
     c$2.g = 255 * (x = Math.sin(t + pi_1_3)) * x
@@ -21513,32 +21674,32 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'range' implicitly has an 'any' type.
   function ramp$1(range) {
-    var n = range.length
+    const n = range.length
     // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
     return function (t) {
       return range[Math.max(0, Math.min(n - 1, Math.floor(t * n)))]
     }
   }
 
-  var viridis = ramp$1(
+  const viridis = ramp$1(
     colors(
       '44015444025645045745055946075a46085c460a5d460b5e470d60470e6147106347116447136548146748166848176948186a481a6c481b6d481c6e481d6f481f70482071482173482374482475482576482677482878482979472a7a472c7a472d7b472e7c472f7d46307e46327e46337f463480453581453781453882443983443a83443b84433d84433e85423f854240864241864142874144874045884046883f47883f48893e49893e4a893e4c8a3d4d8a3d4e8a3c4f8a3c508b3b518b3b528b3a538b3a548c39558c39568c38588c38598c375a8c375b8d365c8d365d8d355e8d355f8d34608d34618d33628d33638d32648e32658e31668e31678e31688e30698e306a8e2f6b8e2f6c8e2e6d8e2e6e8e2e6f8e2d708e2d718e2c718e2c728e2c738e2b748e2b758e2a768e2a778e2a788e29798e297a8e297b8e287c8e287d8e277e8e277f8e27808e26818e26828e26828e25838e25848e25858e24868e24878e23888e23898e238a8d228b8d228c8d228d8d218e8d218f8d21908d21918c20928c20928c20938c1f948c1f958b1f968b1f978b1f988b1f998a1f9a8a1e9b8a1e9c891e9d891f9e891f9f881fa0881fa1881fa1871fa28720a38620a48621a58521a68522a78522a88423a98324aa8325ab8225ac8226ad8127ad8128ae8029af7f2ab07f2cb17e2db27d2eb37c2fb47c31b57b32b67a34b67935b77937b87838b9773aba763bbb753dbc743fbc7340bd7242be7144bf7046c06f48c16e4ac16d4cc26c4ec36b50c46a52c56954c56856c66758c7655ac8645cc8635ec96260ca6063cb5f65cb5e67cc5c69cd5b6ccd5a6ece5870cf5773d05675d05477d1537ad1517cd2507fd34e81d34d84d44b86d54989d5488bd6468ed64590d74393d74195d84098d83e9bd93c9dd93ba0da39a2da37a5db36a8db34aadc32addc30b0dd2fb2dd2db5de2bb8de29bade28bddf26c0df25c2df23c5e021c8e020cae11fcde11dd0e11cd2e21bd5e21ad8e219dae319dde318dfe318e2e418e5e419e7e419eae51aece51befe51cf1e51df4e61ef6e620f8e621fbe723fde725'
     )
   )
 
-  var magma = ramp$1(
+  const magma = ramp$1(
     colors(
       '00000401000501010601010802010902020b02020d03030f03031204041405041606051806051a07061c08071e0907200a08220b09240c09260d0a290e0b2b100b2d110c2f120d31130d34140e36150e38160f3b180f3d19103f1a10421c10441d11471e114920114b21114e22115024125325125527125829115a2a115c2c115f2d11612f116331116533106734106936106b38106c390f6e3b0f703d0f713f0f72400f74420f75440f764510774710784910784a10794c117a4e117b4f127b51127c52137c54137d56147d57157e59157e5a167e5c167f5d177f5f187f601880621980641a80651a80671b80681c816a1c816b1d816d1d816e1e81701f81721f817320817521817621817822817922827b23827c23827e24828025828125818326818426818627818827818928818b29818c29818e2a81902a81912b81932b80942c80962c80982d80992d809b2e7f9c2e7f9e2f7fa02f7fa1307ea3307ea5317ea6317da8327daa337dab337cad347cae347bb0357bb2357bb3367ab5367ab73779b83779ba3878bc3978bd3977bf3a77c03a76c23b75c43c75c53c74c73d73c83e73ca3e72cc3f71cd4071cf4070d0416fd2426fd3436ed5446dd6456cd8456cd9466bdb476adc4869de4968df4a68e04c67e24d66e34e65e44f64e55064e75263e85362e95462ea5661eb5760ec5860ed5a5fee5b5eef5d5ef05f5ef1605df2625df2645cf3655cf4675cf4695cf56b5cf66c5cf66e5cf7705cf7725cf8745cf8765cf9785df9795df97b5dfa7d5efa7f5efa815ffb835ffb8560fb8761fc8961fc8a62fc8c63fc8e64fc9065fd9266fd9467fd9668fd9869fd9a6afd9b6bfe9d6cfe9f6dfea16efea36ffea571fea772fea973feaa74feac76feae77feb078feb27afeb47bfeb67cfeb77efeb97ffebb81febd82febf84fec185fec287fec488fec68afec88cfeca8dfecc8ffecd90fecf92fed194fed395fed597fed799fed89afdda9cfddc9efddea0fde0a1fde2a3fde3a5fde5a7fde7a9fde9aafdebacfcecaefceeb0fcf0b2fcf2b4fcf4b6fcf6b8fcf7b9fcf9bbfcfbbdfcfdbf'
     )
   )
 
-  var inferno = ramp$1(
+  const inferno = ramp$1(
     colors(
       '00000401000501010601010802010a02020c02020e03021004031204031405041706041907051b08051d09061f0a07220b07240c08260d08290e092b10092d110a30120a32140b34150b37160b39180c3c190c3e1b0c411c0c431e0c451f0c48210c4a230c4c240c4f260c51280b53290b552b0b572d0b592f0a5b310a5c320a5e340a5f3609613809623909633b09643d09653e0966400a67420a68440a68450a69470b6a490b6a4a0c6b4c0c6b4d0d6c4f0d6c510e6c520e6d540f6d550f6d57106e59106e5a116e5c126e5d126e5f136e61136e62146e64156e65156e67166e69166e6a176e6c186e6d186e6f196e71196e721a6e741a6e751b6e771c6d781c6d7a1d6d7c1d6d7d1e6d7f1e6c801f6c82206c84206b85216b87216b88226a8a226a8c23698d23698f24699025689225689326679526679727669827669a28659b29649d29649f2a63a02a63a22b62a32c61a52c60a62d60a82e5fa92e5eab2f5ead305dae305cb0315bb1325ab3325ab43359b63458b73557b93556ba3655bc3754bd3853bf3952c03a51c13a50c33b4fc43c4ec63d4dc73e4cc83f4bca404acb4149cc4248ce4347cf4446d04545d24644d34743d44842d54a41d74b3fd84c3ed94d3dda4e3cdb503bdd513ade5238df5337e05536e15635e25734e35933e45a31e55c30e65d2fe75e2ee8602de9612bea632aeb6429eb6628ec6726ed6925ee6a24ef6c23ef6e21f06f20f1711ff1731df2741cf3761bf37819f47918f57b17f57d15f67e14f68013f78212f78410f8850ff8870ef8890cf98b0bf98c0af98e09fa9008fa9207fa9407fb9606fb9706fb9906fb9b06fb9d07fc9f07fca108fca309fca50afca60cfca80dfcaa0ffcac11fcae12fcb014fcb216fcb418fbb61afbb81dfbba1ffbbc21fbbe23fac026fac228fac42afac62df9c72ff9c932f9cb35f8cd37f8cf3af7d13df7d340f6d543f6d746f5d949f5db4cf4dd4ff4df53f4e156f3e35af3e55df2e661f2e865f2ea69f1ec6df1ed71f1ef75f1f179f2f27df2f482f3f586f3f68af4f88ef5f992f6fa96f8fb9af9fc9dfafda1fcffa4'
     )
   )
 
-  var plasma = ramp$1(
+  const plasma = ramp$1(
     colors(
       '0d088710078813078916078a19068c1b068d1d068e20068f2206902406912605912805922a05932c05942e05952f059631059733059735049837049938049a3a049a3c049b3e049c3f049c41049d43039e44039e46039f48039f4903a04b03a14c02a14e02a25002a25102a35302a35502a45601a45801a45901a55b01a55c01a65e01a66001a66100a76300a76400a76600a76700a86900a86a00a86c00a86e00a86f00a87100a87201a87401a87501a87701a87801a87a02a87b02a87d03a87e03a88004a88104a78305a78405a78606a68707a68808a68a09a58b0aa58d0ba58e0ca48f0da4910ea3920fa39410a29511a19613a19814a099159f9a169f9c179e9d189d9e199da01a9ca11b9ba21d9aa31e9aa51f99a62098a72197a82296aa2395ab2494ac2694ad2793ae2892b02991b12a90b22b8fb32c8eb42e8db52f8cb6308bb7318ab83289ba3388bb3488bc3587bd3786be3885bf3984c03a83c13b82c23c81c33d80c43e7fc5407ec6417dc7427cc8437bc9447aca457acb4679cc4778cc4977cd4a76ce4b75cf4c74d04d73d14e72d24f71d35171d45270d5536fd5546ed6556dd7566cd8576bd9586ada5a6ada5b69db5c68dc5d67dd5e66de5f65de6164df6263e06363e16462e26561e26660e3685fe4695ee56a5de56b5de66c5ce76e5be76f5ae87059e97158e97257ea7457eb7556eb7655ec7754ed7953ed7a52ee7b51ef7c51ef7e50f07f4ff0804ef1814df1834cf2844bf3854bf3874af48849f48948f58b47f58c46f68d45f68f44f79044f79143f79342f89441f89540f9973ff9983ef99a3efa9b3dfa9c3cfa9e3bfb9f3afba139fba238fca338fca537fca636fca835fca934fdab33fdac33fdae32fdaf31fdb130fdb22ffdb42ffdb52efeb72dfeb82cfeba2cfebb2bfebd2afebe2afec029fdc229fdc328fdc527fdc627fdc827fdca26fdcb26fccd25fcce25fcd025fcd225fbd324fbd524fbd724fad824fada24f9dc24f9dd25f8df25f8e125f7e225f7e425f6e626f6e826f5e926f5eb27f4ed27f3ee27f3f027f2f227f1f426f1f525f0f724f0f921'
     )
@@ -21551,18 +21712,18 @@
     }
   }
 
-  var abs$3 = Math.abs
-  var atan2$1 = Math.atan2
-  var cos$2 = Math.cos
-  var max$3 = Math.max
-  var min$2 = Math.min
-  var sin$2 = Math.sin
-  var sqrt$2 = Math.sqrt
+  const abs$3 = Math.abs
+  const atan2$1 = Math.atan2
+  const cos$2 = Math.cos
+  const max$3 = Math.max
+  const min$2 = Math.min
+  const sin$2 = Math.sin
+  const sqrt$2 = Math.sqrt
 
-  var epsilon$5 = 1e-12
-  var pi$4 = Math.PI
-  var halfPi$3 = pi$4 / 2
-  var tau$5 = 2 * pi$4
+  const epsilon$5 = 1e-12
+  const pi$4 = Math.PI
+  const halfPi$3 = pi$4 / 2
+  const tau$5 = 2 * pi$4
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function acos$1(x) {
@@ -21601,7 +21762,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x0' implicitly has an 'any' type.
   function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
-    var x10 = x1 - x0,
+    let x10 = x1 - x0,
       y10 = y1 - y0,
       x32 = x3 - x2,
       y32 = y3 - y2,
@@ -21615,7 +21776,7 @@
   // http://mathworld.wolfram.com/Circle-LineIntersection.html
   // @ts-expect-error TS(7006) FIXME: Parameter 'x0' implicitly has an 'any' type.
   function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
-    var x01 = x0 - x1,
+    let x01 = x0 - x1,
       y01 = y0 - y1,
       lo = (cw ? rc : -rc) / sqrt$2(x01 * x01 + y01 * y01),
       ox = lo * y01,
@@ -21656,7 +21817,7 @@
   }
 
   function arc() {
-    var innerRadius = arcInnerRadius,
+    let innerRadius = arcInnerRadius,
       outerRadius = arcOuterRadius,
       cornerRadius = constant$a(0),
       // @ts-expect-error TS(7034) FIXME: Variable 'padRadius' implicitly has type 'any' in ... Remove this comment to see the full error message
@@ -21668,7 +21829,7 @@
       context = null
 
     function arc() {
-      var buffer,
+      let buffer,
         r,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         r0 = +innerRadius.apply(this, arguments),
@@ -21706,7 +21867,7 @@
 
       // Or is it a circular or annular sector?
       else {
-        var a01 = a0,
+        let a01 = a0,
           a11 = a1,
           a00 = a0,
           a10 = a1,
@@ -21726,7 +21887,7 @@
         // Apply padding? Note that since r1 ≥ r0, da1 ≥ da0.
         if (rp > epsilon$5) {
           // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-          var p0 = asin$1((rp / r0) * sin$2(ap)),
+          let p0 = asin$1((rp / r0) * sin$2(ap)),
             // @ts-expect-error TS(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
             p1 = asin$1((rp / r1) * sin$2(ap))
           if ((da0 -= p0 * 2) > epsilon$5) (p0 *= cw ? 1 : -1), (a00 += p0), (a10 -= p0)
@@ -21735,7 +21896,7 @@
           else (da1 = 0), (a01 = a11 = (a0 + a1) / 2)
         }
 
-        var x01 = r1 * cos$2(a01),
+        const x01 = r1 * cos$2(a01),
           y01 = r1 * sin$2(a01),
           x10 = r0 * cos$2(a10),
           y10 = r0 * sin$2(a10)
@@ -21750,7 +21911,7 @@
 
           // Restrict the corner radius according to the sector angle.
           if (da < pi$4 && (oc = intersect(x01, y01, x00, y00, x11, y11, x10, y10))) {
-            var ax = x01 - oc[0],
+            const ax = x01 - oc[0],
               ay = y01 - oc[1],
               bx = x11 - oc[0],
               by = y11 - oc[1],
@@ -21833,7 +21994,7 @@
 
     arc.centroid = function () {
       // @ts-expect-error TS(2345) FIXME: Argument of type 'IArguments' is not assignable to... Remove this comment to see the full error message
-      var r = (+innerRadius.apply(this, arguments) + +outerRadius.apply(this, arguments)) / 2,
+      const r = (+innerRadius.apply(this, arguments) + +outerRadius.apply(this, arguments)) / 2,
         // @ts-expect-error TS(2345) FIXME: Argument of type 'IArguments' is not assignable to... Remove this comment to see the full error message
         a = (+startAngle.apply(this, arguments) + +endAngle.apply(this, arguments)) / 2 - pi$4 / 2
       return [cos$2(a) * r, sin$2(a) * r]
@@ -21856,10 +22017,10 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     arc.padRadius = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'padRadius' implicitly has an 'any' type.
       return arguments.length
         ? ((padRadius = _ == null ? null : typeof _ === 'function' ? _ : constant$a(+_)), arc)
-        : padRadius
+        : // @ts-expect-error TS(7005) FIXME: Variable 'padRadius' implicitly has an 'any' type.
+          padRadius
     }
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
@@ -21886,13 +22047,14 @@
     return arc
   }
 
-  var slice$4 = Array.prototype.slice
+  const slice$4 = Array.prototype.slice
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function array$5(x) {
     return typeof x === 'object' && 'length' in x
       ? x // Array, TypedArray, NodeList, array-like
-      : Array.from(x) // Map, Set, iterable, string, or anything else
+      : // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+        Array.from(x) // Map, Set, iterable, string, or anything else
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
@@ -21950,7 +22112,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function line(x, y) {
-    var defined = constant$a(true),
+    let defined = constant$a(true),
       // @ts-expect-error TS(7034) FIXME: Variable 'context' implicitly has type 'any' in so... Remove this comment to see the full error message
       context = null,
       curve = curveLinear,
@@ -21962,7 +22124,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function line(data) {
-      var i,
+      let i,
         n = (data = array$5(data)).length,
         d,
         defined0 = false,
@@ -22009,10 +22171,10 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     line.context = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
       return arguments.length
         ? (_ == null ? (context = output = null) : (output = curve((context = _))), line)
-        : context
+        : // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
+          context
     }
 
     return line
@@ -22021,7 +22183,7 @@
   // @ts-expect-error TS(7006) FIXME: Parameter 'x0' implicitly has an 'any' type.
   function area$3(x0, y0, y1) {
     // @ts-expect-error TS(7034) FIXME: Variable 'x1' implicitly has type 'any' in some lo... Remove this comment to see the full error message
-    var x1 = null,
+    let x1 = null,
       defined = constant$a(true),
       // @ts-expect-error TS(7034) FIXME: Variable 'context' implicitly has type 'any' in so... Remove this comment to see the full error message
       context = null,
@@ -22035,7 +22197,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function area(data) {
-      var i,
+      let i,
         j,
         k,
         n = (data = array$5(data)).length,
@@ -22145,10 +22307,10 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     area.context = function (_) {
-      // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
       return arguments.length
         ? (_ == null ? (context = output = null) : (output = curve((context = _))), area)
-        : context
+        : // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
+          context
     }
 
     return area
@@ -22165,7 +22327,7 @@
   }
 
   function pie() {
-    var value = identity$8,
+    let value = identity$8,
       sortValues = descending$1,
       // @ts-expect-error TS(7034) FIXME: Variable 'sort' implicitly has type 'any' in some ... Remove this comment to see the full error message
       sort = null,
@@ -22175,7 +22337,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function pie(data) {
-      var i,
+      let i,
         n = (data = array$5(data)).length,
         j,
         k,
@@ -22207,6 +22369,7 @@
       // @ts-expect-error TS(7005) FIXME: Variable 'sort' implicitly has an 'any' type.
       else if (sort != null)
         index.sort(function (i, j) {
+          // @ts-expect-error TS(7005) FIXME: Variable 'sort' implicitly has an 'any' type.
           return sort(data[i], data[j])
         })
 
@@ -22262,7 +22425,7 @@
     return pie
   }
 
-  var curveRadialLinear = curveRadial(curveLinear)
+  const curveRadialLinear = curveRadial(curveLinear)
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'curve' implicitly has an 'any' type.
   function Radial(curve) {
@@ -22304,7 +22467,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'l' implicitly has an 'any' type.
   function lineRadial(l) {
-    var c = l.curve
+    const c = l.curve
 
     ;(l.angle = l.x), delete l.x
     ;(l.radius = l.y), delete l.y
@@ -22324,7 +22487,7 @@
 
   function areaRadial() {
     // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 0.
-    var a = area$3().curve(curveRadialLinear),
+    const a = area$3().curve(curveRadialLinear),
       // @ts-expect-error TS(2339) FIXME: Property 'curve' does not exist on type '(context:... Remove this comment to see the full error message
       c = a.curve,
       // @ts-expect-error TS(2339) FIXME: Property 'lineX0' does not exist on type '(context... Remove this comment to see the full error message
@@ -22352,21 +22515,25 @@
     ;(a.lineStartAngle = function () {
       return lineRadial(x0())
     }),
+      // @ts-expect-error TS(2339) FIXME: Property 'lineX0' does not exist on type '(context... Remove this comment to see the full error message
       delete a.lineX0
     // @ts-expect-error TS(2339) FIXME: Property 'lineEndAngle' does not exist on type '(c... Remove this comment to see the full error message
     ;(a.lineEndAngle = function () {
       return lineRadial(x1())
     }),
+      // @ts-expect-error TS(2339) FIXME: Property 'lineX1' does not exist on type '(context... Remove this comment to see the full error message
       delete a.lineX1
     // @ts-expect-error TS(2339) FIXME: Property 'lineInnerRadius' does not exist on type ... Remove this comment to see the full error message
     ;(a.lineInnerRadius = function () {
       return lineRadial(y0())
     }),
+      // @ts-expect-error TS(2339) FIXME: Property 'lineY0' does not exist on type '(context... Remove this comment to see the full error message
       delete a.lineY0
     // @ts-expect-error TS(2339) FIXME: Property 'lineOuterRadius' does not exist on type ... Remove this comment to see the full error message
     ;(a.lineOuterRadius = function () {
       return lineRadial(y1())
     }),
+      // @ts-expect-error TS(2339) FIXME: Property 'lineY1' does not exist on type '(context... Remove this comment to see the full error message
       delete a.lineY1
 
     // @ts-expect-error TS(2339) FIXME: Property 'curve' does not exist on type '(context:... Remove this comment to see the full error message
@@ -22394,7 +22561,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'curve' implicitly has an 'any' type.
   function link$2(curve) {
-    var source = linkSource,
+    let source = linkSource,
       target = linkTarget,
       x = x$3,
       y = y$3,
@@ -22402,19 +22569,24 @@
       context = null
 
     function link() {
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var buffer,
+      let buffer,
         argv = slice$4.call(arguments),
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         s = source.apply(this, argv),
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         t = target.apply(this, argv)
       // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
       if (!context) context = buffer = path()
-      // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
       curve(
+        // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
         context,
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         +x.apply(this, ((argv[0] = s), argv)),
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         +y.apply(this, argv),
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         +x.apply(this, ((argv[0] = t), argv)),
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         +y.apply(this, argv)
       )
       if (buffer) return (context = null), buffer + '' || null
@@ -22463,7 +22635,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
   function curveRadial$1(context, x0, y0, x1, y1) {
-    var p0 = pointRadial(x0, y0),
+    const p0 = pointRadial(x0, y0),
       p1 = pointRadial(x0, (y0 = (y0 + y1) / 2)),
       p2 = pointRadial(x1, y0),
       p3 = pointRadial(x1, y1)
@@ -22480,7 +22652,7 @@
   }
 
   function linkRadial() {
-    var l = link$2(curveRadial$1)
+    const l = link$2(curveRadial$1)
     // @ts-expect-error TS(2339) FIXME: Property 'angle' does not exist on type '{ (): str... Remove this comment to see the full error message
     ;(l.angle = l.x), delete l.x
     // @ts-expect-error TS(2339) FIXME: Property 'radius' does not exist on type '{ (): st... Remove this comment to see the full error message
@@ -22488,19 +22660,19 @@
     return l
   }
 
-  var circle$2 = {
+  const circle$2 = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var r = Math.sqrt(size / pi$4)
+      const r = Math.sqrt(size / pi$4)
       context.moveTo(r, 0)
       context.arc(0, 0, r, 0, tau$5)
     },
   }
 
-  var cross$2 = {
+  const cross$2 = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var r = Math.sqrt(size / 5) / 2
+      const r = Math.sqrt(size / 5) / 2
       context.moveTo(-3 * r, -r)
       context.lineTo(-r, -r)
       context.lineTo(-r, -3 * r)
@@ -22517,13 +22689,13 @@
     },
   }
 
-  var tan30 = Math.sqrt(1 / 3),
+  const tan30 = Math.sqrt(1 / 3),
     tan30_2 = tan30 * 2
 
-  var diamond = {
+  const diamond = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var y = Math.sqrt(size / tan30_2),
+      const y = Math.sqrt(size / tan30_2),
         x = y * tan30
       context.moveTo(0, -y)
       context.lineTo(x, 0)
@@ -22533,21 +22705,21 @@
     },
   }
 
-  var ka = 0.8908130915292852281,
+  const ka = 0.8908130915292852281,
     kr = Math.sin(pi$4 / 10) / Math.sin((7 * pi$4) / 10),
     kx = Math.sin(tau$5 / 10) * kr,
     ky = -Math.cos(tau$5 / 10) * kr
 
-  var star = {
+  const star = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var r = Math.sqrt(size * ka),
+      const r = Math.sqrt(size * ka),
         x = kx * r,
         y = ky * r
       context.moveTo(0, -r)
       context.lineTo(x, y)
-      for (var i = 1; i < 5; ++i) {
-        var a = (tau$5 * i) / 5,
+      for (let i = 1; i < 5; ++i) {
+        const a = (tau$5 * i) / 5,
           c = Math.cos(a),
           s = Math.sin(a)
         context.lineTo(s * r, -c * r)
@@ -22557,21 +22729,21 @@
     },
   }
 
-  var square$1 = {
+  const square$1 = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var w = Math.sqrt(size),
+      const w = Math.sqrt(size),
         x = -w / 2
       context.rect(x, x, w, w)
     },
   }
 
-  var sqrt3 = Math.sqrt(3)
+  const sqrt3 = Math.sqrt(3)
 
-  var triangle = {
+  const triangle = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var y = -Math.sqrt(size / (sqrt3 * 3))
+      const y = -Math.sqrt(size / (sqrt3 * 3))
       context.moveTo(0, y * 2)
       context.lineTo(-sqrt3 * y, -y)
       context.lineTo(sqrt3 * y, -y)
@@ -22579,15 +22751,15 @@
     },
   }
 
-  var c$3 = -0.5,
+  const c$3 = -0.5,
     s = Math.sqrt(3) / 2,
     k = 1 / Math.sqrt(12),
     a$1 = (k / 2 + 1) * 3
 
-  var wye = {
+  const wye = {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     draw: function (context, size) {
-      var r = Math.sqrt(size / a$1),
+      const r = Math.sqrt(size / a$1),
         x0 = r / 2,
         y0 = r * k,
         x1 = x0,
@@ -22607,17 +22779,17 @@
     },
   }
 
-  var symbols = [circle$2, cross$2, diamond, square$1, star, triangle, wye]
+  const symbols = [circle$2, cross$2, diamond, square$1, star, triangle, wye]
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
   function symbol(type, size) {
     // @ts-expect-error TS(7034) FIXME: Variable 'context' implicitly has type 'any' in so... Remove this comment to see the full error message
-    var context = null
+    let context = null
     type = typeof type === 'function' ? type : constant$a(type || circle$2)
     size = typeof size === 'function' ? size : constant$a(size === undefined ? 64 : +size)
 
     function symbol() {
-      var buffer
+      let buffer
       // @ts-expect-error TS(7005) FIXME: Variable 'context' implicitly has an 'any' type.
       if (!context) context = buffer = path()
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -22850,12 +23022,12 @@
       this._basis.lineStart()
     },
     lineEnd: function () {
-      var x = this._x,
+      const x = this._x,
         y = this._y,
         j = x.length - 1
 
       if (j > 0) {
-        var x0 = x[0],
+        let x0 = x[0],
           y0 = y[0],
           dx = x[j] - x0,
           dy = y[j] - y0,
@@ -22881,7 +23053,7 @@
     },
   }
 
-  var bundle = (function custom(beta) {
+  const bundle = (function custom(beta) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function bundle(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -22962,7 +23134,7 @@
     },
   }
 
-  var cardinal = (function custom(tension) {
+  const cardinal = (function custom(tension) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function cardinal(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23049,7 +23221,7 @@
     },
   }
 
-  var cardinalClosed = (function custom(tension) {
+  const cardinalClosed = (function custom(tension) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function cardinal(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23112,7 +23284,7 @@
     },
   }
 
-  var cardinalOpen = (function custom(tension) {
+  const cardinalOpen = (function custom(tension) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function cardinal(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23129,20 +23301,20 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
   function point$3(that, x, y) {
-    var x1 = that._x1,
+    let x1 = that._x1,
       y1 = that._y1,
       x2 = that._x2,
       y2 = that._y2
 
     if (that._l01_a > epsilon$5) {
-      var a = 2 * that._l01_2a + 3 * that._l01_a * that._l12_a + that._l12_2a,
+      const a = 2 * that._l01_2a + 3 * that._l01_a * that._l12_a + that._l12_2a,
         n = 3 * that._l01_a * (that._l01_a + that._l12_a)
       x1 = (x1 * a - that._x0 * that._l12_2a + that._x2 * that._l01_2a) / n
       y1 = (y1 * a - that._y0 * that._l12_2a + that._y2 * that._l01_2a) / n
     }
 
     if (that._l23_a > epsilon$5) {
-      var b = 2 * that._l23_2a + 3 * that._l23_a * that._l12_a + that._l12_2a,
+      const b = 2 * that._l23_2a + 3 * that._l23_a * that._l12_a + that._l12_2a,
         m = 3 * that._l23_a * (that._l23_a + that._l12_a)
       x2 = (x2 * b + that._x1 * that._l23_2a - x * that._l12_2a) / m
       y2 = (y2 * b + that._y1 * that._l23_2a - y * that._l12_2a) / m
@@ -23187,7 +23359,7 @@
       ;(x = +x), (y = +y)
 
       if (this._point) {
-        var x23 = this._x2 - x,
+        const x23 = this._x2 - x,
           y23 = this._y2 - y
         this._l23_a = Math.sqrt((this._l23_2a = Math.pow(x23 * x23 + y23 * y23, this._alpha)))
       }
@@ -23214,7 +23386,7 @@
     },
   }
 
-  var catmullRom = (function custom(alpha) {
+  const catmullRom = (function custom(alpha) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function catmullRom(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23281,7 +23453,7 @@
       ;(x = +x), (y = +y)
 
       if (this._point) {
-        var x23 = this._x2 - x,
+        const x23 = this._x2 - x,
           y23 = this._y2 - y
         this._l23_a = Math.sqrt((this._l23_2a = Math.pow(x23 * x23 + y23 * y23, this._alpha)))
       }
@@ -23311,7 +23483,7 @@
     },
   }
 
-  var catmullRomClosed = (function custom(alpha) {
+  const catmullRomClosed = (function custom(alpha) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function catmullRom(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23354,7 +23526,7 @@
       ;(x = +x), (y = +y)
 
       if (this._point) {
-        var x23 = this._x2 - x,
+        const x23 = this._x2 - x,
           y23 = this._y2 - y
         this._l23_a = Math.sqrt((this._l23_2a = Math.pow(x23 * x23 + y23 * y23, this._alpha)))
       }
@@ -23384,7 +23556,7 @@
     },
   }
 
-  var catmullRomOpen = (function custom(alpha) {
+  const catmullRomOpen = (function custom(alpha) {
     // @ts-expect-error TS(7006) FIXME: Parameter 'context' implicitly has an 'any' type.
     function catmullRom(context) {
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
@@ -23439,7 +23611,7 @@
   // NOV(II), P. 443, 1990.
   // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
   function slope3(that, x2, y2) {
-    var h0 = that._x1 - that._x0,
+    const h0 = that._x1 - that._x0,
       h1 = x2 - that._x1,
       // @ts-expect-error TS(2363) FIXME: The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
       s0 = (that._y1 - that._y0) / (h0 || (h1 < 0 && -0)),
@@ -23452,7 +23624,7 @@
   // Calculate a one-sided slope.
   // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
   function slope2(that, t) {
-    var h = that._x1 - that._x0
+    const h = that._x1 - that._x0
     return h ? ((3 * (that._y1 - that._y0)) / h - t) / 2 : t
   }
 
@@ -23461,7 +23633,7 @@
   // with respect to the four values p0, p0 + m0 / 3, p1 - m1 / 3, p1".
   // @ts-expect-error TS(7006) FIXME: Parameter 'that' implicitly has an 'any' type.
   function point$4(that, t0, t1) {
-    var x0 = that._x0,
+    const x0 = that._x0,
       y0 = that._y0,
       x1 = that._x1,
       y1 = that._y1,
@@ -23500,7 +23672,7 @@
     },
     // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
     point: function (x, y) {
-      var t1 = NaN
+      let t1 = NaN
 
       ;(x = +x), (y = +y)
       if (x === this._x1 && y === this._y1) return // Ignore coincident points.
@@ -23592,7 +23764,7 @@
       this._y = []
     },
     lineEnd: function () {
-      var x = this._x,
+      const x = this._x,
         y = this._y,
         n = x.length
 
@@ -23601,9 +23773,9 @@
         if (n === 2) {
           this._context.lineTo(x[1], y[1])
         } else {
-          var px = controlPoints(x),
+          const px = controlPoints(x),
             py = controlPoints(y)
-          for (var i0 = 0, i1 = 1; i1 < n; ++i0, ++i1) {
+          for (let i0 = 0, i1 = 1; i1 < n; ++i0, ++i1) {
             this._context.bezierCurveTo(px[0][i0], py[0][i0], px[1][i0], py[1][i0], x[i1], y[i1])
           }
         }
@@ -23623,7 +23795,7 @@
   // See https://www.particleincell.com/2012/bezier-splines/ for derivation.
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
   function controlPoints(x) {
-    var i,
+    let i,
       n = x.length - 1,
       m,
       a = new Array(n),
@@ -23685,7 +23857,7 @@
             this._context.lineTo(this._x, y)
             this._context.lineTo(x, y)
           } else {
-            var x1 = this._x * (1 - this._t) + x * this._t
+            const x1 = this._x * (1 - this._t) + x * this._t
             this._context.lineTo(x1, this._y)
             this._context.lineTo(x1, y)
           }
@@ -23727,7 +23899,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function none$2(series) {
-    var n = series.length,
+    let n = series.length,
       o = new Array(n)
     while (--n >= 0) o[n] = n
     return o
@@ -23749,15 +23921,15 @@
   }
 
   function stack() {
-    var keys = constant$a([]),
+    let keys = constant$a([]),
       order = none$2,
       offset = none$1,
       value = stackValue
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
     function stack(data) {
-      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var sz = Array.from(keys.apply(this, arguments), stackSeries),
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+      let sz = Array.from(keys.apply(this, arguments), stackSeries),
         i,
         n = sz.length,
         j = -1,
@@ -23765,13 +23937,12 @@
 
       for (const d of data) {
         for (i = 0, ++j; i < n; ++i) {
-          // @ts-expect-error TS(2551) FIXME: Property 'key' does not exist on type 'any[]'. Did... Remove this comment to see the full error message
+          // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 4.
           ;(sz[i][j] = [0, +value(d, sz[i].key, j, data)]).data = d
         }
       }
 
       for (i = 0, oz = array$5(order(sz)); i < n; ++i) {
-        // @ts-expect-error TS(2339) FIXME: Property 'index' does not exist on type 'any[]'.
         sz[oz[i]].index = i
       }
 
@@ -23781,6 +23952,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     stack.keys = function (_) {
+      // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
       return arguments.length ? ((keys = typeof _ === 'function' ? _ : constant$a(Array.from(_))), stack) : keys
     }
 
@@ -23792,7 +23964,8 @@
     // @ts-expect-error TS(7006) FIXME: Parameter '_' implicitly has an 'any' type.
     stack.order = function (_) {
       return arguments.length
-        ? ((order = _ == null ? none$2 : typeof _ === 'function' ? _ : constant$a(Array.from(_))), stack)
+        ? // @ts-expect-error TS(2550) FIXME: Property 'from' does not exist on type 'ArrayConst... Remove this comment to see the full error message
+          ((order = _ == null ? none$2 : typeof _ === 'function' ? _ : constant$a(Array.from(_))), stack)
         : order
     }
 
@@ -23845,12 +24018,12 @@
     if (!((n = series.length) > 0) || !((m = (s0 = series[order[0]]).length) > 0)) return
     for (var y = 0, j = 1, s0, m, n; j < m; ++j) {
       for (var i = 0, s1 = 0, s2 = 0; i < n; ++i) {
-        var si = series[order[i]],
+        let si = series[order[i]],
           sij0 = si[j][1] || 0,
           sij1 = si[j - 1][1] || 0,
           s3 = (sij0 - sij1) / 2
-        for (var k = 0; k < i; ++k) {
-          var sk = series[order[k]],
+        for (let k = 0; k < i; ++k) {
+          const sk = series[order[k]],
             skj0 = sk[j][1] || 0,
             skj1 = sk[j - 1][1] || 0
           s3 += skj0 - skj1
@@ -23866,7 +24039,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function appearance(series) {
-    var peaks = series.map(peak)
+    const peaks = series.map(peak)
     return none$2(series).sort(function (a, b) {
       return peaks[a] - peaks[b]
     })
@@ -23874,7 +24047,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function peak(series) {
-    var i = -1,
+    let i = -1,
       j = 0,
       n = series.length,
       vi,
@@ -23885,7 +24058,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function ascending$3(series) {
-    var sums = series.map(sum$1)
+    const sums = series.map(sum$1)
     return none$2(series).sort(function (a, b) {
       return sums[a] - sums[b]
     })
@@ -23893,7 +24066,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function sum$1(series) {
-    var s = 0,
+    let s = 0,
       i = -1,
       n = series.length,
       v
@@ -23908,7 +24081,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'series' implicitly has an 'any' type.
   function insideOut(series) {
-    var n = series.length,
+    let n = series.length,
       i,
       j,
       sums = series.map(sum$1),
@@ -23938,10 +24111,10 @@
   }
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'x' implicitly has an 'any' type.
-  var constant$b = x => () => x
+  const constant$b = x => () => x
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
   function ZoomEvent(
+    // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
     type,
     {
       // @ts-expect-error TS(7031) FIXME: Binding element 'sourceEvent' implicitly has an 'a... Remove this comment to see the full error message
@@ -24024,7 +24197,7 @@
   }
 
   // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-  var identity$9 = new Transform(1, 0, 0)
+  const identity$9 = new Transform(1, 0, 0)
 
   transform$1.prototype = Transform.prototype
 
@@ -24054,7 +24227,7 @@
 
   function defaultExtent$1() {
     // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-    var e = this
+    let e = this
     if (e instanceof SVGElement) {
       e = e.ownerSVGElement || e
       if (e.hasAttribute('viewBox')) {
@@ -24092,7 +24265,7 @@
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'transform' implicitly has an 'any' type... Remove this comment to see the full error message
   function defaultConstrain(transform, extent, translateExtent) {
-    var dx0 = transform.invertX(extent[0][0]) - translateExtent[0][0],
+    const dx0 = transform.invertX(extent[0][0]) - translateExtent[0][0],
       dx1 = transform.invertX(extent[1][0]) - translateExtent[1][0],
       dy0 = transform.invertY(extent[0][1]) - translateExtent[0][1],
       dy1 = transform.invertY(extent[1][1]) - translateExtent[1][1]
@@ -24103,7 +24276,7 @@
   }
 
   function zoom() {
-    var filter = defaultFilter$2,
+    let filter = defaultFilter$2,
       extent = defaultExtent$1,
       constrain = defaultConstrain,
       wheelDelta = defaultWheelDelta,
@@ -24114,9 +24287,8 @@
         [Infinity, Infinity],
       ],
       duration = 250,
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'interpolateZoom'.
       interpolate = interpolateZoom,
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'dispatch'.
+      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 3.
       listeners = dispatch('start', 'zoom', 'end'),
       // @ts-expect-error TS(7034) FIXME: Variable 'touchstarting' implicitly has type 'any'... Remove this comment to see the full error message
       touchstarting,
@@ -24145,7 +24317,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'collection' implicitly has an 'any' typ... Remove this comment to see the full error message
     zoom.transform = function (collection, transform, point, event) {
-      var selection = collection.selection ? collection.selection() : collection
+      const selection = collection.selection ? collection.selection() : collection
       selection.property('__zoom', defaultTransform)
       if (collection !== selection) {
         schedule(collection, transform, point, event)
@@ -24168,7 +24340,7 @@
         selection,
         function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var k0 = this.__zoom.k,
+          const k0 = this.__zoom.k,
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             k1 = typeof k === 'function' ? k.apply(this, arguments) : k
           return k0 * k1
@@ -24184,7 +24356,7 @@
         selection,
         function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var e = extent.apply(this, arguments),
+          const e = extent.apply(this, arguments),
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             t0 = this.__zoom,
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -24204,15 +24376,15 @@
       zoom.transform(
         selection,
         function () {
-          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           return constrain(
+            // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             this.__zoom.translate(
               // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
               typeof x === 'function' ? x.apply(this, arguments) : x,
               // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
               typeof y === 'function' ? y.apply(this, arguments) : y
-              // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             ),
+            // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             extent.apply(this, arguments),
             translateExtent
           )
@@ -24228,7 +24400,7 @@
         selection,
         function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var e = extent.apply(this, arguments),
+          const e = extent.apply(this, arguments),
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             t = this.__zoom,
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
@@ -24261,7 +24433,7 @@
 
     // @ts-expect-error TS(7006) FIXME: Parameter 'transform' implicitly has an 'any' type... Remove this comment to see the full error message
     function translate(transform, p0, p1) {
-      var x = p0[0] - p1[0] * transform.k,
+      const x = p0[0] - p1[0] * transform.k,
         y = p0[1] - p1[1] * transform.k
       // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
       return x === transform.x && y === transform.y ? transform : new Transform(transform.k, x, y)
@@ -24275,17 +24447,17 @@
     // @ts-expect-error TS(7006) FIXME: Parameter 'transition' implicitly has an 'any' typ... Remove this comment to see the full error message
     function schedule(transition, transform, point, event) {
       transition
-        // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         .on('start.zoom', function () {
+          // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
           gesture(this, arguments).event(event).start()
         })
-        // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         .on('interrupt.zoom end.zoom', function () {
+          // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
           gesture(this, arguments).event(event).end()
         })
         .tween('zoom', function () {
           // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-          var that = this,
+          const that = this,
             args = arguments,
             // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
             g = gesture(that, args).event(event),
@@ -24299,10 +24471,10 @@
           // @ts-expect-error TS(7006) FIXME: Parameter 't' implicitly has an 'any' type.
           return function (t) {
             if (t === 1) t = b // Avoid rounding error on end.
-            // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
             else {
-              var l = i(t),
+              const l = i(t),
                 k = w / l[2]
+              // @ts-expect-error TS(7009) FIXME: 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
               t = new Transform(k, p[0] - l[0] * k, p[1] - l[1] * k)
             }
             g.zoom(null, t)
@@ -24363,8 +24535,7 @@
       },
       // @ts-expect-error TS(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
       emit: function (type) {
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'select'.
-        var d = select(this.that).datum()
+        const d = select(this.that).datum()
         listeners.call(
           type,
           this.that,
@@ -24387,12 +24558,12 @@
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!filter.apply(this, arguments)) return
       // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
-      var g = gesture(this, args).event(event),
+      const g = gesture(this, args).event(event),
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         t = this.__zoom,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         k = Math.max(scaleExtent[0], Math.min(scaleExtent[1], t.k * Math.pow(2, wheelDelta.apply(this, arguments)))),
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
+        // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
         p = pointer(event)
 
       // If the mouse is in the same location as before, reuse it.
@@ -24409,7 +24580,7 @@
       // Otherwise, capture the mouse point and location at the start.
       else {
         g.mouse = [p, t.invert(p)]
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'interrupt'.
+        // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
         interrupt(this)
         g.start()
       }
@@ -24430,20 +24601,17 @@
       if (touchending || !filter.apply(this, arguments)) return
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       var g = gesture(this, args, true).event(event),
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'select'.
         v = select(event.view).on('mousemove.zoom', mousemoved, true).on('mouseup.zoom', mouseupped, true),
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
         p = pointer(event, currentTarget),
         currentTarget = event.currentTarget,
         x0 = event.clientX,
         y0 = event.clientY
 
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'dragDisable'.
       dragDisable(event.view)
       nopropagation$2(event)
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       g.mouse = [p, this.__zoom.invert(p)]
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'interrupt'.
+      // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
       interrupt(this)
       g.start()
 
@@ -24451,26 +24619,23 @@
       function mousemoved(event) {
         noevent$2(event)
         if (!g.moved) {
-          var dx = event.clientX - x0,
+          const dx = event.clientX - x0,
             dy = event.clientY - y0
           g.moved = dx * dx + dy * dy > clickDistance2
         }
-        g.event(event)
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
-          .zoom(
-            'mouse',
-            constrain(
-              translate(g.that.__zoom, (g.mouse[0] = pointer(event, currentTarget)), g.mouse[1]),
-              g.extent,
-              translateExtent
-            )
+        g.event(event).zoom(
+          'mouse',
+          constrain(
+            translate(g.that.__zoom, (g.mouse[0] = pointer(event, currentTarget)), g.mouse[1]),
+            g.extent,
+            translateExtent
           )
+        )
       }
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'event' implicitly has an 'any' type.
       function mouseupped(event) {
         v.on('mousemove.zoom mouseup.zoom', null)
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'yesdrag'.
         yesdrag(event.view, g.moved)
         noevent$2(event)
         g.event(event).end()
@@ -24482,8 +24647,8 @@
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!filter.apply(this, arguments)) return
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
-      var t0 = this.__zoom,
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
+      const t0 = this.__zoom,
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         p0 = pointer(event.changedTouches ? event.changedTouches[0] : event, this),
         p1 = t0.invert(p0),
         k1 = t0.k * (event.shiftKey ? 0.5 : 2),
@@ -24491,9 +24656,9 @@
         t1 = constrain(translate(scale(t0, k1), p0, p1), extent.apply(this, args), translateExtent)
 
       noevent$2(event)
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'select'.
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (duration > 0) select(this).transition().duration(duration).call(schedule, t1, p0, event)
-      // @ts-expect-error TS(2304) FIXME: Cannot find name 'select'.
+      // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       else select(this).call(zoom.transform, t1, p0, event)
     }
 
@@ -24501,7 +24666,7 @@
     function touchstarted(event, ...args) {
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!filter.apply(this, arguments)) return
-      var touches = event.touches,
+      let touches = event.touches,
         n = touches.length,
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         g = gesture(this, args, event.changedTouches.length === n).event(event),
@@ -24512,7 +24677,7 @@
 
       nopropagation$2(event)
       for (i = 0; i < n; ++i) {
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         ;(t = touches[i]), (p = pointer(t, this))
         // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         p = [p, this.__zoom.invert(p), t.identifier]
@@ -24525,13 +24690,13 @@
       if (touchstarting) touchstarting = clearTimeout(touchstarting)
 
       if (started) {
-        // @ts-expect-error TS(2532) FIXME: Object is possibly 'undefined'.
         if (g.taps < 2)
+          // @ts-expect-error TS(2532) FIXME: Object is possibly 'undefined'.
           (touchfirst = p[0]),
             (touchstarting = setTimeout(function () {
               touchstarting = null
             }, touchDelay))
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'interrupt'.
+        // @ts-expect-error TS(2554) FIXME: Expected 2 arguments, but got 1.
         interrupt(this)
         g.start()
       }
@@ -24542,7 +24707,7 @@
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!this.__zooming) return
       // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
-      var g = gesture(this, args).event(event),
+      let g = gesture(this, args).event(event),
         touches = event.changedTouches,
         n = touches.length,
         i,
@@ -24552,7 +24717,7 @@
 
       noevent$2(event)
       for (i = 0; i < n; ++i) {
-        // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
+        // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
         ;(t = touches[i]), (p = pointer(t, this))
         if (g.touch0 && g.touch0[2] === t.identifier) g.touch0[0] = p
         else if (g.touch1 && g.touch1[2] === t.identifier) g.touch1[0] = p
@@ -24581,7 +24746,7 @@
       // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
       if (!this.__zooming) return
       // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
-      var g = gesture(this, args).event(event),
+      let g = gesture(this, args).event(event),
         touches = event.changedTouches,
         n = touches.length,
         i,
@@ -24605,12 +24770,12 @@
         g.end()
         // If this was a dbltap, reroute to the (optional) dblclick.zoom handler.
         if (g.taps === 2) {
-          // @ts-expect-error TS(2304) FIXME: Cannot find name 'pointer'.
+          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           t = pointer(t, this)
-          // @ts-expect-error TS(7005) FIXME: Variable 'touchfirst' implicitly has an 'any' type... Remove this comment to see the full error message
+          // @ts-expect-error TS(2550) FIXME: Property 'hypot' does not exist on type 'Math'. Do... Remove this comment to see the full error message
           if (Math.hypot(touchfirst[0] - t[0], touchfirst[1] - t[1]) < tapDistance) {
-            // @ts-expect-error TS(2304) FIXME: Cannot find name 'select'.
-            var p = select(this).on('dblclick.zoom')
+            // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
+            const p = select(this).on('dblclick.zoom')
             // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
             if (p) p.apply(this, arguments)
           }
@@ -24684,7 +24849,7 @@
     }
 
     zoom.on = function () {
-      var value = listeners.on.apply(listeners, arguments)
+      const value = listeners.on.apply(listeners, arguments)
       return value === listeners ? zoom : value
     }
 
@@ -24701,1079 +24866,542 @@
     return zoom
   }
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.Adder = Adder
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.Delaunay = Delaunay
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.FormatSpecifier = FormatSpecifier
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.Voronoi = Voronoi
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.active = active
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.arc = arc
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.area = area$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.areaRadial = areaRadial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.ascending = ascending
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.autoType = autoType
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.axisBottom = axisBottom
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.axisLeft = axisLeft
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.axisRight = axisRight
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.axisTop = axisTop
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bin = bin
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bisect = bisectRight
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bisectCenter = bisectCenter
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bisectLeft = bisectLeft
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bisectRight = bisectRight
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.bisector = bisector
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.blob = blob
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.brush = brush
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.brushSelection = brushSelection
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.brushX = brushX
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.brushY = brushY
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.buffer = buffer
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.chord = chord
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.chordDirected = chordDirected
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.chordTranspose = chordTranspose
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.cluster = cluster
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.color = color
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.contourDensity = density
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.contours = contours
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.count = count
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.create = create
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.creator = creator
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.cross = cross
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csv = csv$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvFormat = csvFormat
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvFormatBody = csvFormatBody
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvFormatRow = csvFormatRow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvFormatRows = csvFormatRows
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvFormatValue = csvFormatValue
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvParse = csvParse
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.csvParseRows = csvParseRows
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.cubehelix = cubehelix
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.cumsum = cumsum
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveBasis = basis$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveBasisClosed = basisClosed$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveBasisOpen = basisOpen
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveBundle = bundle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCardinal = cardinal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCardinalClosed = cardinalClosed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCardinalOpen = cardinalOpen
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCatmullRom = catmullRom
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCatmullRomClosed = catmullRomClosed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveCatmullRomOpen = catmullRomOpen
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveLinear = curveLinear
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveLinearClosed = linearClosed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveMonotoneX = monotoneX
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveMonotoneY = monotoneY
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveNatural = natural
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveStep = step
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveStepAfter = stepAfter
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.curveStepBefore = stepBefore
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.descending = descending
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.deviation = deviation
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.difference = difference
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.disjoint = disjoint
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.dispatch = dispatch
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.drag = drag
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.dragDisable = dragDisable
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.dragEnable = yesdrag
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.dsv = dsv
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.dsvFormat = dsvFormat
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBack = backInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBackIn = backIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBackInOut = backInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBackOut = backOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBounce = bounceOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBounceIn = bounceIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBounceInOut = bounceInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeBounceOut = bounceOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCircle = circleInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCircleIn = circleIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCircleInOut = circleInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCircleOut = circleOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCubic = cubicInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCubicIn = cubicIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCubicInOut = cubicInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeCubicOut = cubicOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeElastic = elasticOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeElasticIn = elasticIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeElasticInOut = elasticInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeElasticOut = elasticOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeExp = expInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeExpIn = expIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeExpInOut = expInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeExpOut = expOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeLinear = linear$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easePoly = polyInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easePolyIn = polyIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easePolyInOut = polyInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easePolyOut = polyOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeQuad = quadInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeQuadIn = quadIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeQuadInOut = quadInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeQuadOut = quadOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeSin = sinInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeSinIn = sinIn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeSinInOut = sinInOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.easeSinOut = sinOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.every = every
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.extent = extent
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.filter = filter
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceCenter = center$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceCollide = collide
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceLink = link
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceManyBody = manyBody
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceRadial = radial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceSimulation = simulation
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceX = x$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.forceY = y$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.formatDefaultLocale = defaultLocale
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.formatLocale = formatLocale
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.formatSpecifier = formatSpecifier
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.fsum = fsum
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAlbers = albers
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAlbersUsa = albersUsa
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoArea = area$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAzimuthalEqualArea = azimuthalEqualArea
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAzimuthalEqualAreaRaw = azimuthalEqualAreaRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAzimuthalEquidistant = azimuthalEquidistant
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoAzimuthalEquidistantRaw = azimuthalEquidistantRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoBounds = bounds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoCentroid = centroid
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoCircle = circle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoClipAntimeridian = clipAntimeridian
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoClipCircle = clipCircle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoClipExtent = extent$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoClipRectangle = clipRectangle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicConformal = conicConformal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicConformalRaw = conicConformalRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicEqualArea = conicEqualArea
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicEqualAreaRaw = conicEqualAreaRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicEquidistant = conicEquidistant
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoConicEquidistantRaw = conicEquidistantRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoContains = contains$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoDistance = distance
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoEqualEarth = equalEarth
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoEqualEarthRaw = equalEarthRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoEquirectangular = equirectangular
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoEquirectangularRaw = equirectangularRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoGnomonic = gnomonic
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoGnomonicRaw = gnomonicRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoGraticule = graticule
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoGraticule10 = graticule10
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoIdentity = identity$5
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoInterpolate = interpolate$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoLength = length$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoMercator = mercator
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoMercatorRaw = mercatorRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoNaturalEarth1 = naturalEarth1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoNaturalEarth1Raw = naturalEarth1Raw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoOrthographic = orthographic
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoOrthographicRaw = orthographicRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoPath = index$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoProjection = projection
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoProjectionMutator = projectionMutator
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoRotation = rotation
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoStereographic = stereographic
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoStereographicRaw = stereographicRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoStream = geoStream
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoTransform = transform
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoTransverseMercator = transverseMercator
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.geoTransverseMercatorRaw = transverseMercatorRaw
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.gray = gray
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.greatest = greatest
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.greatestIndex = greatestIndex
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.group = group
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.groups = groups
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.hcl = hcl
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.hierarchy = hierarchy
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.histogram = bin
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.hsl = hsl
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.html = html
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.image = image
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.index = index
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.indexes = indexes
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolate = interpolate
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateArray = array$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBasis = basis$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBasisClosed = basisClosed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBlues = Blues
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBrBG = BrBG
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBuGn = BuGn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateBuPu = BuPu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateCividis = cividis
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateCool = cool
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateCubehelix = cubehelix$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateCubehelixDefault = cubehelix$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateCubehelixLong = cubehelixLong
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateDate = date
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateDiscrete = discrete
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateGnBu = GnBu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateGreens = Greens
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateGreys = Greys
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateHcl = hcl$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateHclLong = hclLong
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateHsl = hsl$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateHslLong = hslLong
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateHue = hue$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateInferno = inferno
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateLab = lab$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateMagma = magma
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateNumber = interpolateNumber
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateNumberArray = numberArray
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateObject = object
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateOrRd = OrRd
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateOranges = Oranges
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePRGn = PRGn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePiYG = PiYG
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePlasma = plasma
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePuBu = PuBu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePuBuGn = PuBuGn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePuOr = PuOr
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePuRd = PuRd
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolatePurples = Purples
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRainbow = rainbow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRdBu = RdBu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRdGy = RdGy
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRdPu = RdPu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRdYlBu = RdYlBu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRdYlGn = RdYlGn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateReds = Reds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRgb = interpolateRgb
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRgbBasis = rgbBasis
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRgbBasisClosed = rgbBasisClosed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateRound = interpolateRound
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateSinebow = sinebow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateSpectral = Spectral
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateString = interpolateString
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateTransformCss = interpolateTransformCss
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateTransformSvg = interpolateTransformSvg
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateTurbo = turbo
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateViridis = viridis
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateWarm = warm
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateYlGn = YlGn
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateYlGnBu = YlGnBu
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateYlOrBr = YlOrBr
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateYlOrRd = YlOrRd
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interpolateZoom = interpolateZoom
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interrupt = interrupt
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.intersection = intersection
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.interval = interval$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.isoFormat = formatIso
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.isoParse = parseIso
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.json = json
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.lab = lab
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.lch = lch
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.least = least
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.leastIndex = leastIndex
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.line = line
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.lineRadial = lineRadial$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.linkHorizontal = linkHorizontal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.linkRadial = linkRadial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.linkVertical = linkVertical
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.local = local
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.map = map
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.matcher = matcher
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.max = max
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.maxIndex = maxIndex
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.mean = mean
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.median = median
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.merge = merge
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.min = min
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.minIndex = minIndex
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.namespace = namespace
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.namespaces = namespaces
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.nice = nice
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.now = now
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pack = index$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.packEnclose = enclose
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.packSiblings = siblings
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pairs = pairs
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.partition = partition
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.path = path
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.permute = permute
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pie = pie
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.piecewise = piecewise
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pointRadial = pointRadial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pointer = pointer
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.pointers = pointers
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.polygonArea = area$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.polygonCentroid = centroid$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.polygonContains = contains$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.polygonHull = hull
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.polygonLength = length$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.precisionFixed = precisionFixed
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.precisionPrefix = precisionPrefix
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.precisionRound = precisionRound
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.quadtree = quadtree
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.quantile = quantile
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.quantileSorted = quantileSorted
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.quantize = quantize
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.quickselect = quickselect
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.radialArea = areaRadial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.radialLine = lineRadial$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomBates = bates
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomBernoulli = bernoulli
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomBeta = beta
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomBinomial = binomial
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomCauchy = cauchy
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomExponential = exponential$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomGamma = gamma$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomGeometric = geometric
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomInt = int
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomIrwinHall = irwinHall
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomLcg = lcg$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomLogNormal = logNormal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomLogistic = logistic
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomNormal = normal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomPareto = pareto
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomPoisson = poisson
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomUniform = uniform
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.randomWeibull = weibull
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.range = sequence
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.reduce = reduce
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.reverse = reverse
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.rgb = rgb
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.ribbon = ribbon$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.ribbonArrow = ribbonArrow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.rollup = rollup
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.rollups = rollups
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleBand = band
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleDiverging = diverging
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleDivergingLog = divergingLog
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleDivergingPow = divergingPow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleDivergingSqrt = divergingSqrt
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleDivergingSymlog = divergingSymlog
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleIdentity = identity$7
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleImplicit = implicit
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleLinear = linear$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleLog = log$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleOrdinal = ordinal
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scalePoint = point
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scalePow = pow$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleQuantile = quantile$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleQuantize = quantize$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleRadial = radial$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequential = sequential
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequentialLog = sequentialLog
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequentialPow = sequentialPow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequentialQuantile = sequentialQuantile
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequentialSqrt = sequentialSqrt
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSequentialSymlog = sequentialSymlog
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSqrt = sqrt$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleSymlog = symlog
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleThreshold = threshold
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleTime = time
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scaleUtc = utcTime
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.scan = scan
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeAccent = Accent
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeBlues = scheme$l
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeBrBG = scheme
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeBuGn = scheme$9
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeBuPu = scheme$a
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeCategory10 = category10
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeDark2 = Dark2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeGnBu = scheme$b
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeGreens = scheme$m
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeGreys = scheme$n
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeOrRd = scheme$c
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeOranges = scheme$q
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePRGn = scheme$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePaired = Paired
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePastel1 = Pastel1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePastel2 = Pastel2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePiYG = scheme$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePuBu = scheme$e
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePuBuGn = scheme$d
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePuOr = scheme$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePuRd = scheme$f
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemePurples = scheme$o
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeRdBu = scheme$4
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeRdGy = scheme$5
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeRdPu = scheme$g
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeRdYlBu = scheme$6
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeRdYlGn = scheme$7
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeReds = scheme$p
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeSet1 = Set1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeSet2 = Set2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeSet3 = Set3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeSpectral = scheme$8
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeTableau10 = Tableau10
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeYlGn = scheme$i
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeYlGnBu = scheme$h
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeYlOrBr = scheme$j
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.schemeYlOrRd = scheme$k
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.select = select
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.selectAll = selectAll
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.selection = selection
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.selector = selector
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.selectorAll = selectorAll
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.shuffle = shuffle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.shuffler = shuffler
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.some = some
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.sort = sort
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stack = stack
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOffsetDiverging = diverging$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOffsetExpand = expand
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOffsetNone = none$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOffsetSilhouette = silhouette
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOffsetWiggle = wiggle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderAppearance = appearance
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderAscending = ascending$3
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderDescending = descending$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderInsideOut = insideOut
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderNone = none$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stackOrderReverse = reverse$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.stratify = stratify
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.style = styleValue
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.subset = subset
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.sum = sum
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.superset = superset
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.svg = svg
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbol = symbol
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolCircle = circle$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolCross = cross$2
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolDiamond = diamond
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolSquare = square$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolStar = star
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolTriangle = triangle
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbolWye = wye
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.symbols = symbols
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.text = text
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.thresholdFreedmanDiaconis = freedmanDiaconis
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.thresholdScott = scott
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.thresholdSturges = thresholdSturges
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tickFormat = tickFormat
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tickIncrement = tickIncrement
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tickStep = tickStep
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.ticks = ticks
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeDay = day
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeDays = days
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeFormatDefaultLocale = defaultLocale$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeFormatLocale = formatLocale$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeFriday = friday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeFridays = fridays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeHour = hour
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeHours = hours
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeInterval = newInterval
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMillisecond = millisecond
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMilliseconds = milliseconds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMinute = minute
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMinutes = minutes
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMonday = monday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMondays = mondays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMonth = month
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeMonths = months
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSaturday = saturday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSaturdays = saturdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSecond = second
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSeconds = seconds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSunday = sunday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeSundays = sundays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeThursday = thursday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeThursdays = thursdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeTuesday = tuesday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeTuesdays = tuesdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeWednesday = wednesday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeWednesdays = wednesdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeWeek = sunday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeWeeks = sundays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeYear = year
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeYears = years
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timeout = timeout$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timer = timer
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.timerFlush = timerFlush
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.transition = transition
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.transpose = transpose
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tree = tree
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemap = index$4
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapBinary = binary
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapDice = treemapDice
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapResquarify = resquarify
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapSlice = treemapSlice
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapSliceDice = sliceDice
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.treemapSquarify = squarify
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsv = tsv$1
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvFormat = tsvFormat
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvFormatBody = tsvFormatBody
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvFormatRow = tsvFormatRow
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvFormatRows = tsvFormatRows
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvFormatValue = tsvFormatValue
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvParse = tsvParse
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.tsvParseRows = tsvParseRows
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.union = union
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcDay = utcDay
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcDays = utcDays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcFriday = utcFriday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcFridays = utcFridays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcHour = utcHour
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcHours = utcHours
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMillisecond = millisecond
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMilliseconds = milliseconds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMinute = utcMinute
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMinutes = utcMinutes
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMonday = utcMonday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMondays = utcMondays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMonth = utcMonth
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcMonths = utcMonths
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSaturday = utcSaturday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSaturdays = utcSaturdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSecond = second
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSeconds = seconds
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSunday = utcSunday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcSundays = utcSundays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcThursday = utcThursday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcThursdays = utcThursdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcTuesday = utcTuesday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcTuesdays = utcTuesdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcWednesday = utcWednesday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcWednesdays = utcWednesdays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcWeek = utcSunday
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcWeeks = utcSundays
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcYear = utcYear
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.utcYears = utcYears
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.variance = variance
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.version = version
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.window = defaultView
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.xml = xml
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.zip = zip
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.zoom = zoom
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.zoomIdentity = identity$9
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   exports.zoomTransform = transform$1
 
-  // @ts-expect-error TS(2304) FIXME: Cannot find name 'exports'.
   Object.defineProperty(exports, '__esModule', { value: true })
 })

@@ -26,14 +26,14 @@ export default function d3AnimationView({ store, cont, Card }) {
     updateLinks()
     // @ts-expect-error TS(2345) FIXME: Argument of type '{ svg: Element | null; svg_dim: ... Remove this comment to see the full error message
     if (props.initial) treeFit({ svg, svg_dim: svg.getBoundingClientRect(), tree_dim: tree.dim, transition_time: 0 })
-    // @ts-expect-error TS(2345) FIXME: Argument of type '{ svg: Element | null; svg_dim: ... Remove this comment to see the full error message
     else if (tree_position === 'fit')
+      // @ts-expect-error TS(2345) FIXME: Argument of type '{ svg: Element | null; svg_dim: ... Remove this comment to see the full error message
       treeFit({ svg, svg_dim: svg.getBoundingClientRect(), tree_dim: tree.dim, transition_time })
-    // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
     else if (tree_position === 'main_to_middle')
       mainToMiddle({
         datum: tree.data[0],
         svg,
+        // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
         svg_dim: svg.getBoundingClientRect(),
         scale: props.scale,
         transition_time,
@@ -46,10 +46,10 @@ export default function d3AnimationView({ store, cont, Card }) {
     function updateLinks() {
       // @ts-expect-error TS(7006) FIXME: Parameter 'acc' implicitly has an 'any' type.
       const links_data = tree.data.reduce((acc, d) => acc.concat(createLinks({ d, tree: tree.data })), []),
-        // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
         link = view
           .select('.links_view')
           .selectAll('path.link')
+          // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .data(links_data, d => d.id),
         link_exit = link.exit(),
         link_enter = link.enter().append('path').attr('class', 'link'),
@@ -88,10 +88,10 @@ export default function d3AnimationView({ store, cont, Card }) {
     }
 
     function updateCards() {
-      // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
       const card = view
           .select('.cards_view')
           .selectAll('g.card_cont')
+          // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
           .data(tree.data, d => d.data.id),
         card_exit = card.exit(),
         card_enter = card.enter().append('g').attr('class', 'card_cont'),
@@ -113,8 +113,8 @@ export default function d3AnimationView({ store, cont, Card }) {
         d3.select(this)
           .attr('transform', `translate(${d._x}, ${d._y})`)
           .style('opacity', 0)
-          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .node()
+          // @ts-expect-error TS(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
           .appendChild(CardElement(this, d))
       }
 

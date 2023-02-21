@@ -22,8 +22,8 @@ export function setupWikiSearch(store, cont) {
   // @ts-expect-error TS(7031) FIXME: Binding element 'wiki_id' implicitly has an 'any' ... Remove this comment to see the full error message
   function updateDataWithWDItem({ wiki_id }) {
     const loader = insertLoader()
-    // @ts-expect-error TS(7005) FIXME: Variable 'wiki_stash' implicitly has an 'any[]' ty... Remove this comment to see the full error message
     return (
+      // @ts-expect-error TS(7005) FIXME: Variable 'wiki_stash' implicitly has an 'any[]' ty... Remove this comment to see the full error message
       getFamilyTreeFromWikidata(wiki_stash, wiki_id)
         .then(d => {
           wiki_stash = d.wiki_stash.slice(0, 500)
@@ -60,20 +60,21 @@ function Search({ cont, onSelect }) {
     </div>
   `
 
-  // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const results = wikidata_peps.reduce((acc, d) => {
+      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       acc[d.humanLabel] = { datum: { wiki_id: d.human.split('/')[d.human.split('/').length - 1] } }
       return acc
     }, {}),
-    // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     dict_for_autocomplete = Object.keys(results).reduce((acc, k) => {
+      // @ts-expect-error TS(7053) FIXME: Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       acc[k] = null
       return acc
     }, {}),
     input = cont.querySelector('input'),
-    // @ts-expect-error TS(2339) FIXME: Property 'Autocomplete' does not exist on type 'nu... Remove this comment to see the full error message
+    // @ts-expect-error TS(2304) FIXME: Cannot find name 'M'.
     autocomplete = M.Autocomplete.init(input, {
       data: dict_for_autocomplete,
+      // @ts-expect-error TS(7006) FIXME: Parameter 'key' implicitly has an 'any' type.
       onAutocomplete: key => onSelect(results[key].datum),
       minLength: 3,
     })
@@ -90,9 +91,10 @@ function Search({ cont, onSelect }) {
     function search() {
       if (input.value.length < 3) return
       autocomplete.el.parentNode.querySelector('.lds-roller-input-cont').style.display = null
+      // @ts-expect-error TS(7006) FIXME: Parameter 'data' implicitly has an 'any' type.
       getWikiDataElementByStr(input.value).then(data => {
         autocomplete.el.parentNode.querySelector('.lds-roller-input-cont').style.display = 'none'
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
+        // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
         data.forEach(d => {
           isHuman(d.datum.wiki_id).then(is => (is ? insertHuman(d) : ''))
         })

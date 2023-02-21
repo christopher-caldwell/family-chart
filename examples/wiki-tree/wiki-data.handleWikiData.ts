@@ -2,7 +2,7 @@ import { props, relative_props, exclusive_props } from './wiki-data.dict.js'
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'wiki_ids' implicitly has an 'any' type.
 function getWikiDataLabels(wiki_ids) {
-  let url =
+  const url =
     'https://www.wikidata.org/w/api.php?' +
     'action=wbgetentities&ids=' +
     wiki_ids.slice(0, 49).join('|') + // TODO: get all
@@ -11,14 +11,14 @@ function getWikiDataLabels(wiki_ids) {
     '&props=labels|descriptions' +
     '&format=json'
 
+  // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
   return new Promise((resolve, reject) => {
+    // @ts-expect-error TS(7006) FIXME: Parameter 'json' implicitly has an 'any' type.
     jsonpQuery(url).then(function (json) {
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       if (!json.hasOwnProperty('entities')) {
         resolve({})
         return
       }
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       resolve(json.entities)
     })
   })
@@ -61,17 +61,18 @@ export async function isHuman(wiki_id) {
   const data = await getWikiItem(wiki_id),
     instance_of = 'P31',
     is_human = 'Q5',
-    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     claims = data.entities[wiki_id].claims
   if (!claims[instance_of]) return false
 
-  // @ts-expect-error TS(7006) FIXME: Parameter 'claim' implicitly has an 'any' type.
-  return claims[instance_of]
-    .map(claim => {
-      return claim.mainsnak && claim.mainsnak.datavalue ? claim.mainsnak.datavalue.value.id : null
+  return (
+    claims[instance_of]
+      // @ts-expect-error TS(7006) FIXME: Parameter 'claim' implicitly has an 'any' type.
+      .map(claim => {
+        return claim.mainsnak && claim.mainsnak.datavalue ? claim.mainsnak.datavalue.value.id : null
+      })
       // @ts-expect-error TS(7006) FIXME: Parameter 'claim_id' implicitly has an 'any' type.
-    })
-    .some(claim_id => claim_id === is_human)
+      .some(claim_id => claim_id === is_human)
+  )
 }
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'wiki_id' implicitly has an 'any' type.
@@ -90,7 +91,6 @@ export function getWikiItem(wiki_id) {
 // @ts-expect-error TS(7031) FIXME: Binding element 'wiki_id' implicitly has an 'any' ... Remove this comment to see the full error message
 export async function getWikiPersonData({ wiki_id, exclude_props = true }) {
   const json = await getWikiItem(wiki_id),
-    // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
     entity = json.entities[wiki_id]
   if (exclude_props) cleanClaims(entity.claims, exclusive_props)
 
@@ -104,7 +104,7 @@ export async function getWikiPersonData({ wiki_id, exclude_props = true }) {
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'claims' implicitly has an 'any' type.
   function cleanClaims(claims, exclusive_props) {
-    for (let prop_id in claims) {
+    for (const prop_id in claims) {
       if (!claims.hasOwnProperty(prop_id)) continue
       if (exclusive_props && !exclusive_props.includes(prop_id)) delete claims[prop_id]
     }
@@ -115,13 +115,13 @@ export async function getWikiPersonData({ wiki_id, exclude_props = true }) {
     if (!claims) return []
     // @ts-expect-error TS(7034) FIXME: Variable 'claims_id' implicitly has type 'any[]' i... Remove this comment to see the full error message
     const claims_id = []
-    for (let prop_id in claims) {
+    for (const prop_id in claims) {
       if (!claims.hasOwnProperty(prop_id)) continue
 
       // @ts-expect-error TS(7006) FIXME: Parameter 'claim' implicitly has an 'any' type.
       claims[prop_id].forEach(claim => {
-        let rank = claim.rank
-        let claim_id = claim.mainsnak ? (claim.mainsnak.datavalue ? claim.mainsnak.datavalue.value.id : null) : null
+        const rank = claim.rank
+        const claim_id = claim.mainsnak ? (claim.mainsnak.datavalue ? claim.mainsnak.datavalue.value.id : null) : null
         if (claim_id && rank !== 'deprecated') claims_id.push({ prop_id: prop_id, claim_id: claim_id })
       })
     }
@@ -134,9 +134,7 @@ export async function getWikiPersonData({ wiki_id, exclude_props = true }) {
       const claim_id = d.claim_id
       const prop_id = d.prop_id
       d.wiki_id = claim_id
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       d.label = getWikiDatumLbl(search_entities_claims[claim_id])
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
       d.desc = getWikiDatumDesc(search_entities_claims[claim_id])
 
       return d
@@ -146,14 +144,15 @@ export async function getWikiPersonData({ wiki_id, exclude_props = true }) {
   // @ts-expect-error TS(7006) FIXME: Parameter 'entity' implicitly has an 'any' type.
   function getImageUrl(entity) {
     const image_claim = entity.claims[props.image]
+    // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
     return new Promise(function (resolve, reject) {
       if (!image_claim || !image_claim[0].mainsnak.datavalue) resolve(null)
       const image_name = image_claim[0].mainsnak.datavalue.value
       jsonpQuery(
         'https://commons.wikimedia.org/w/api.php?action=query&format=json&prop=imageinfo&iiprop=url&titles=File:' +
           image_name
+        // @ts-expect-error TS(7006) FIXME: Parameter 'response' implicitly has an 'any' type.
       ).then(function (response) {
-        // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
         const wikimedia_first_page = response.query.pages[Object.keys(response.query.pages)[0]]
         if (wikimedia_first_page.imageinfo) resolve(wikimedia_first_page.imageinfo[0].url)
         else resolve(null)
@@ -172,6 +171,7 @@ export async function getFamilyDataForItem(wiki_stash, wiki_id, level) {
   wiki_stash.push(datum)
 
   if (level === 0) return wiki_stash
+  // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
   else
     return new Promise(resolve => {
       let rels_to_load = 0
@@ -196,7 +196,9 @@ export function getWikiDataElementByStr(text_substr) {
     // @ts-expect-error TS(7034) FIXME: Variable 'data' implicitly has type 'any[]' in som... Remove this comment to see the full error message
     data = []
 
+  // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
   return new Promise((resolve, reject) => {
+    // @ts-expect-error TS(2705) FIXME: An async function or method in ES5/ES3 requires th... Remove this comment to see the full error message
     ;(async () => {
       for (let i = 0; i < 1; i++) {
         await getRes(i * 7)
@@ -208,9 +210,10 @@ export function getWikiDataElementByStr(text_substr) {
 
   // @ts-expect-error TS(7006) FIXME: Parameter 'iter' implicitly has an 'any' type.
   function getRes(iter) {
-    let url_query = url_temp.replace('{search_continue}', iter).replace('{text_substr}', text_substr)
+    const url_query = url_temp.replace('{search_continue}', iter).replace('{text_substr}', text_substr)
+    // @ts-expect-error TS(7006) FIXME: Parameter 'json' implicitly has an 'any' type.
     return jsonpQuery(url_query).then(function (json) {
-      // @ts-expect-error TS(2571) FIXME: Object is of type 'unknown'.
+      // @ts-expect-error TS(7006) FIXME: Parameter 'datum' implicitly has an 'any' type.
       json.search.forEach(datum => {
         data.push({
           key: datum.label,
@@ -227,6 +230,7 @@ export function getWikiDataElementByStr(text_substr) {
 
 // @ts-expect-error TS(7006) FIXME: Parameter 'url' implicitly has an 'any' type.
 function jsonpQuery(url) {
+  // @ts-expect-error TS(2585) FIXME: 'Promise' only refers to a type, but is being used... Remove this comment to see the full error message
   return new Promise(resolve => {
     // @ts-expect-error TS(2339) FIXME: Property 'jsonpQuery' does not exist on type 'Wind... Remove this comment to see the full error message
     if (!window.jsonpQuery) window.jsonpQuery = {}

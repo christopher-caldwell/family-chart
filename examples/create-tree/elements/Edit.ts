@@ -38,8 +38,8 @@ export default function Edit(cont_selector, card_edit) {
 
       // @ts-expect-error TS(2531) FIXME: Object is possibly 'null'.
       cont.querySelector('span').addEventListener('click', function () {
-        // @ts-expect-error TS(7006) FIXME: Parameter 'd0' implicitly has an 'any' type.
         card_edit.splice(
+          // @ts-expect-error TS(7006) FIXME: Parameter 'd0' implicitly has an 'any' type.
           card_edit.findIndex(d0 => d0 === d),
           1
         )

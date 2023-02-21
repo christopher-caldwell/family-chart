@@ -18,7 +18,9 @@ export default function View(tree, { store, data_stash, cont, datum, card_dim, c
             // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             ${tree.data
               .slice(1)
+              // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
               .map((d, i) => Link({ d, is_vertical: !['spouse'].includes(d.data.rel_type) }).template)}
+            // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
             ${tree.data.slice(1).map((d, i) => Card({ d }).template)}
           </g>
@@ -75,13 +77,14 @@ export default function View(tree, { store, data_stash, cont, datum, card_dim, c
     return {
       template: `
       // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
+      // @ts-expect-error TS(2554) FIXME: Expected 0 arguments, but got 1.
       <path d="${createPath(d)}" fill="none" stroke="#fff" />
     `,
     }
 
     function createPath() {
       const { w, h } = card_dim
-      let parent =
+      const parent =
         is_vertical && d.y < 0
           ? { x: 0, y: -h / 2 }
           : is_vertical && d.y > 0

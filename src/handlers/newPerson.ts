@@ -41,9 +41,9 @@ export function handleRelsOfNewDatum({ datum, data_stash, rel_type, rel_datum })
   function addParent(datum) {
     const is_father = datum.data.gender === 'M',
       parent_to_add_id = rel_datum.rels[is_father ? 'father' : 'mother']
-    // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
     if (parent_to_add_id)
       removeToAdd(
+        // @ts-expect-error TS(7006) FIXME: Parameter 'd' implicitly has an 'any' type.
         data_stash.find(d => d.id === parent_to_add_id),
         data_stash
       )
@@ -95,6 +95,7 @@ export function createNewPerson({ data, rels }) {
 // @ts-expect-error TS(7031) FIXME: Binding element 'data' implicitly has an 'any' typ... Remove this comment to see the full error message
 export function createNewPersonWithGenderFromRel({ data, rel_type, rel_datum }) {
   const gender = getGenderFromRelative(rel_datum, rel_type)
+  // @ts-expect-error TS(2550) FIXME: Property 'assign' does not exist on type 'ObjectCo... Remove this comment to see the full error message
   data = Object.assign(data || {}, { gender })
   // @ts-expect-error TS(2345) FIXME: Argument of type '{ data: any; }' is not assignabl... Remove this comment to see the full error message
   return createNewPerson({ data })

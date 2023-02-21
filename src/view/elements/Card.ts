@@ -35,15 +35,15 @@ export function Card(props) {
         !d.data.to_add
           ? CardImage({ d, image: d.data.data.avatar || null, card_dim, maleIcon: null, femaleIcon: null }).template
           : '',
-      // @ts-expect-error TS(2345) FIXME: Argument of type '{ card_dim: any; x: number; y: n... Remove this comment to see the full error message
       edit_icon = () =>
         !d.data.to_add && props.cardEditForm
-          ? PencilIcon({ card_dim, x: card_dim.w - 46, y: card_dim.h - 20 }).template
+          ? // @ts-expect-error TS(2345) FIXME: Argument of type '{ card_dim: any; x: number; y: n... Remove this comment to see the full error message
+            PencilIcon({ card_dim, x: card_dim.w - 46, y: card_dim.h - 20 }).template
           : '',
-      // @ts-expect-error TS(2345) FIXME: Argument of type '{ card_dim: any; x: number; y: n... Remove this comment to see the full error message
       add_icon = () =>
         !d.data.to_add && props.cardEditForm
-          ? PlusIcon({ card_dim, x: card_dim.w - 26, y: card_dim.h - 20 }).template
+          ? // @ts-expect-error TS(2345) FIXME: Argument of type '{ card_dim: any; x: number; y: n... Remove this comment to see the full error message
+            PlusIcon({ card_dim, x: card_dim.w - 26, y: card_dim.h - 20 }).template
           : '',
       link_break_icon = () => LinkBreakIconWrapper({ d, card_dim })
 
@@ -72,48 +72,48 @@ export function Card(props) {
     let p
 
     p = el.querySelector('.card')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         cardChangeMain(store, { card: el, d })
       })
 
     p = el.querySelector('.card_edit')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p && props.cardEditForm)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         cardEdit(store, { card: el, d, cardEditForm: props.cardEditForm })
       })
 
     p = el.querySelector('.card_add')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p && props.cardEditForm)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         cardEdit(store, { card: el, d, cardEditForm: props.cardEditForm })
       })
 
     p = el.querySelector('.card_add_relative')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         props.addRelative({ d })
       })
 
     p = el.querySelector('.card_family_tree')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         cardChangeMain(store, { card: el, d })
       })
 
     p = el.querySelector('.card_break_link')
-    // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
     if (p)
+      // @ts-expect-error TS(7006) FIXME: Parameter 'e' implicitly has an 'any' type.
       p.addEventListener('click', e => {
         e.stopPropagation()
         cardShowHideRels(store, { card: el, d })
@@ -133,6 +133,7 @@ export function Card(props) {
           <stop offset="1" stop-color="white" stop-opacity="1"/>
         </linearGradient>
         <mask id="fade" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#fadeGrad)"/></mask>
+        // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         // @ts-expect-error TS(2554) FIXME: Expected 3 arguments, but got 2.
         <clipPath id="card_clip"><path d="${curvedRectPath({ w: card_dim.w, h: card_dim.h }, 5)}"></clipPath>
         <clipPath id="card_text_clip"><rect width="${card_dim.w - card_dim.text_x - 10}" height="${
