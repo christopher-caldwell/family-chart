@@ -1,4 +1,4 @@
-import f3 from '../../src/index.js'
+import f3 from '../../dist/index.js'
 
 fetch('./data.json')
   .then(r => r.json())
@@ -8,7 +8,6 @@ fetch('./data.json')
         node_separation: 250,
         level_separation: 150,
       }),
-      // @ts-expect-error TS(2345) FIXME: Argument of type '{ store: { state: any; update: {... Remove this comment to see the full error message
       view = f3.d3AnimationView({
         store,
         cont: document.querySelector('#FamilyChart'),
@@ -24,7 +23,6 @@ fetch('./data.json')
       })
 
     view.setCard(Card)
-    // @ts-expect-error TS(7006) FIXME: Parameter 'props' implicitly has an 'any' type.
     store.setOnUpdate(props => view.update(props || {}))
     store.update.tree({ initial: true })
   })
